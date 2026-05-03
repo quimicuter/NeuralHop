@@ -1,29 +1,28 @@
-/* Notes Repository - Glassmorphism with Purple/Pink Theme */
+/* Notes Repository - Minimalist Glassmorphism with Purple/Pink Theme */
 .notes-repository {
   height: 100%;
   display: flex;
   flex-direction: column;
+  padding: 0.5rem;
 }
 
+/* --- HEADER INVISIBLE (Estilo Mis Tareas) --- */
 .notes-header {
-  background: rgba(147, 51, 234, 0.1);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(147, 51, 234, 0.2);
-  border-radius: 16px;
-  padding: 12px 16px;
+  /* Eliminamos el fondo y el borde para que quede limpio como el de tareas */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-  box-shadow: 0 8px 32px rgba(147, 51, 234, 0.15);
+  padding: 0 0.5rem 0.75rem 0.5rem;
+  margin-bottom: 0;
 }
 
 .notes-header h3 {
   color: rgba(255, 255, 255, 0.95);
-  font-size: 15px;
+  font-family: serif;
+  font-size: 1.1rem; /* Mismo tamaño que Mis Tareas */
   font-weight: 600;
   margin: 0;
-  text-shadow: 0 2px 8px rgba(147, 51, 234, 0.3);
+  text-shadow: 0 2px 8px rgba(147, 51, 234, 0.4);
 }
 
 .add-note-btn {
@@ -37,274 +36,35 @@
   font-size: 18px;
   font-weight: 300;
   transition: all 0.3s ease;
-  width: 32px;
-  height: 32px;
+  width: 28px; /* Círculo perfecto y pequeño */
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(236, 72, 153, 0.2);
+  line-height: 1;
 }
 
 .add-note-btn:hover {
-  background: rgba(236, 72, 153, 0.25);
+  background: rgba(236, 72, 153, 0.3);
   transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(236, 72, 153, 0.3);
+  box-shadow: 0 6px 16px rgba(236, 72, 153, 0.4);
 }
 
-/* Modal flotante externo con glassmorfismo morado/rosa */
-.note-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(30px) saturate(200%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  padding: 20px;
-}
-
-.note-modal {
-  background: linear-gradient(135deg, 
-    rgba(147, 51, 234, 0.12) 0%, 
-    rgba(236, 72, 153, 0.08) 50%,
-    rgba(219, 39, 119, 0.12) 100%
-  );
-  backdrop-filter: blur(25px) saturate(200%);
-  border-radius: 24px;
-  padding: 28px;
-  max-width: 480px;
-  width: 100%;
-  max-height: 75vh;
-  overflow-y: auto;
-  border: 1px solid rgba(236, 72, 153, 0.3);
-  box-shadow: 
-    0 20px 50px rgba(147, 51, 234, 0.25),
-    0 10px 25px rgba(236, 72, 153, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.note-modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.note-modal-header h4 {
-  color: rgba(255, 255, 255, 0.95);
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0;
-  text-shadow: 0 2px 8px rgba(147, 51, 234, 0.4);
-}
-
-.close-modal-btn {
-  background: rgba(236, 72, 153, 0.15);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(236, 72, 153, 0.3);
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 18px;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.2);
-}
-
-.close-modal-btn:hover {
-  background: rgba(236, 72, 153, 0.25);
-  transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(236, 72, 153, 0.3);
-}
-
-.note-form {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.note-title-input, .note-content-input {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(147, 51, 234, 0.2);
-  color: rgba(255, 255, 255, 0.95);
-  padding: 14px;
-  border-radius: 16px;
-  font-size: 14px;
-  font-family: inherit;
-  resize: vertical;
-  min-height: 100px;
-  transition: all 0.3s ease;
-}
-
-.note-title-input:focus, .note-content-input:focus {
-  outline: none;
-  border-color: rgba(236, 72, 153, 0.4);
-  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.15);
-}
-
-.note-colors {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.note-colors span {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.color-btn {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.color-btn.active {
-  border-color: rgba(236, 72, 153, 0.8);
-  transform: scale(1.1);
-  box-shadow: 0 0 8px rgba(236, 72, 153, 0.4);
-}
-
-.color-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 6px rgba(147, 51, 234, 0.3);
-}
-
-.note-modal-actions {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-}
-
-.cancel-btn, .save-btn, .delete-btn {
-  padding: 10px 16px;
-  border-radius: 16px;
-  border: none;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.cancel-btn {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.cancel-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateY(-1px);
-}
-
-.save-btn {
-  background: linear-gradient(135deg, 
-    rgba(147, 51, 234, 0.8) 0%, 
-    rgba(236, 72, 153, 0.8) 100%
-  );
-  backdrop-filter: blur(10px);
-  color: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(236, 72, 153, 0.3);
-}
-
-.save-btn:hover {
-  background: linear-gradient(135deg, 
-    rgba(147, 51, 234, 0.9) 0%, 
-    rgba(236, 72, 153, 0.9) 100%
-  );
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(236, 72, 153, 0.3);
-}
-
-.delete-btn {
-  background: rgba(219, 39, 119, 0.8);
-  backdrop-filter: blur(10px);
-  color: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(219, 39, 119, 0.3);
-}
-
-.delete-btn:hover {
-  background: rgba(219, 39, 119, 0.9);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(219, 39, 119, 0.3);
-}
-
-/* Controles de selección con tema morado/rosa */
-.selection-controls {
-  background: rgba(147, 51, 234, 0.08);
-  backdrop-filter: blur(15px);
-  border-radius: 14px;
-  padding: 10px 14px;
-  margin-bottom: 14px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid rgba(147, 51, 234, 0.2);
-  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.15);
-}
-
-.selection-count {
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 600;
-  font-size: 12px;
-  text-shadow: 0 1px 3px rgba(147, 51, 234, 0.3);
-}
-
-.delete-selected-btn {
-  background: rgba(219, 39, 119, 0.8);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(219, 39, 119, 0.9);
-  color: rgba(255, 255, 255, 0.95);
-  padding: 8px 12px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 11px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(219, 39, 119, 0.2);
-}
-
-.delete-selected-btn:hover {
-  background: rgba(219, 39, 119, 0.9);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(219, 39, 119, 0.3);
-}
-
-/* Lista de notas con tema morado/rosa */
+/* --- LISTA DE NOTAS --- */
 .notes-list {
   flex: 1;
   overflow-y: auto;
   max-height: 400px;
-  padding-right: 6px;
+  padding-right: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Espaciado uniforme */
+  /* Ocultar barra de scroll para estética limpia */
+  scrollbar-width: none;
 }
-
 .notes-list::-webkit-scrollbar {
-  width: 4px;
-}
-
-.notes-list::-webkit-scrollbar-track {
-  background: rgba(147, 51, 234, 0.1);
-  border-radius: 2px;
-}
-
-.notes-list::-webkit-scrollbar-thumb {
-  background: rgba(236, 72, 153, 0.3);
-  border-radius: 2px;
-}
-
-.notes-list::-webkit-scrollbar-thumb:hover {
-  background: rgba(236, 72, 153, 0.5);
+  display: none;
 }
 
 .empty-notes {
@@ -315,25 +75,25 @@
 
 .empty-notes p {
   margin: 8px 0;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   text-shadow: 0 1px 3px rgba(147, 51, 234, 0.3);
 }
 
+/* --- TARJETITAS DE NOTAS (Delicadas) --- */
 .note-item {
   background: rgba(147, 51, 234, 0.08);
   backdrop-filter: blur(15px);
   border: 1px solid rgba(147, 51, 234, 0.15);
-  border-radius: 16px;
-  padding: 12px;
-  margin-bottom: 8px;
+  border-radius: 12px;
+  padding: 10px 12px; /* Más compacto */
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
 }
 
 .note-item:hover {
-  background: rgba(147, 51, 234, 0.12);
+  background: rgba(147, 51, 234, 0.15);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(147, 51, 234, 0.15);
 }
@@ -341,127 +101,86 @@
 .note-item.selected {
   background: rgba(236, 72, 153, 0.15);
   border-color: rgba(236, 72, 153, 0.3);
-  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.2);
 }
 
 .note-item-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 8px;
+  align-items: center;
+  margin-bottom: 6px;
 }
 
 .note-color-indicator {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  margin-right: 6px;
+  margin-right: 8px;
   flex-shrink: 0;
   box-shadow: 0 0 6px rgba(236, 72, 153, 0.4);
 }
 
 .note-title {
   color: rgba(255, 255, 255, 0.95);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   margin: 0;
   flex: 1;
-  line-height: 1.3;
-  text-shadow: 0 1px 3px rgba(147, 51, 234, 0.3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Truncar título si es muy largo */
 }
 
 .note-actions {
   display: flex;
   gap: 6px;
-  flex-shrink: 0;
 }
 
 .note-action-btn {
-  background: rgba(236, 72, 153, 0.15);
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(236, 72, 153, 0.2);
-  width: 24px;
-  height: 24px;
-  border-radius: 8px;
+  background: transparent;
+  border: none;
+  font-size: 12px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.9);
+  opacity: 0.5;
+  transition: opacity 0.2s;
+  padding: 2px;
 }
 
-.note-action-btn:hover {
-  background: rgba(236, 72, 153, 0.25);
-  transform: scale(1.05);
-}
-
-.edit-btn:hover {
-  background: rgba(147, 51, 234, 0.3);
-  border-color: rgba(147, 51, 234, 0.4);
-}
-
-.copy-btn:hover {
-  background: rgba(236, 72, 153, 0.3);
-  border-color: rgba(236, 72, 153, 0.4);
+.note-item:hover .note-action-btn {
+  opacity: 1;
 }
 
 .note-preview {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .note-content {
   color: rgba(255, 255, 255, 0.85);
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.4;
   margin: 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.expand-btn {
-  background: none;
-  border: none;
-  color: rgba(236, 72, 153, 0.7);
-  cursor: pointer;
-  font-size: 11px;
-  padding: 3px 6px;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-}
-
-.expand-btn:hover {
-  background: rgba(236, 72, 153, 0.15);
-  color: rgba(255, 255, 255, 0.95);
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Máximo 2 líneas de texto */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .note-meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.6);
 }
 
-.note-date {
-  color: rgba(255, 255, 255, 0.8);
-  text-shadow: 0 1px 2px rgba(147, 51, 234, 0.2);
-}
-
-.note-modified {
-  color: rgba(236, 72, 153, 0.9);
-  font-style: italic;
-}
-
-/* Modal de confirmación con tema morado/rosa */
-.confirm-modal-overlay {
+/* --- MODAL CENTRADO Y ESTÉTICO --- */
+.note-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(30px) saturate(200%);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -469,73 +188,117 @@
   padding: 20px;
 }
 
-.confirm-modal {
+.note-modal {
   background: linear-gradient(135deg, 
     rgba(147, 51, 234, 0.15) 0%, 
     rgba(236, 72, 153, 0.1) 50%,
     rgba(219, 39, 119, 0.15) 100%
   );
   backdrop-filter: blur(25px) saturate(200%);
-  border-radius: 20px;
+  border-radius: 24px;
   padding: 24px;
-  max-width: 380px;
+  max-width: 400px; /* Más compacto */
   width: 100%;
   border: 1px solid rgba(236, 72, 153, 0.3);
-  box-shadow: 
-    0 20px 50px rgba(147, 51, 234, 0.25),
-    0 10px 25px rgba(236, 72, 153, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.confirm-modal h4 {
-  color: rgba(255, 255, 255, 0.95);
-  font-size: 16px;
-  font-weight: 600;
-  margin: 0 0 16px 0;
-  text-shadow: 0 2px 8px rgba(147, 51, 234, 0.4);
-}
-
-.confirm-modal p {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 13px;
-  line-height: 1.5;
-  margin: 0 0 16px 0;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-.confirm-actions {
+  box-shadow: 0 20px 50px rgba(147, 51, 234, 0.25);
   display: flex;
-  gap: 10px;
-  justify-content: flex-end;
+  flex-direction: column;
+  gap: 16px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .notes-repository {
-    padding: 12px;
-  }
-  
-  .note-modal {
-    margin: 20px;
-    max-width: calc(100% - 40px);
-  }
-  
-  .note-item-header {
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .note-actions {
-    align-self: flex-end;
-  }
-  
-  .selection-controls {
-    flex-direction: column;
-    gap: 8px;
-    align-items: stretch;
-  }
-  
-  .delete-selected-btn {
-    align-self: flex-end;
-  }
+.note-modal-header {
+  display: flex;
+  justify-content: center; /* Título centrado */
+  align-items: center;
+  position: relative;
+}
+
+.note-modal-header h4 {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 1.2rem;
+  font-family: serif;
+  font-weight: 600;
+  margin: 0;
+}
+
+.close-modal-btn {
+  position: absolute;
+  right: 0;
+  background: rgba(236, 72, 153, 0.1);
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.note-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.note-title-input, .note-content-input {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(147, 51, 234, 0.2);
+  color: #1f2937; /* Letra oscura para que se lea */
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  outline: none;
+}
+
+.note-title-input::placeholder, .note-content-input::placeholder {
+  color: rgba(75, 85, 99, 0.7); /* Placeholder visible */
+}
+
+.note-title-input:focus, .note-content-input:focus {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(236, 72, 153, 0.5);
+}
+
+.note-colors {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.note-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center; /* Botones centrados */
+  margin-top: 8px;
+}
+
+/* Botones con tus degradados */
+.cancel-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 8px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.save-btn {
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.8) 0%, rgba(236, 72, 153, 0.8) 100%);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* Ocultar elementos innecesarios */
+.selection-controls {
+  display: none; /* Simplificando UI por ahora */
 }

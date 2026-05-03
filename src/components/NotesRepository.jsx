@@ -4,12 +4,11 @@ import './NotesRepository.css'
 const NotesRepository = () => {
   const [notes, setNotes] = useState([])
   const [isAddingNote, setIsAddingNote] = useState(false)
-  const [newNote, setNewNote] = useState({ title: '', content: '', color: '#fbbf24' })
+  const [newNote, setNewNote] = useState({ title: '', content: '', color: '#fbf72486' })
   const [editingNote, setEditingNote] = useState(null)
   const [selectedNotes, setSelectedNotes] = useState(new Set())
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
-  // Cargar notas desde localStorage o Firebase
   useEffect(() => {
     const savedNotes = localStorage.getItem('neuralhop-notes')
     if (savedNotes) {
@@ -17,13 +16,11 @@ const NotesRepository = () => {
     }
   }, [])
 
-  // Guardar notas en localStorage
   const saveNotes = (updatedNotes) => {
     localStorage.setItem('neuralhop-notes', JSON.stringify(updatedNotes))
     setNotes(updatedNotes)
   }
 
-  // Agregar nueva nota
   const handleAddNote = () => {
     if (newNote.title.trim() || newNote.content.trim()) {
       const note = {
@@ -35,12 +32,11 @@ const NotesRepository = () => {
         updatedAt: new Date().toISOString()
       }
       saveNotes([...notes, note])
-      setNewNote({ title: '', content: '', color: '#fbbf24' })
+      setNewNote({ title: '', content: '', color: '#fbf72486' })
       setIsAddingNote(false)
     }
   }
 
-  // Editar nota
   const handleEditNote = () => {
     if (editingNote) {
       const updatedNotes = notes.map(note =>
@@ -53,7 +49,6 @@ const NotesRepository = () => {
     }
   }
 
-  // Eliminar notas seleccionadas
   const handleDeleteNotes = () => {
     const updatedNotes = notes.filter(note => !selectedNotes.has(note.id))
     saveNotes(updatedNotes)
@@ -61,13 +56,10 @@ const NotesRepository = () => {
     setShowDeleteConfirm(false)
   }
 
-  // Copiar texto al portapapeles
   const handleCopyNote = (content) => {
     navigator.clipboard.writeText(content)
-    // Podríamos agregar una notificación toast aquí
   }
 
-  // Toggle selección de nota
   const toggleNoteSelection = (noteId) => {
     const newSelected = new Set(selectedNotes)
     if (newSelected.has(noteId)) {
@@ -78,7 +70,6 @@ const NotesRepository = () => {
     setSelectedNotes(newSelected)
   }
 
-  // Formato de fecha
   const formatDate = (dateString) => {
     const date = new Date(dateString)
     return date.toLocaleDateString('es-ES', {
@@ -89,41 +80,106 @@ const NotesRepository = () => {
     })
   }
 
-  // Colores disponibles para notas
   const noteColors = [
-    '#fbbf24', // amarillo
-    '#60a5fa', // azul
-    '#a78bfa', // índigo
-    '#34d399', // verde
-    '#f56565', // rojo
-    '#f6ad55', // naranja
-    '#e5e7eb', // gris
+    '#fbf72486', // amarillo suave
+    '#dbeafe',   // azul pastel
+    '#ede9fe',   // índigo pastel
+    '#d1fae5',   // verde pastel
+    '#fee2e2',   // rojo pastel
+    '#ffedd5',   // naranja pastel
+    '#f3f4f6',   // gris claro
   ]
 
   return (
     <div className="notes-repository">
+      {/* Header estético y alineado */}
       <div className="notes-header">
-        <h3>📝 Notas Rápidas</h3>
+        <h3 className="notes-title">Notas Rápidas</h3>
         <button 
           className="add-note-btn"
           onClick={() => setIsAddingNote(true)}
         >
-          + Nueva Nota
+          +
         </button>
       </div>
 
-      {/* Modal para agregar/editar nota */}
+      {/* Controles de selección */}
+      {selectedNotes.size > 0 && (
+        <div className="selection-controls">
+          <span className="selection-count">
+            {selectedNotes.size} nota{selectedNotes.size > 1 ? 's' : ''} seleccionada{selectedNotes.size > 1 ? 's' : ''}
+          </span>
+          <button 
+            className="delete-selected-btn"
+            onClick={() => setShowDeleteConfirm(true)}
+          >
+            🗑️ Eliminar
+          </button>
+        </div>
+      )}
+
+      {/* Lista de notas */}
+      <div className="notes-list">
+        {notes.length === 0 ? (
+          <div className="empty-notes">
+            <p>📝 No tienes notas aún</p>
+            <p>Click en "+" para comenzar</p>
+          </div>
+        ) : (
+          notes.map(note => (
+            <div 
+              key={note.id}
+              className={`note-item ${selectedNotes.has(note.id) ? 'selected' : ''}`}
+              onClick={() => toggleNoteSelection(note.id)}
+              style={{ borderLeftColor: note.color }}
+            >
+              <div className="note-item-header">
+                <h4 className="note-item-title">{note.title}</h4>
+                <div className="note-actions">
+                  <button 
+                    className="note-action-btn"
+                    onClick={(e) => { e.stopPropagation(); setEditingNote(note); }}
+                  >
+                    ✏️
+                  </button>
+                  <button 
+                    className="note-action-btn"
+                    onClick={(e) => { e.stopPropagation(); handleCopyNote(note.content); }}
+                  >
+                    📋
+                  </button>
+                </div>
+              </div>
+              
+              <div className="note-preview">
+                <p className="note-content-text">
+                  {note.content.length > 80 
+                    ? `${note.content.substring(0, 80)}...` 
+                    : note.content
+                  }
+                </p>
+              </div>
+              
+              <div className="note-meta">
+                <span className="note-date">{formatDate(note.updatedAt)}</span>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Modal estético para agregar/editar nota */}
       {(isAddingNote || editingNote) && (
         <div className="note-modal-overlay">
           <div className="note-modal">
             <div className="note-modal-header">
-              <h4>{editingNote ? 'Editar Nota' : 'Nueva Nota'}</h4>
+              <h4 className="note-modal-title">{editingNote ? 'Editar Nota' : 'Nueva Nota'}</h4>
               <button 
                 className="close-modal-btn"
                 onClick={() => {
                   setIsAddingNote(false)
                   setEditingNote(null)
-                  setNewNote({ title: '', content: '', color: '#fbbf24' })
+                  setNewNote({ title: '', content: '', color: '#fbf72486' })
                 }}
               >
                 ×
@@ -170,20 +226,20 @@ const NotesRepository = () => {
               
               <div className="note-modal-actions">
                 <button 
-                  className="cancel-btn"
+                  className="note-cancel-btn"
                   onClick={() => {
                     setIsAddingNote(false)
                     setEditingNote(null)
-                    setNewNote({ title: '', content: '', color: '#fbbf24' })
+                    setNewNote({ title: '', content: '', color: '#fbf72486' })
                   }}
                 >
                   Cancelar
                 </button>
                 <button 
-                  className="save-btn"
+                  className="note-save-btn"
                   onClick={editingNote ? handleEditNote : handleAddNote}
                 >
-                  {editingNote ? 'Guardar Cambios' : 'Crear Nota'}
+                  {editingNote ? 'Guardar' : 'Agregar'}
                 </button>
               </div>
             </div>
@@ -191,112 +247,15 @@ const NotesRepository = () => {
         </div>
       )}
 
-      {/* Controles de selección */}
-      {selectedNotes.size > 0 && (
-        <div className="selection-controls">
-          <span className="selection-count">
-            {selectedNotes.size} nota{selectedNotes.size > 1 ? 's' : ''} seleccionada{selectedNotes.size > 1 ? 's' : ''}
-          </span>
-          <button 
-            className="delete-selected-btn"
-            onClick={() => setShowDeleteConfirm(true)}
-          >
-            🗑️ Eliminar Seleccionadas
-          </button>
-        </div>
-      )}
-
-      {/* Lista de notas con scroll */}
-      <div className="notes-list">
-        {notes.length === 0 ? (
-          <div className="empty-notes">
-            <p>📝 No tienes notas aún</p>
-            <p>Click en "+ Nueva Nota" para comenzar</p>
-          </div>
-        ) : (
-          notes.map(note => (
-            <div 
-              key={note.id}
-              className={`note-item ${selectedNotes.has(note.id) ? 'selected' : ''}`}
-              onClick={() => toggleNoteSelection(note.id)}
-            >
-              <div className="note-item-header">
-                <div className="note-color-indicator" style={{ backgroundColor: note.color }}></div>
-                <h4 className="note-title">{note.title}</h4>
-                <div className="note-actions">
-                  <button 
-                    className="note-action-btn edit-btn"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      setEditingNote(note)
-                    }}
-                    title="Editar nota"
-                  >
-                    ✏️
-                  </button>
-                  <button 
-                    className="note-action-btn copy-btn"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleCopyNote(note.content)
-                    }}
-                    title="Copiar texto"
-                  >
-                    📋
-                  </button>
-                </div>
-              </div>
-              
-              <div className="note-preview">
-                <p className="note-content">
-                  {note.content.length > 100 
-                    ? `${note.content.substring(0, 100)}...` 
-                    : note.content
-                  }
-                </p>
-                {note.content.length > 100 && (
-                  <button 
-                    className="expand-btn"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      // Aquí podríamos mostrar la nota completa en un modal
-                    }}
-                  >
-                    Ver más
-                  </button>
-                )}
-              </div>
-              
-              <div className="note-meta">
-                <span className="note-date">{formatDate(note.updatedAt)}</span>
-                {note.updatedAt !== note.createdAt && (
-                  <span className="note-modified">• Modificada</span>
-                )}
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-
       {/* Modal de confirmación de eliminación */}
       {showDeleteConfirm && (
-        <div className="confirm-modal-overlay">
-          <div className="confirm-modal">
-            <h4>¿Eliminar Notas?</h4>
-            <p>Se eliminarán {selectedNotes.size} nota{selectedNotes.size > 1 ? 's' : ''} permanentemente.</p>
-            <div className="confirm-actions">
-              <button 
-                className="cancel-btn"
-                onClick={() => setShowDeleteConfirm(false)}
-              >
-                Cancelar
-              </button>
-              <button 
-                className="delete-btn"
-                onClick={handleDeleteNotes}
-              >
-                Eliminar
-              </button>
+        <div className="note-modal-overlay">
+          <div className="note-modal confirm-modal">
+            <h4 className="note-modal-title">¿Eliminar notas?</h4>
+            <p className="confirm-text">Se eliminarán {selectedNotes.size} nota(s).</p>
+            <div className="note-modal-actions">
+              <button className="note-cancel-btn" onClick={() => setShowDeleteConfirm(false)}>Cancelar</button>
+              <button className="note-delete-btn" onClick={handleDeleteNotes}>Eliminar</button>
             </div>
           </div>
         </div>
