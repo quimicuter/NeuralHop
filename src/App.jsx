@@ -9,6 +9,7 @@ import WeatherWidget from './components/WeatherWidget'
 import ModuleDashboard from './components/ModuleDashboard'
 import GlobalAddModal from './components/GlobalAddModal'
 import DataScienceHub from './components/DataScienceHub'
+import NotesRepository from './components/NotesRepository'
 import './App.css'
 
 function App() {
@@ -142,13 +143,7 @@ function App() {
           
           {/* Notas (3x4) */}
           <div className="notes-card">
-            <div className="card-header">
-              <h3>Notas Rápidas</h3>
-              <button className="add-btn">+</button>
-            </div>
-            <div className="card-content">
-              <div className="notes-content"></div>
-            </div>
+            <NotesRepository />
           </div>
           
           {/* Rutina (3x4) */}

@@ -75,6 +75,15 @@ const defaultCategories = {
     subcats: ['Fitness', 'Mindfulness', 'Skincare', 'Haircare'],
     customFields: ['series', 'repeticiones', 'linkVideo', 'duracion'],
     dataRoot: 'bienestar'
+  },
+  notas: {
+    icon: "📝",
+    label: 'Notas',
+    color: '#fbbf24',
+    cover: 'https://images.unsplash.com/photo-1610477169453-5b7398412921?auto=format&fit=crop&w=600&q=80',
+    subcats: ['Rápidas', 'Ideas', 'Recordatorios'],
+    customFields: ['contenido', 'etiqueta', 'color'],
+    dataRoot: 'notas'
   }
 }
 
