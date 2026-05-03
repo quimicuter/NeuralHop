@@ -202,17 +202,28 @@ function App() {
           <div className="gallery-academic">
             <h3 className="gallery-title">Académico</h3>
             <div className="gallery-grid">
-              <Link to="/modulo/maestria" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
+              <button 
+                className="gallery-card notion-card" 
+                onClick={() => setIsDataScienceHubOpen(true)}
+                style={{backgroundImage: 'url(https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=60&fm=webp)'}}
+              >
                 <div className="notion-overlay">
                   <div className="notion-content">
-                    <span className="notion-title">Maestría</span>
+                    <span className="notion-title">📊 Data Science</span>
                   </div>
                 </div>
-              </Link>
+              </button>
               <Link to="/modulo/lab" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1532153975070-2e9ab71f1b14?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
                 <div className="notion-overlay">
                   <div className="notion-content">
                     <span className="notion-title">Lab</span>
+                  </div>
+                </div>
+              </Link>
+              <Link to="/modulo/maestria" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
+                <div className="notion-overlay">
+                  <div className="notion-content">
+                    <span className="notion-title">Maestría</span>
                   </div>
                 </div>
               </Link>
@@ -230,17 +241,6 @@ function App() {
                   </div>
                 </div>
               </Link>
-              <button 
-                className="gallery-card notion-card" 
-                onClick={() => setIsDataScienceHubOpen(true)}
-                style={{backgroundImage: 'url(https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=60&fm=webp)'}}
-              >
-                <div className="notion-overlay">
-                  <div className="notion-content">
-                    <span className="notion-title">📊 Data Science</span>
-                  </div>
-                </div>
-              </button>
             </div>
           </div>
         </div>
