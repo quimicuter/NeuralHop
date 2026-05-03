@@ -14,7 +14,7 @@ function App() {
   const [isModalOpen, setIsModalOpen] = React.useState(false)
   return (
     <AppProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/NeuralHop">
         <Routes>
           <Route path="/" element={
             <div className="app-container">
