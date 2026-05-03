@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import { HashRouter, Routes, Route, Link } from 'react-router-dom'
 import { AppProvider } from './context/AppContext'
 import ClockWidget from './components/ClockWidget'
 import NexusCalendar from './components/NexusCalendar'
@@ -8,13 +8,15 @@ import HabitsTracker from './components/HabitsTracker'
 import WeatherWidget from './components/WeatherWidget'
 import ModuleDashboard from './components/ModuleDashboard'
 import GlobalAddModal from './components/GlobalAddModal'
+import DataScienceHub from './components/DataScienceHub'
 import './App.css'
 
 function App() {
   const [isModalOpen, setIsModalOpen] = React.useState(false)
+  const [isDataScienceHubOpen, setIsDataScienceHubOpen] = React.useState(false)
   return (
     <AppProvider>
-      <BrowserRouter basename="/NeuralHop">
+      <HashRouter>
         <Routes>
           <Route path="/" element={
             <div className="app-container">
@@ -228,6 +230,17 @@ function App() {
                   </div>
                 </div>
               </Link>
+              <button 
+                className="gallery-card notion-card" 
+                onClick={() => setIsDataScienceHubOpen(true)}
+                style={{backgroundImage: 'url(https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=60&fm=webp)'}}
+              >
+                <div className="notion-overlay">
+                  <div className="notion-content">
+                    <span className="notion-title">📊 Data Science</span>
+                  </div>
+                </div>
+              </button>
             </div>
           </div>
         </div>
@@ -236,11 +249,14 @@ function App() {
               isOpen={isModalOpen} 
               onClose={() => setIsModalOpen(false)} 
             />
+            <DataScienceHub 
+              isOpen={isDataScienceHubOpen} 
+              onClose={() => setIsDataScienceHubOpen(false)} 
+            />
             </div>
           } />
-          <Route path="/modulo/:moduleId" element={<ModuleDashboard />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </AppProvider>
   )
 }

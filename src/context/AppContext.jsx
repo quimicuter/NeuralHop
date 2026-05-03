@@ -36,9 +36,18 @@ const defaultCategories = {
     label: 'Académico', 
     color: '#c8a2c8', 
     cover: 'https://images.unsplash.com/photo-1532153975070-2e9ab71f1b14?auto=format&fit=crop&w=600&q=80', 
-    subcats: ['Curso Análisis de Datos', 'Química', 'Maestría'], 
+    subcats: ['Curso Análisis de Datos', 'Química', 'Maestría', 'Ciencias de Datos'], 
     customFields: ['materia', 'profesor', 'grupo'],
     dataRoot: 'academic'
+  },
+  datascience: { 
+    icon: "📊", 
+    label: 'Ciencias de Datos', 
+    color: '#3b82f6', 
+    cover: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80', 
+    subcats: ['Clases', 'Tareas', 'Proyectos', 'Plataformas'], 
+    customFields: ['plataforma', 'profesor', 'deadline'],
+    dataRoot: 'datascience'
   },
   profesional: { 
     icon: "💼", 
