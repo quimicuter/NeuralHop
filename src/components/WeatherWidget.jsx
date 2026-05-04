@@ -1,9 +1,41 @@
 import React, { useState, useEffect } from 'react'
 
+// Mapeo de weather codes a emojis
+const getWeatherEmoji = (weathercode) => {
+  const weatherMap = {
+    0: '☀️', // Soleado
+    1: '☁️', // Mayormente nublado
+    2: '☁️', // Nublado
+    3: '☁️', // Nubosidad
+    45: '🌫️', // Niebla
+    48: '🌫️', // Niebla escarchada
+    51: '🌧️', // Llovizna ligera
+    53: '🌧️', // Llovizna
+    55: '🌧️', // Llovizna fuerte
+    56: '🌧️', // Llovizna muy fuerte
+    57: '🌧️', // Chubascos
+    61: '❄️', // Nieve ligera
+    63: '❄️', // Nieve
+    65: '❄️', // Nieve fuerte
+    66: '❄️', // Nieve muy fuerte
+    71: '🌤️', // Neblina
+    73: '🌤️', // Tormenta
+    75: '🌤️', // Tormenta fuerte
+    77: '🌤️', // Tormenta violenta
+    80: '🌦️', // Chubascos ligeros
+    81: '🌦️', // Chubascos
+    82: '🌦️', // Chubascos fuertes
+    85: '🌦️', // Llovizna helada
+    86: '🌦️', // Llovizna helada fuerte
+    95: '🌦️'  // Tormenta eléctrica
+  }
+  return weatherMap[weathercode] || '🌤️' // Por defecto tormenta
+}
+
 function WeatherWidget() {
   const [weather, setWeather] = useState({
     temp: null,
-    city: 'Guanajuato',
+    city: 'León, Gto.',
     description: '',
     icon: ''
   })
@@ -18,8 +50,12 @@ function WeatherWidget() {
           throw new Error('OpenWeather API key not found')
         }
 
+        // Coordenadas de León, Guanajuato
+        const lat = 21.1219
+        const lon = -101.6826
+
         const response = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?q=Guanajuato,MX&units=metric&appid=${apiKey}`
+          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&units=metric`
         )
         
         if (!response.ok) {
@@ -28,10 +64,10 @@ function WeatherWidget() {
 
         const data = await response.json()
         setWeather({
-          temp: Math.round(data.main.temp),
-          city: data.name,
-          description: data.weather[0].description,
-          icon: data.weather[0].icon
+          temp: Math.round(data.current_weather.temperature),
+          city: 'León, Gto.',
+          description: getWeatherDescription(data.current_weather.weathercode),
+          icon: null // Open-Meteo usa weathercode en lugar de icon
         })
       } catch (err) {
         setError(err.message)
@@ -69,10 +105,7 @@ function WeatherWidget() {
     <div className="weather-widget">
       <div className="weather-main">
         <div className="weather-icon">
-          {weather.icon && <img 
-            src={`https://openweathermap.org/img/wn/${weather.icon}@2x.png`}
-            alt={weather.description}
-          />}
+          <span className="weather-emoji">{getWeatherEmoji(weather.weathercode)}</span>
         </div>
         <div className="weather-info">
           <div className="weather-temp">{weather.temp}°C</div>
