@@ -5,7 +5,8 @@ function NexusGallery() {
   const { state } = useApp()
   const [activeModal, setActiveModal] = useState(null)
   
-  const categories = Object.entries(state.categories).map(([key, cat]) => ({
+  const entries = state.entries || []
+  const categories = Object.entries(state.categories || {}).map(([key, cat]) => ({
     id: key,
     ...cat
   }))
@@ -32,7 +33,7 @@ function NexusGallery() {
               <div className="gallery-icon">{category.icon}</div>
               <div className="gallery-label">{category.label}</div>
               <div className="gallery-count">
-                {state.tasks.filter(task => task.category === category.id).length}
+                {entries.filter(task => task.category === category.id).length}
               </div>
             </div>
           ))}
@@ -52,7 +53,7 @@ function NexusGallery() {
             </div>
             <div className="modal-body">
               <div className="category-tasks">
-                {state.tasks
+                {entries
                   .filter(task => task.category === activeModal.id)
                   .map(task => (
                     <div key={task.id} className="modal-task">

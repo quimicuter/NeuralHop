@@ -33,15 +33,16 @@ function NexusCalendar() {
 
   const getTasksForDay = (day) => {
     const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+    const entries = state.entries || []
     
     // Filtrar tareas (type: 'task' o sin type) con fecha
-    const tasks = state.tasks.filter(task => 
+    const tasks = entries.filter(task => 
       (task.type === 'task' || !task.type || task.type === undefined) && 
       task.date === dateStr
     )
     
     // Filtrar eventos (type: 'event') con fecha
-    const events = state.tasks.filter(task => 
+    const events = entries.filter(task => 
       task.type === 'event' && 
       task.date === dateStr
     )
