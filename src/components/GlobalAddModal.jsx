@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { useApp } from '../context/AppContext'
 import './GlobalAddModal.css'
 
-function GlobalAddModal({ isOpen, onClose }) {
+function GlobalAddModal({ isOpen, onClose, preselectedType = 'task' }) {
   const { actions } = useApp()
   const [formData, setFormData] = useState({
-    type: 'task',
+    type: preselectedType,
     title: '',
     category: 'personal',
     subcategory: '',
@@ -22,6 +22,11 @@ function GlobalAddModal({ isOpen, onClose }) {
     habitDays: [],
     notes: ''
   })
+
+  // Actualizar el tipo cuando cambia preselectedType
+  useEffect(() => {
+    setFormData(prev => ({ ...prev, type: preselectedType }))
+  }, [preselectedType])
 
   const typeOptions = [
     { value: 'task', label: 'Tarea', emoji: '📝' },

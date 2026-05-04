@@ -15,6 +15,12 @@ import './App.css'
 function App() {
   const [isModalOpen, setIsModalOpen] = React.useState(false)
   const [isDataScienceHubOpen, setIsDataScienceHubOpen] = React.useState(false)
+  const [modalPreselectedType, setModalPreselectedType] = React.useState('task')
+
+  const openModalWithType = (type) => {
+    setModalPreselectedType(type)
+    setIsModalOpen(true)
+  }
   return (
     <AppProvider>
       <HashRouter>
@@ -51,7 +57,7 @@ function App() {
               <h3>Mis Tareas</h3>
               <div className="task-buttons">
                 <button className="task-btn circular">⏰</button>
-                <button className="task-btn circular">+</button>
+                <button className="task-btn circular" onClick={() => openModalWithType('task')}>+</button>
               </div>
             </div>
             <div className="card-content">
@@ -63,7 +69,7 @@ function App() {
           <div className="events-card">
             <div className="card-header">
               <h3>Próximos Eventos</h3>
-              <button className="task-btn circular">+</button>
+              <button className="task-btn circular" onClick={() => openModalWithType('event')}>+</button>
             </div>
             <div className="card-content">
               <div className="empty-state">
@@ -152,7 +158,7 @@ function App() {
           <div className="routine-card">
             <div className="card-header">
               <h3>Hábitos Diarios</h3>
-              <button className="task-btn circular">+</button>
+              <button className="task-btn circular" onClick={() => openModalWithType('habit')}>+</button>
             </div>
             <div className="card-content">
               <HabitsTracker />
@@ -263,6 +269,7 @@ function App() {
             <GlobalAddModal 
               isOpen={isModalOpen} 
               onClose={() => setIsModalOpen(false)} 
+              preselectedType={modalPreselectedType}
             />
             <DataScienceHub 
               isOpen={isDataScienceHubOpen} 

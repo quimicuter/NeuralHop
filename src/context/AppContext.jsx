@@ -195,6 +195,14 @@ export function AppProvider({ children }) {
   const [state, dispatch] = useReducer(appReducer, initialState)
 
   const saveToMemory = async () => {
+    // Guardar en localStorage
+    try {
+      localStorage.setItem('neuralhop-state', JSON.stringify(state))
+    } catch (e) {
+      console.error('Error saving to localStorage:', e)
+    }
+    
+    // Guardar en Firebase si está disponible
     if (!db) return
     try {
       await setDoc(doc(db, "usuarios", "datos_planner"), state)
@@ -204,12 +212,27 @@ export function AppProvider({ children }) {
   }
 
   const loadFromMemory = async () => {
+    // Cargar desde localStorage primero
+    try {
+      const savedState = localStorage.getItem('neuralhop-state')
+      if (savedState) {
+        const data = JSON.parse(savedState)
+        dispatch({ type: 'SET_STATE', payload: data })
+        return // Si encontramos datos en localStorage, no necesitamos Firebase
+      }
+    } catch (e) {
+      console.error('Error loading from localStorage:', e)
+    }
+    
+    // Si no hay datos en localStorage, intentar con Firebase
     if (!db) return
     try {
       const docSnap = await getDoc(doc(db, "usuarios", "datos_planner"))
       if (docSnap.exists()) {
         const data = docSnap.data()
         dispatch({ type: 'SET_STATE', payload: data })
+        // Guardar en localStorage para futuras cargas
+        localStorage.setItem('neuralhop-state', JSON.stringify(data))
       }
     } catch (e) {
       console.error('Error loading from Firebase:', e)
