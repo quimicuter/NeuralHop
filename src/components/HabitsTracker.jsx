@@ -6,9 +6,9 @@ function HabitsTracker() {
   const [habits, setHabits] = useState([])
 
   useEffect(() => {
-    // Filtrar hábitos del contexto
+    // Filtrado estricto: solo hábitos y rutinas
     const realHabits = state.habits.filter(habit => 
-      habit.type === 'habit'
+      habit.type === 'Hábito' || habit.type === 'Rutina'
     )
     setHabits(realHabits)
   }, [state.habits])

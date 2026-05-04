@@ -51,46 +51,10 @@ const defaultCategories = {
   }
 }
 
-const defaultTasks = [
-  // Personal Tasks
-  { id: 1, type: 'task', title: 'Rutina Pilates Completa', category: 'personal', subcategory: 'Fitness', date: '', priority: 'high', status: 'todo', tags: ['pilates', 'ejercicio'], series: '3', repeticiones: '15', linkVideo: 'https://youtube.com/watch?v=pilates', duracion: '45 min', notes: 'Enfocado en core y flexibilidad' },
-  { id: 2, type: 'task', title: 'Meditación Guiada', category: 'personal', subcategory: 'Mindfulness', date: '', priority: 'medium', status: 'todo', tags: ['meditacion', 'relajacion'], series: '1', repeticiones: '1', linkVideo: 'https://youtube.com/watch?v=meditacion', duracion: '20 min', notes: 'Meditación para reducir estrés' },
-  { id: 3, type: 'task', title: 'Rutina Facial Completa', category: 'personal', subcategory: 'Skincare', date: '', priority: 'medium', status: 'todo', tags: ['skincare', 'rostro'], series: '1', repeticiones: '1', linkVideo: '', duracion: '30 min', notes: 'Limpieza, exfoliación e hidratación' },
-  { id: 4, type: 'task', title: 'Masaje Capilar con Aceites', category: 'personal', subcategory: 'Haircare', date: '', priority: 'low', status: 'todo', tags: ['haircare', 'natural'], series: '1', repeticiones: '1', linkVideo: '', duracion: '15 min', notes: 'Con aceite de coco y romero' },
-  { id: 5, type: 'task', title: 'Café con Amigas', category: 'personal', subcategory: 'Vida Social', date: '', priority: 'medium', status: 'todo', tags: ['social', 'amigos'], notes: 'Planificar encuentro semanal' },
-  
-  // Académico Tasks
-  { id: 101, type: 'task', title: 'Proyecto Data Science', category: 'academico', subcategory: 'Data Science', date: '', priority: 'high', status: 'todo', tags: ['proyecto', 'datos'], plataforma: 'GitHub', profesor: 'Dr. Smith', grupo: 'Grupo A', notes: 'Análisis de dataset de ventas' },
-  { id: 102, type: 'task', title: 'Investigación Química', category: 'academico', subcategory: 'Investigación', date: '', priority: 'high', status: 'todo', tags: ['investigacion', 'quimica'], materia: 'Química Avanzada', profesor: 'Dra. Johnson', grupo: 'Laboratorio 1', notes: 'Experimento con catalizadores' },
-  { id: 103, type: 'task', title: 'Tesis Maestría', category: 'academico', subcategory: 'Maestría', date: '', priority: 'high', status: 'todo', tags: ['tesis', 'maestria'], materia: 'Metodología', profesor: 'Dr. Martinez', grupo: 'Grupo B', notes: 'Capítulo 3: Metodología' },
-  { id: 104, type: 'task', title: 'Reporte Laboratorio', category: 'academico', subcategory: 'Laboratorio', date: '', priority: 'medium', status: 'todo', tags: ['laboratorio', 'reporte'], materia: 'Lab Química', profesor: 'Mtra. Garcia', grupo: 'Grupo A', notes: 'Práctica 5: Cinética' },
-  
-  // Global Tasks
-  { id: 201, type: 'task', title: 'Actualizar Grimorio', category: 'global', subcategory: 'Grimorio', date: '', priority: 'medium', status: 'todo', tags: ['grimorio', 'actualizacion'], notes: 'Añadir nuevos hechizos y rituales' },
-  { id: 202, type: 'event', title: 'Reunión Semanal', category: 'global', subcategory: 'Agenda', date: '2026-04-10', priority: 'high', status: 'todo', tags: ['reunion', 'semanal'], notes: 'Revisión de objetivos semanales' },
-  { id: 203, type: 'task', title: 'Compras Semana', category: 'global', subcategory: 'ShopList', date: '', priority: 'medium', status: 'todo', tags: ['compras', 'semana'], notes: 'Supermercado y artículos personales' }
-]
-
-const defaultHabits = [
-  {id: 1, title: 'Masaje cuero cabelludo', group: 'Haircare', category: 'Bodycare', freq: 'personalizado', customDays: [1,3,5], recurrenceStart: '', lastDone: '', streak: 0},
-  {id: 2, title: 'Despunte', group: 'Haircare', category: 'Bodycare', freq: 'monthly', monthlyDay: 15, recurrenceStart: '', lastDone: '', streak: 0},
-  {id: 3, title: 'Repolarización capilar', group: 'Haircare', category: 'Bodycare', freq: 'monthly', monthlyDay: 1, recurrenceStart: '', lastDone: '', streak: 0},
-  {id: 4, title: 'Exfoliación (cuerpo completo)', group: 'Skincare', category: 'Bodycare', freq: 'weekly', weeklyDay: 6, recurrenceStart: '', lastDone: '', streak: 0},
-  {id: 5, title: 'Cara (mañana)', group: 'Skincare', category: 'Bodycare', freq: 'daily', recurrenceStart: '', lastDone: '', streak: 0},
-  {id: 6, title: 'Cara (noche)', group: 'Skincare', category: 'Bodycare', freq: 'daily', recurrenceStart: '', lastDone: '', streak: 0},
-  {id: 7, title: 'Wake up', group: 'Estiramientos', category: 'Fitness', freq: 'daily', recurrenceStart: '', lastDone: '', streak: 0},
-  {id: 8, title: 'Prepare to rest', group: 'Estiramientos', category: 'Fitness', freq: 'daily', recurrenceStart: '', lastDone: '', streak: 0},
-  {id: 9, title: 'Rutina Pilates', group: 'Pilates', category: 'Fitness', freq: 'personalizado', customDays: [1,3,5], link: 'https://youtube.com', recurrenceStart: '', lastDone: '', streak: 0},
-  {id: 10, title: 'Gym', group: 'Gym', category: 'Fitness', freq: 'personalizado', customDays: [2,4,6], recurrenceStart: '', lastDone: '', streak: 0},
-  {id: 11, title: 'Meditación', group: 'Mindfulness', category: 'Mind', freq: 'daily', recurrenceStart: '', lastDone: '', streak: 0},
-  {id: 12, title: 'Say ILY to someone', group: 'Salud Emocional', category: 'Mind', freq: 'weekly', weeklyDay: 0, recurrenceStart: '', lastDone: '', streak: 0},
-  {id: 13, title: 'Carta del mes', group: 'Salud Emocional', category: 'Mind', freq: 'monthly', monthlyDay: 1, recurrenceStart: '', lastDone: '', streak: 0}
-]
-
 const initialState = {
   categories: defaultCategories,
-  tasks: defaultTasks,
-  habits: defaultHabits,
+  tasks: [],
+  habits: [],
   pageData: {},
   dashboard: { links: [], biblioteca: [], bgImage: '' },
   quickNotesList: [],

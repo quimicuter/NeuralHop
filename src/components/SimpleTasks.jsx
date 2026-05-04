@@ -8,9 +8,9 @@ function SimpleTasks() {
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false)
 
   useEffect(() => {
-    // Filtrar tareas del contexto (type: 'task' o sin type específico) y no completadas
+    // Filtrado estricto: solo tareas reales y no completadas
     const realTasks = state.tasks.filter(task => 
-      (task.type === 'task' || !task.type || task.type === undefined) && 
+      task.type === 'Tarea' && 
       !task.completed
     )
     setTasks(realTasks)
