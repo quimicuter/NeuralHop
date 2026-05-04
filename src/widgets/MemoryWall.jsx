@@ -13,14 +13,14 @@ function MemoryWall({ entries, onItemClick }) {
   const [activeCity, setActiveCity] = useState('all')
 
   // Filtrar entries con photoUrl
-  const entriesWithPhotos = entries.filter(entry => 
+  const entriesWithPhotos = (entries || []).filter(entry => 
     entry.metadata?.photoUrl || entry.metadata?.imageUrl
   )
 
   // Filtrar por ciudad
   const filteredEntries = activeCity === 'all'
     ? entriesWithPhotos
-    : entriesWithPhotos.filter(entry => 
+    : (entriesWithPhotos || []).filter(entry => 
         entry.metadata?.location?.toLowerCase().includes(activeCity) ||
         entry.metadata?.city?.toLowerCase() === activeCity
       )

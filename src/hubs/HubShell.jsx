@@ -123,25 +123,25 @@ function HubShell() {
   }
 
   // Filtrar entries de este módulo
-  const moduleEntries = getEntries ? getEntries({ scope, module: moduleId }) : []
-  const moduleTasks = moduleEntries.filter(e => e.type === 'task' && !e.completed)
-  const moduleHabits = moduleEntries.filter(e => e.type === 'habit')
-  const moduleEvents = moduleEntries.filter(e => e.type === 'event' && !e.completed)
-  const moduleJournal = moduleEntries.filter(e => e.type === 'journal')
-  const moduleWishlist = moduleEntries.filter(e => e.type === 'wishlist' || e.metadata?.isWishlist)
-  const moduleVideos = moduleEntries.filter(e => e.type === 'video' || e.metadata?.youtubeId)
-  const moduleProducts = moduleEntries.filter(e => e.type === 'product' || e.metadata?.category)
-  const moduleCycles = moduleEntries.filter(e => e.metadata?.cycleId)
-  const moduleContacts = moduleEntries.filter(e => e.metadata?.contactId || e.metadata?.lastContactDate)
-  const modulePapers = moduleEntries.filter(e => e.type === 'paper' || e.metadata?.paperType)
-  const moduleResearchContacts = moduleEntries.filter(e => e.type === 'research-contact' || e.metadata?.contactType === 'research')
-  const moduleApplications = moduleEntries.filter(e => e.type === 'application' || e.metadata?.applicationType)
-  const moduleTitulacion = moduleEntries.filter(e => e.type === 'titulacion' || e.metadata?.requirementId)
-  const moduleExperiments = moduleEntries.filter(e => e.metadata?.subject)
-  const moduleInventory = moduleEntries.filter(e => e.type === 'inventory' || e.metadata?.inventoryType)
-  const moduleLanguage = moduleEntries.filter(e => e.metadata?.language || e.type === 'vocabulary')
-  const moduleFlashcards = moduleEntries.filter(e => e.type === 'flashcard' || e.metadata?.flashcardData)
-  const moduleCourses = moduleEntries.filter(e => e.type === 'course-module' || e.metadata?.courseId)
+  const moduleEntries = (getEntries && getEntries({ scope, module: moduleId })) || []
+  const moduleTasks = (moduleEntries || []).filter(e => e.type === 'task' && !e.completed)
+  const moduleHabits = (moduleEntries || []).filter(e => e.type === 'habit')
+  const moduleEvents = (moduleEntries || []).filter(e => e.type === 'event' && !e.completed)
+  const moduleJournal = (moduleEntries || []).filter(e => e.type === 'journal')
+  const moduleWishlist = (moduleEntries || []).filter(e => e.type === 'wishlist' || e.metadata?.isWishlist)
+  const moduleVideos = (moduleEntries || []).filter(e => e.type === 'video' || e.metadata?.youtubeId)
+  const moduleProducts = (moduleEntries || []).filter(e => e.type === 'product' || e.metadata?.category)
+  const moduleCycles = (moduleEntries || []).filter(e => e.metadata?.cycleId)
+  const moduleContacts = (moduleEntries || []).filter(e => e.metadata?.contactId || e.metadata?.lastContactDate)
+  const modulePapers = (moduleEntries || []).filter(e => e.type === 'paper' || e.metadata?.paperType)
+  const moduleResearchContacts = (moduleEntries || []).filter(e => e.type === 'research-contact' || e.metadata?.contactType === 'research')
+  const moduleApplications = (moduleEntries || []).filter(e => e.type === 'application' || e.metadata?.applicationType)
+  const moduleTitulacion = (moduleEntries || []).filter(e => e.type === 'titulacion' || e.metadata?.requirementId)
+  const moduleExperiments = (moduleEntries || []).filter(e => e.metadata?.subject)
+  const moduleInventory = (moduleEntries || []).filter(e => e.type === 'inventory' || e.metadata?.inventoryType)
+  const moduleLanguage = (moduleEntries || []).filter(e => e.metadata?.language || e.type === 'vocabulary')
+  const moduleFlashcards = (moduleEntries || []).filter(e => e.type === 'flashcard' || e.metadata?.flashcardData)
+  const moduleCourses = (moduleEntries || []).filter(e => e.type === 'course-module' || e.metadata?.courseId)
 
   // ═══════════════════════════════════════════════════════
   // ║  RENDERIZADO DE WIDGETS ESPECIALIZADOS              ║

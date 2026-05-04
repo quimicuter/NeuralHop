@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext'
 function SimpleEvents() {
   const { state, actions, getEvents } = useApp()
 
-  const events = getEvents ? getEvents() : []
+  const events = (getEvents && getEvents()) || []
 
   const handleEventToggle = (eventId) => {
     actions.updateEntry(eventId, {
@@ -82,7 +82,7 @@ function SimpleEvents() {
   }
 
   // Mostrar solo eventos no completados
-  const visibleEvents = events.filter(event => 
+  const visibleEvents = (events || []).filter(event => 
     !event.completed && event.status !== 'completed'
   ).slice(0, 4) // Limitar a 4 eventos para el dashboard
 
