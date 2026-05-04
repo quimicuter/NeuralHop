@@ -248,43 +248,35 @@ export function AppProvider({ children }) {
     
     addHabit: (habit) => {
       dispatch({ type: 'ADD_HABIT', payload: habit })
-      saveToMemory()
     },
     
     updateHabit: (habit) => {
       dispatch({ type: 'UPDATE_HABIT', payload: habit })
-      saveToMemory()
     },
     
     deleteHabit: (habitId) => {
       dispatch({ type: 'DELETE_HABIT', payload: habitId })
-      saveToMemory()
     },
     
     // Acciones para notas
     setNotes: (notes) => {
       dispatch({ type: 'SET_NOTES', payload: notes })
-      saveToMemory()
     },
     
     addNote: (note) => {
       dispatch({ type: 'ADD_NOTE', payload: note })
-      saveToMemory()
     },
     
     updateNote: (note) => {
       dispatch({ type: 'UPDATE_NOTE', payload: note })
-      saveToMemory()
     },
     
     deleteNote: (noteId) => {
       dispatch({ type: 'DELETE_NOTE', payload: noteId })
-      saveToMemory()
     },
     
     deleteNotes: (noteIds) => {
       dispatch({ type: 'DELETE_NOTES', payload: noteIds })
-      saveToMemory()
     },
     
     setMonthOffset: (offset) => {
