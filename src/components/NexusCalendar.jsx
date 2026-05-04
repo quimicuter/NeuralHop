@@ -115,6 +115,9 @@ function NexusCalendar() {
 
   return (
     <div className="nexus-calendar">
+      <div className="card-header">
+        <h3>Agenda</h3>
+      </div>
       <div className="month-header">
         <button className="widget-action-btn" onClick={prevMonth}>❮</button>
         <span className="month-label">{getMonthName(currentDate)}</span>

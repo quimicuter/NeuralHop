@@ -179,7 +179,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -189,18 +189,14 @@
 }
 
 .note-modal {
-  background: linear-gradient(135deg, 
-    rgba(147, 51, 234, 0.15) 0%, 
-    rgba(236, 72, 153, 0.1) 50%,
-    rgba(219, 39, 119, 0.15) 100%
-  );
-  backdrop-filter: blur(25px) saturate(200%);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(25px);
   border-radius: 24px;
   padding: 24px;
-  max-width: 400px; /* Más compacto */
+  max-width: 400px;
   width: 100%;
-  border: 1px solid rgba(236, 72, 153, 0.3);
-  box-shadow: 0 20px 50px rgba(147, 51, 234, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -214,9 +210,9 @@
 }
 
 .note-modal-header h4 {
-  color: rgba(255, 255, 255, 0.95);
+  color: #374151;
   font-size: 1.2rem;
-  font-family: serif;
+  font-family: 'Playfair Display', serif;
   font-weight: 600;
   margin: 0;
 }
@@ -224,9 +220,9 @@
 .close-modal-btn {
   position: absolute;
   right: 0;
-  background: rgba(236, 72, 153, 0.1);
+  background: rgba(200, 162, 161, 0.2);
   border: none;
-  color: rgba(255, 255, 255, 0.8);
+  color: #374151;
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -243,10 +239,10 @@
 }
 
 .note-title-input, .note-content-input {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(147, 51, 234, 0.2);
-  color: #1f2937; /* Letra oscura para que se lea */
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: none;
+  border: 1px solid rgba(200, 162, 161, 0.4);
+  color: #1f2937;
   padding: 12px 16px;
   border-radius: 12px;
   font-size: 13px;
@@ -254,12 +250,12 @@
 }
 
 .note-title-input::placeholder, .note-content-input::placeholder {
-  color: rgba(75, 85, 99, 0.7); /* Placeholder visible */
+  color: #6b7280;
 }
 
 .note-title-input:focus, .note-content-input:focus {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(236, 72, 153, 0.5);
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(200, 162, 161, 0.6);
 }
 
 .note-colors {
@@ -270,6 +266,33 @@
   margin-top: 4px;
 }
 
+.note-colors span {
+  color: #374151;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Reparación CRÍTICA de botones de color */
+.color-btn {
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50% !important;
+  display: inline-block !important;
+  border: 2px solid rgba(0, 0, 0, 0.05);
+  padding: 0 !important;
+  appearance: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.color-btn:hover {
+  transform: scale(1.1);
+}
+
+.color-btn.active {
+  box-shadow: 0 0 0 2px #374151;
+}
+
 .note-modal-actions {
   display: flex;
   gap: 12px;
@@ -277,25 +300,36 @@
   margin-top: 8px;
 }
 
-/* Botones con tus degradados */
-.cancel-btn {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: rgba(255, 255, 255, 0.9);
+/* Botones con estilo claro */
+.note-cancel-btn, .cancel-btn {
+  background: rgba(200, 162, 161, 0.2);
+  border: 1px solid rgba(200, 162, 161, 0.3);
+  color: #374151;
   padding: 8px 20px;
   border-radius: 12px;
   cursor: pointer;
   font-size: 13px;
+  transition: all 0.2s ease;
 }
 
-.save-btn {
-  background: linear-gradient(135deg, rgba(147, 51, 234, 0.8) 0%, rgba(236, 72, 153, 0.8) 100%);
+.note-cancel-btn:hover, .cancel-btn:hover {
+  background: rgba(200, 162, 161, 0.3);
+}
+
+.note-save-btn, .save-btn {
+  background: linear-gradient(135deg, #C8A2A1 0%, #DAC0C1 100%);
   color: white;
   border: none;
   padding: 8px 20px;
   border-radius: 12px;
   cursor: pointer;
   font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.note-save-btn:hover, .save-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(200, 162, 161, 0.4);
 }
 
 /* Ocultar elementos innecesarios */

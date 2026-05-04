@@ -74,7 +74,9 @@ function App() {
           
           {/* Menú Semanal (4x4) */}
           <div className="weekly-menu-card">
-            <h3 className="menu-title">Menú Semanal</h3>
+            <div className="card-header">
+              <h3>Menú Semanal</h3>
+            </div>
             <div className="menu-grid-6x4">
               {/* Fila 1 - Cabecera */}
               <div className="menu-cell empty-header"></div>
@@ -160,7 +162,9 @@ function App() {
           {/* BLOQUE DERECHO (Columnas 11-12) */}
           {/* Galería Personal (2x6) */}
           <div className="gallery-personal">
-            <h3 className="gallery-title">Personal</h3>
+            <div className="card-header">
+              <h3>Personal</h3>
+            </div>
             <div className="gallery-grid">
               <Link to="/modulo/self-care" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
                 <div className="notion-overlay">
@@ -195,7 +199,9 @@ function App() {
           
           {/* Galería Académico (2x6) */}
           <div className="gallery-academic">
-            <h3 className="gallery-title">Académico</h3>
+            <div className="card-header">
+              <h3>Académico</h3>
+            </div>
             <div className="gallery-grid">
               <button 
                 className="gallery-card notion-card" 
