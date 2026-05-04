@@ -10,7 +10,7 @@ function SimpleTasks() {
   useEffect(() => {
     // Filtrado estricto: solo tareas reales y no completadas
     const realTasks = state.tasks.filter(task => 
-      task.type === 'Tarea' && 
+      task.type === 'task' && 
       !task.completed
     )
     setTasks(realTasks)

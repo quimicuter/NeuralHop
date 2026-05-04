@@ -4,6 +4,7 @@ import { AppProvider } from './context/AppContext'
 import ClockWidget from './components/ClockWidget'
 import NexusCalendar from './components/NexusCalendar'
 import SimpleTasks from './components/SimpleTasks'
+import SimpleEvents from './components/SimpleEvents'
 import HabitsTracker from './components/HabitsTracker'
 import WeatherWidget from './components/WeatherWidget'
 import ModuleDashboard from './components/ModuleDashboard'
@@ -11,17 +12,32 @@ import GlobalAddModal from './components/GlobalAddModal'
 import DataScienceHub from './components/DataScienceHub'
 import NotesRepository from './components/NotesRepository'
 import TaskHistoryModal from './components/TaskHistoryModal'
+import RecipeModal from './components/RecipeModal'
 import './App.css'
 
 function App() {
   const [isModalOpen, setIsModalOpen] = React.useState(false)
   const [isDataScienceHubOpen, setIsDataScienceHubOpen] = React.useState(false)
   const [isTaskHistoryOpen, setIsTaskHistoryOpen] = React.useState(false)
+  const [isRecipeModalOpen, setIsRecipeModalOpen] = React.useState(false)
+  const [selectedRecipeDay, setSelectedRecipeDay] = React.useState('')
+  const [selectedRecipeMealType, setSelectedRecipeMealType] = React.useState('')
   const [modalPreselectedType, setModalPreselectedType] = React.useState('task')
 
   const openModalWithType = (type) => {
     setModalPreselectedType(type)
     setIsModalOpen(true)
+  }
+
+  const openRecipeModal = (day, mealType) => {
+    setSelectedRecipeDay(day)
+    setSelectedRecipeMealType(mealType)
+    setIsRecipeModalOpen(true)
+  }
+
+  const handleSelectRecipe = (day, mealType, recipe) => {
+    console.log(`Receta seleccionada: ${recipe.name} para ${day} - ${mealType}`)
+    // Aquí se puede guardar en el estado o Firebase
   }
   return (
     <AppProvider>
@@ -74,9 +90,7 @@ function App() {
               <button className="task-btn circular" onClick={() => openModalWithType('event')}>+</button>
             </div>
             <div className="card-content">
-              <div className="empty-state">
-                <span>No hay eventos próximos. ✨</span>
-              </div>
+              <SimpleEvents />
             </div>
           </div>
           
@@ -108,7 +122,7 @@ function App() {
                     <div 
                       key={`${day}-${mealType.key}`}
                       className={`menu-cell meal-cell ${mealType.key === 'comida' ? 'has-meal' : 'empty-meal'}`}
-                      onClick={() => console.log(`Abriendo modal para seleccionar receta de Recetario para [${day}] - [${mealType.key}]`)}
+                      onClick={() => openRecipeModal(day, mealType.key)}
                     >
                       {mealType.key === 'comida' ? (
                         <span className="check-icon">✓</span>
@@ -266,6 +280,13 @@ function App() {
             <TaskHistoryModal 
               isOpen={isTaskHistoryOpen} 
               onClose={() => setIsTaskHistoryOpen(false)} 
+            />
+            <RecipeModal 
+              isOpen={isRecipeModalOpen}
+              onClose={() => setIsRecipeModalOpen(false)}
+              selectedDay={selectedRecipeDay}
+              selectedMealType={selectedRecipeMealType}
+              onSelectRecipe={handleSelectRecipe}
             />
             </div>
           } />

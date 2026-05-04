@@ -179,6 +179,24 @@ export function AppProvider({ children }) {
     return () => unsubscribe()
   }, [])
 
+  // Suscripción a hábitos en tiempo real desde Firebase
+  useEffect(() => {
+    if (!db) return
+
+    const habitsQuery = query(collection(db, "habits"))
+    const unsubscribe = onSnapshot(habitsQuery, (snapshot) => {
+      const habits = []
+      snapshot.forEach((doc) => {
+        habits.push({ id: doc.id, ...doc.data() })
+      })
+      dispatch({ type: 'SET_HABITS', payload: habits })
+    }, (error) => {
+      console.error('Error listening to habits:', error)
+    })
+
+    return () => unsubscribe()
+  }, [])
+
   const actions = {
     addTask: async (task) => {
       if (!db) return
@@ -210,16 +228,34 @@ export function AppProvider({ children }) {
       }
     },
     
-    addHabit: (habit) => {
-      dispatch({ type: 'ADD_HABIT', payload: habit })
+    addHabit: async (habit) => {
+      if (!db) return
+      try {
+        const habitRef = doc(collection(db, "habits"))
+        await setDoc(habitRef, { ...habit, completed: false, createdAt: new Date() })
+      } catch (e) {
+        console.error('Error adding habit to Firebase:', e)
+      }
     },
     
-    updateHabit: (habit) => {
-      dispatch({ type: 'UPDATE_HABIT', payload: habit })
+    updateHabit: async (habit) => {
+      if (!db) return
+      try {
+        const habitRef = doc(db, "habits", habit.id)
+        await updateDoc(habitRef, habit)
+      } catch (e) {
+        console.error('Error updating habit in Firebase:', e)
+      }
     },
     
-    deleteHabit: (habitId) => {
-      dispatch({ type: 'DELETE_HABIT', payload: habitId })
+    deleteHabit: async (habitId) => {
+      if (!db) return
+      try {
+        const habitRef = doc(db, "habits", habitId)
+        await deleteDoc(habitRef)
+      } catch (e) {
+        console.error('Error deleting habit from Firebase:', e)
+      }
     },
     
     // Acciones para notas

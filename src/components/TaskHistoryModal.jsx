@@ -23,7 +23,7 @@ function TaskHistoryModal({ isOpen, onClose }) {
       snapshot.forEach((doc) => {
         const taskData = { id: doc.id, ...doc.data() }
         // Filtrado estricto: solo tareas reales
-        if (taskData.type === 'Tarea') {
+        if (taskData.type === 'task') {
           tasks.push(taskData)
         }
       })
