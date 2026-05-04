@@ -43,12 +43,13 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = 'task' }) {
   const personalModules = [
     { value: 'self-care', label: 'Self Care', emoji: '🛀' },
     { value: 'mindfulness', label: 'Mindfulness', emoji: '🧘‍♀️' },
-    { value: 'recetario', label: 'Recetario', emoji: '🍳' },
-    { value: 'hobbies', label: 'Hobbies', emoji: '🎨' }
+    { value: 'vida-social', label: 'Vida Social', emoji: '🥂' },
+    { value: 'fitness', label: 'Fitness', emoji: '💪' }
   ]
 
   const academicModules = [
     { value: 'maestria', label: 'Maestría', emoji: '🎓' },
+    { value: 'data-science', label: 'Data Science', emoji: '📊' },
     { value: 'lab', label: 'Lab', emoji: '🧪' },
     { value: 'idiomas', label: 'Idiomas', emoji: '🗣️' },
     { value: 'investigacion', label: 'Investigación', emoji: '🔬' }

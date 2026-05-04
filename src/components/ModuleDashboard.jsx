@@ -3,14 +3,15 @@ import { Link, useParams } from 'react-router-dom'
 import './ModuleDashboard.css'
 
 const moduleTitles = {
-  'self-care': 'Self Care',
-  'mindfulness': 'Mindfulness', 
-  'recetario': 'Recetario',
-  'hobbies': 'Hobbies',
-  'maestria': 'Maestría',
-  'lab': 'Lab',
-  'idiomas': 'Idiomas',
-  'investigacion': 'Investigación'
+  'self-care': '🛀 Self Care',
+  'mindfulness': '🧘‍♀️ Mindfulness', 
+  'vida-social': '🥂 Vida Social',
+  'fitness': '💪 Fitness',
+  'maestria': '🎓 Maestría',
+  'data-science': '📊 Data Science',
+  'lab': '🧪 Lab',
+  'idiomas': '🗣️ Idiomas',
+  'investigacion': '🔬 Investigación'
 }
 
 function ModuleDashboard() {

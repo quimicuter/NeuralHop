@@ -172,49 +172,35 @@ function App() {
               <h3>Personal</h3>
             </div>
             <div className="gallery-grid">
-              <Link to="/modulo/selfcare" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
+              <Link to="/modulo/self-care" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
                 <div className="notion-overlay">
                   <div className="notion-content">
-                    <span className="notion-title">Selfcare</span>
+                    <span className="notion-title">🛀 Self Care</span>
                   </div>
                 </div>
               </Link>
               <Link to="/modulo/mindfulness" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1508672019048-805c876b67e2?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
                 <div className="notion-overlay">
                   <div className="notion-content">
-                    <span className="notion-title">Mindfulness</span>
+                    <span className="notion-title">🧘‍♀️ Mindfulness</span>
                   </div>
                 </div>
               </Link>
               <Link to="/modulo/vida-social" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
                 <div className="notion-overlay">
                   <div className="notion-content">
-                    <span className="notion-title">Vida Social</span>
+                    <span className="notion-title">🥂 Vida Social</span>
                   </div>
                 </div>
               </Link>
               <Link to="/modulo/fitness" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
                 <div className="notion-overlay">
                   <div className="notion-content">
-                    <span className="notion-title">Fitness</span>
+                    <span className="notion-title">💪 Fitness</span>
                   </div>
                 </div>
               </Link>
-              <Link to="/modulo/skincare" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1556228724-3bee3716d2b2?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
-                <div className="notion-overlay">
-                  <div className="notion-content">
-                    <span className="notion-title">Skincare</span>
-                  </div>
-                </div>
-              </Link>
-              <Link to="/modulo/haircare" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1560066984-b9815e6aa4df?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
-                <div className="notion-overlay">
-                  <div className="notion-content">
-                    <span className="notion-title">Haircare</span>
-                  </div>
-                </div>
-              </Link>
-            </div>
+                                        </div>
           </div>
           
           {/* Galería Académico (2x6) */}
@@ -237,28 +223,28 @@ function App() {
               <Link to="/modulo/investigacion" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
                 <div className="notion-overlay">
                   <div className="notion-content">
-                    <span className="notion-title">Investigación</span>
+                    <span className="notion-title">🔬 Investigación</span>
                   </div>
                 </div>
               </Link>
               <Link to="/modulo/maestria" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
                 <div className="notion-overlay">
                   <div className="notion-content">
-                    <span className="notion-title">Maestría</span>
+                    <span className="notion-title">🎓 Maestría</span>
                   </div>
                 </div>
               </Link>
-              <Link to="/modulo/laboratorio" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1532153975070-2e9ab71f1b14?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
+              <Link to="/modulo/lab" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1532153975070-2e9ab71f1b14?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
                 <div className="notion-overlay">
                   <div className="notion-content">
                     <span className="notion-title">Laboratorio</span>
                   </div>
                 </div>
               </Link>
-              <Link to="/modulo/investigacion" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
+              <Link to="/modulo/idiomas" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1528642474498-1af0c17fd8c3?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
                 <div className="notion-overlay">
                   <div className="notion-content">
-                    <span className="notion-title">Investigación</span>
+                    <span className="notion-title">🗣️ Idiomas</span>
                   </div>
                 </div>
               </Link>
