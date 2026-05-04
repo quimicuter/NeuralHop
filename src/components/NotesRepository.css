@@ -6,23 +6,22 @@
   padding: 0.5rem;
 }
 
-/* --- HEADER INVISIBLE (Estilo Mis Tareas) --- */
+/* --- HEADER ESTÁNDAR COMO EL RESTO --- */
 .notes-header {
-  /* Eliminamos el fondo y el borde para que quede limpio como el de tareas */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 0.5rem 0.75rem 0.5rem;
-  margin-bottom: 0;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 .notes-header h3 {
-  color: rgba(255, 255, 255, 0.95);
-  font-family: serif;
-  font-size: 1.1rem; /* Mismo tamaño que Mis Tareas */
+  font-family: 'Playfair Display', serif;
   font-weight: 600;
+  color: #000000;
+  font-size: 0.85em;
   margin: 0;
-  text-shadow: 0 2px 8px rgba(147, 51, 234, 0.4);
 }
 
 .add-note-btn {
