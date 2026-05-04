@@ -25,6 +25,21 @@
   --color-p4: #394555;
   --color-p5: #797A7C;
   --color-p6: #3B1723;
+  
+  /* FUENTES Y ESPACIADO COMPACTOS */
+  --font-size-xs: 10px;
+  --font-size-sm: 11px;
+  --font-size-base: 12px;
+  --font-size-lg: 13px;
+  --font-size-xl: 14px;
+  --font-size-2xl: 16px;
+  
+  --spacing-xs: 2px;
+  --spacing-sm: 4px;
+  --spacing-base: 6px;
+  --spacing-lg: 8px;
+  --spacing-xl: 10px;
+  --spacing-2xl: 12px;
 }
 
 html, body, #root {
@@ -838,23 +853,23 @@ body {
   font-size: 1.1em;
 }
 
-/* Card Headers with Add Buttons */
+/* Card Headers with Add Buttons - Compact Style */
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
+  padding: var(--spacing-base) var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .card-header h3 {
   font-family: 'Playfair Display', serif;
-  font-size: 0.85em; /* Reduced from 0.9em for sleeker look */
+  font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--color-p4);
-  white-space: nowrap;
   margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .add-btn {
@@ -2149,5 +2164,212 @@ body {
   .pill-btn {
     padding: 0.425rem 0.875rem;
     font-size: 0.8rem;
+  }
+}
+
+/* Responsive Design - Tablet y Móvil */
+@media (max-width: 1024px) {
+  /* Tablet */
+  .nexus-grid {
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(18, 1fr);
+    gap: 6px;
+    padding: 8px;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  
+  .welcome-card {
+    grid-column: 1 / span 10;
+    grid-row: 1 / span 2;
+  }
+  
+  .tasks-card {
+    grid-column: 1 / span 5;
+    grid-row: 3 / span 4;
+  }
+  
+  .events-card {
+    grid-column: 6 / span 5;
+    grid-row: 3 / span 4;
+  }
+  
+  .weekly-menu-card {
+    grid-column: 1 / span 10;
+    grid-row: 7 / span 3;
+  }
+  
+  .nexus-buttons {
+    grid-column: 1 / span 10;
+    grid-row: 10 / span 1;
+  }
+  
+  .calendar-card {
+    grid-column: 1 / span 6;
+    grid-row: 11 / span 5;
+  }
+  
+  .notes-card {
+    grid-column: 7 / span 4;
+    grid-row: 11 / span 3;
+  }
+  
+  .routine-card {
+    grid-column: 7 / span 4;
+    grid-row: 14 / span 2;
+  }
+  
+  .gallery-personal {
+    grid-column: 1 / span 5;
+    grid-row: 16 / span 2;
+  }
+  
+  .gallery-academic {
+    grid-column: 6 / span 5;
+    grid-row: 16 / span 2;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Móvil */
+  .nexus-grid {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(20, 1fr);
+    gap: 4px;
+    padding: 6px;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  
+  .welcome-card {
+    grid-column: 1 / span 6;
+    grid-row: 1 / span 2;
+  }
+  
+  .tasks-card {
+    grid-column: 1 / span 3;
+    grid-row: 3 / span 3;
+  }
+  
+  .events-card {
+    grid-column: 4 / span 3;
+    grid-row: 3 / span 3;
+  }
+  
+  .weekly-menu-card {
+    grid-column: 1 / span 6;
+    grid-row: 6 / span 3;
+  }
+  
+  .nexus-buttons {
+    grid-column: 1 / span 6;
+    grid-row: 9 / span 1;
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+  
+  .nexus-pill-btn {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+  
+  .calendar-card {
+    grid-column: 1 / span 6;
+    grid-row: 10 / span 4;
+  }
+  
+  .notes-card {
+    grid-column: 1 / span 3;
+    grid-row: 14 / span 3;
+  }
+  
+  .routine-card {
+    grid-column: 4 / span 3;
+    grid-row: 14 / span 3;
+  }
+  
+  .gallery-personal {
+    grid-column: 1 / span 3;
+    grid-row: 17 / span 2;
+  }
+  
+  .gallery-academic {
+    grid-column: 4 / span 3;
+    grid-row: 17 / span 2;
+  }
+  
+  .gallery-grid {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  
+  .gallery-card {
+    height: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Móvil pequeño */
+  .nexus-grid {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(24, 1fr);
+    gap: 3px;
+    padding: 4px;
+  }
+  
+  .welcome-card {
+    grid-column: 1 / span 4;
+    grid-row: 1 / span 2;
+  }
+  
+  .tasks-card {
+    grid-column: 1 / span 2;
+    grid-row: 3 / span 3;
+  }
+  
+  .events-card {
+    grid-column: 3 / span 2;
+    grid-row: 3 / span 3;
+  }
+  
+  .weekly-menu-card {
+    grid-column: 1 / span 4;
+    grid-row: 6 / span 3;
+  }
+  
+  .nexus-buttons {
+    grid-column: 1 / span 4;
+    grid-row: 9 / span 2;
+    flex-direction: column;
+  }
+  
+  .nexus-pill-btn {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+  
+  .calendar-card {
+    grid-column: 1 / span 4;
+    grid-row: 11 / span 5;
+  }
+  
+  .notes-card {
+    grid-column: 1 / span 2;
+    grid-row: 16 / span 4;
+  }
+  
+  .routine-card {
+    grid-column: 3 / span 2;
+    grid-row: 16 / span 4;
+  }
+  
+  .gallery-personal {
+    grid-column: 1 / span 2;
+    grid-row: 20 / span 2;
+  }
+  
+  .gallery-academic {
+    grid-column: 3 / span 2;
+    grid-row: 20 / span 2;
   }
 }
