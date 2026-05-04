@@ -10,11 +10,13 @@ import ModuleDashboard from './components/ModuleDashboard'
 import GlobalAddModal from './components/GlobalAddModal'
 import DataScienceHub from './components/DataScienceHub'
 import NotesRepository from './components/NotesRepository'
+import TaskHistoryModal from './components/TaskHistoryModal'
 import './App.css'
 
 function App() {
   const [isModalOpen, setIsModalOpen] = React.useState(false)
   const [isDataScienceHubOpen, setIsDataScienceHubOpen] = React.useState(false)
+  const [isTaskHistoryOpen, setIsTaskHistoryOpen] = React.useState(false)
   const [modalPreselectedType, setModalPreselectedType] = React.useState('task')
 
   const openModalWithType = (type) => {
@@ -56,7 +58,7 @@ function App() {
             <div className="card-header">
               <h3>Mis Tareas</h3>
               <div className="task-buttons">
-                <button className="task-btn circular">⏰</button>
+                <button className="task-btn circular" onClick={() => setIsTaskHistoryOpen(true)}>⏰</button>
                 <button className="task-btn circular" onClick={() => openModalWithType('task')}>+</button>
               </div>
             </div>
@@ -260,6 +262,10 @@ function App() {
             <DataScienceHub 
               isOpen={isDataScienceHubOpen} 
               onClose={() => setIsDataScienceHubOpen(false)} 
+            />
+            <TaskHistoryModal 
+              isOpen={isTaskHistoryOpen} 
+              onClose={() => setIsTaskHistoryOpen(false)} 
             />
             </div>
           } />

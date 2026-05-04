@@ -1,19 +1,39 @@
 import React, { useState, useEffect } from 'react'
 import { useApp } from '../context/AppContext'
+import { getFirestore, collection, query, where, orderBy, limit, onSnapshot } from 'firebase/firestore'
 import './TaskHistoryModal.css'
 
 function TaskHistoryModal({ isOpen, onClose }) {
-  const { state } = useApp()
+  const { actions } = useApp()
   const [completedTasks, setCompletedTasks] = useState([])
 
   useEffect(() => {
-    // Filtrar tareas completadas
-    const tasks = state.tasks.filter(task => 
-      (task.type === 'task' || !task.type || task.type === undefined) && 
-      (task.completed || task.status === 'completed')
+    if (!isOpen) return
+
+    const db = getFirestore()
+    const tasksQuery = query(
+      collection(db, "tasks"),
+      where("completed", "==", true),
+      orderBy("completedAt", "desc"),
+      limit(20)
     )
-    setCompletedTasks(tasks)
-  }, [state.tasks])
+
+    const unsubscribe = onSnapshot(tasksQuery, (snapshot) => {
+      const tasks = []
+      snapshot.forEach((doc) => {
+        const taskData = { id: doc.id, ...doc.data() }
+        // Filtrar solo tareas (no eventos)
+        if (taskData.type === 'task' || !taskData.type || taskData.type === undefined) {
+          tasks.push(taskData)
+        }
+      })
+      setCompletedTasks(tasks)
+    }, (error) => {
+      console.error('Error loading completed tasks:', error)
+    })
+
+    return () => unsubscribe()
+  }, [isOpen])
 
   const getModuleEmoji = (task) => {
     const moduleEmojis = {
@@ -63,6 +83,19 @@ function TaskHistoryModal({ isOpen, onClose }) {
     return 'Sin fecha'
   }
 
+  const handleUncompleteTask = async (task) => {
+    try {
+      await actions.updateTask({
+        ...task,
+        completed: false,
+        status: 'todo',
+        completedAt: null
+      })
+    } catch (error) {
+      console.error('Error uncompleting task:', error)
+    }
+  }
+
   if (!isOpen) return null
 
   return (
@@ -88,7 +121,7 @@ function TaskHistoryModal({ isOpen, onClose }) {
                         type="checkbox" 
                         className="task-checkbox-new"
                         checked={true}
-                        readOnly
+                        onChange={() => handleUncompleteTask(task)}
                       />
                       <span className="task-title completed">{task.title}</span>
                     </div>

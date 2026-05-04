@@ -8,9 +8,10 @@ function SimpleTasks() {
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false)
 
   useEffect(() => {
-    // Filtrar tareas del contexto (type: 'task' o sin type específico)
+    // Filtrar tareas del contexto (type: 'task' o sin type específico) y no completadas
     const realTasks = state.tasks.filter(task => 
-      task.type === 'task' || !task.type || task.type === undefined
+      (task.type === 'task' || !task.type || task.type === undefined) && 
+      !task.completed
     )
     setTasks(realTasks)
   }, [state.tasks])
@@ -42,6 +43,15 @@ function SimpleTasks() {
       case 'general': return 'General'
       default: return category
     }
+  }
+
+  const isTaskOverdue = (task) => {
+    if (!task.deadline || task.completed) return false
+    const today = new Date()
+    today.setHours(0, 0, 0, 0) // Inicio del día
+    const deadline = new Date(task.deadline)
+    deadline.setHours(0, 0, 0, 0) // Inicio del día
+    return deadline < today
   }
 
   const getModuleEmoji = (task) => {
@@ -131,7 +141,7 @@ function SimpleTasks() {
                   checked={task.status === 'completed'}
                   onChange={() => handleTaskToggle(task.id)}
                 />
-                <span className="task-title">{task.title}</span>
+                <span className={`task-title ${isTaskOverdue(task) ? 'text-red-500 font-bold' : ''}`}>{task.title}</span>
               </div>
               <div className="task-item-right">
                 <span className="task-emoji">{getModuleEmoji(task)}</span>
@@ -139,7 +149,7 @@ function SimpleTasks() {
             </div>
             <div className="task-item-footer">
               <div className="priority-indicator" style={{ backgroundColor: getPriorityColor(task.priority) }}></div>
-              <span className="task-datetime">{getTaskDateTime(task)}</span>
+              <span className={`task-datetime ${isTaskOverdue(task) ? 'text-red-500 font-bold' : ''}`}>{getTaskDateTime(task)}</span>
             </div>
           </div>
         ))}

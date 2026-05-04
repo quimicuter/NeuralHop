@@ -45,38 +45,21 @@ function WeatherWidget() {
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY
-        if (!apiKey) {
-          throw new Error('OpenWeather API key not found')
-        }
-
-        // Coordenadas de León, Guanajuato
-        const lat = 21.1219
-        const lon = -101.6826
-
-        const response = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&units=metric`
-        )
-        
-        if (!response.ok) {
-          throw new Error('Weather data unavailable')
-        }
-
-        const data = await response.json()
+        const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=21.1219&longitude=-101.6826&current_weather=true');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
         setWeather({
-          temp: Math.round(data.current_weather.temperature),
+          temp: data.current_weather.temperature,
           city: 'León, Gto.',
-          description: getWeatherDescription(data.current_weather.weathercode),
-          icon: null // Open-Meteo usa weathercode en lugar de icon
-        })
-      } catch (err) {
-        setError(err.message)
-      } finally {
-        setLoading(false)
+          description: getWeatherEmoji(data.current_weather.weathercode),
+          icon: data.current_weather.weathercode
+        });
+      } catch (error) {
+        console.error("Error fetching weather:", error);
+        // Manejar estado de error si es necesario
       }
-    }
-
-    fetchWeather()
+    };
+    fetchWeather();
   }, [])
 
   if (loading) {

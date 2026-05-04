@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react'
 import { initializeApp } from 'firebase/app'
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'
+import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, orderBy, limit, where } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -152,6 +152,9 @@ function appReducer(state, action) {
         habits: state.habits.filter(habit => habit.id !== action.payload)
       }
     
+    case 'SET_TASKS':
+      return { ...state, tasks: action.payload }
+    
     case 'SET_NOTES':
       return { ...state, notes: action.payload }
     
@@ -194,69 +197,53 @@ const AppContext = createContext()
 export function AppProvider({ children }) {
   const [state, dispatch] = useReducer(appReducer, initialState)
 
-  const saveToMemory = async () => {
-    // Guardar en localStorage
-    try {
-      localStorage.setItem('neuralhop-state', JSON.stringify(state))
-    } catch (e) {
-      console.error('Error saving to localStorage:', e)
-    }
-    
-    // Guardar en Firebase si está disponible
-    if (!db) return
-    try {
-      await setDoc(doc(db, "usuarios", "datos_planner"), state)
-    } catch (e) {
-      console.error('Error saving to Firebase:', e)
-    }
-  }
-
-  const loadFromMemory = async () => {
-    // Cargar desde localStorage primero
-    try {
-      const savedState = localStorage.getItem('neuralhop-state')
-      if (savedState) {
-        const data = JSON.parse(savedState)
-        dispatch({ type: 'SET_STATE', payload: data })
-        return // Si encontramos datos en localStorage, no necesitamos Firebase
-      }
-    } catch (e) {
-      console.error('Error loading from localStorage:', e)
-    }
-    
-    // Si no hay datos en localStorage, intentar con Firebase
-    if (!db) return
-    try {
-      const docSnap = await getDoc(doc(db, "usuarios", "datos_planner"))
-      if (docSnap.exists()) {
-        const data = docSnap.data()
-        dispatch({ type: 'SET_STATE', payload: data })
-        // Guardar en localStorage para futuras cargas
-        localStorage.setItem('neuralhop-state', JSON.stringify(data))
-      }
-    } catch (e) {
-      console.error('Error loading from Firebase:', e)
-    }
-  }
-
+  // Suscripción a tareas en tiempo real desde Firebase
   useEffect(() => {
-    loadFromMemory()
+    if (!db) return
+
+    const tasksQuery = query(collection(db, "tasks"))
+    const unsubscribe = onSnapshot(tasksQuery, (snapshot) => {
+      const tasks = []
+      snapshot.forEach((doc) => {
+        tasks.push({ id: doc.id, ...doc.data() })
+      })
+      dispatch({ type: 'SET_TASKS', payload: tasks })
+    }, (error) => {
+      console.error('Error listening to tasks:', error)
+    })
+
+    return () => unsubscribe()
   }, [])
 
   const actions = {
-    addTask: (task) => {
-      dispatch({ type: 'ADD_TASK', payload: task })
-      saveToMemory()
+    addTask: async (task) => {
+      if (!db) return
+      try {
+        const taskRef = doc(collection(db, "tasks"))
+        await setDoc(taskRef, { ...task, completed: false, createdAt: new Date() })
+      } catch (e) {
+        console.error('Error adding task to Firebase:', e)
+      }
     },
     
-    updateTask: (task) => {
-      dispatch({ type: 'UPDATE_TASK', payload: task })
-      saveToMemory()
+    updateTask: async (task) => {
+      if (!db) return
+      try {
+        const taskRef = doc(db, "tasks", task.id)
+        await updateDoc(taskRef, task)
+      } catch (e) {
+        console.error('Error updating task in Firebase:', e)
+      }
     },
     
-    deleteTask: (taskId) => {
-      dispatch({ type: 'DELETE_TASK', payload: taskId })
-      saveToMemory()
+    deleteTask: async (taskId) => {
+      if (!db) return
+      try {
+        const taskRef = doc(db, "tasks", taskId)
+        await deleteDoc(taskRef)
+      } catch (e) {
+        console.error('Error deleting task from Firebase:', e)
+      }
     },
     
     addHabit: (habit) => {
