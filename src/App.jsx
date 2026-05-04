@@ -242,7 +242,14 @@ function App() {
                   </div>
                 </div>
               </Link>
-                            <Link to="/modulo/investigacion" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
+              <Link to="/modulo/laboratorio" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1532153975070-2e9ab71f1b14?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
+                <div className="notion-overlay">
+                  <div className="notion-content">
+                    <span className="notion-title">Laboratorio</span>
+                  </div>
+                </div>
+              </Link>
+              <Link to="/modulo/investigacion" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
                 <div className="notion-overlay">
                   <div className="notion-content">
                     <span className="notion-title">Investigación</span>
