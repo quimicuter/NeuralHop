@@ -2120,65 +2120,73 @@ body {
 
 /* Responsive Design - Tablet y Celular */
 
-/* Tablet Layout (768px - 1024px) - Adaptativo a cualquier proporción */
+/* Tablet Layout (768px - 1024px) - Compacto y adaptado a altura real */
 @media (max-width: 1024px) and (min-width: 768px) {
   .app-container {
-    padding: 6px;
+    padding: 4px;
     height: 100vh;
-    overflow-y: auto; /* Siempre permitir scroll */
+    max-height: 100vh;
+    overflow-y: auto;
     overflow-x: hidden;
   }
   
   .nexus-grid {
-    gap: 6px;
-    padding: 6px;
+    gap: 4px;
+    padding: 4px;
     grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(14, 1fr); /* Más filas para contenido extra */
-    min-height: 140vh; /* Altura mínima mayor */
+    grid-template-rows: repeat(10, minmax(60px, 1fr)); /* Filas más pequeñas */
+    height: auto;
+    min-height: auto;
     overflow-y: auto;
     overflow-x: hidden;
   }
   
-  /* Ajustar grid para tablet con espacio adicional */
-  .welcome-card { grid-area: 1 / 1 / 3 / 5; }
-  .tasks-card { grid-area: 3 / 1 / 6 / 3; }
-  .events-card { grid-area: 3 / 3 / 6 / 5; }
-  .weekly-menu-card { grid-area: 6 / 1 / 8 / 5; }
-  .nexus-buttons { grid-area: 1 / 5 / 2 / 9; }
-  .calendar-card { grid-area: 2 / 5 / 8 / 9; } /* Más espacio para calendario */
-  .notes-card { grid-area: 8 / 5 / 10 / 7; }
-  .routine-card { grid-area: 8 / 7 / 10 / 9; }
-  .gallery-personal { grid-area: 1 / 9 / 7 / 11; }
-  .gallery-academic { grid-area: 7 / 9 / 11 / 11; }
+  /* Grid compacto para tablet */
+  .welcome-card { grid-area: 1 / 1 / 2 / 5; }
+  .tasks-card { grid-area: 2 / 1 / 4 / 3; }
+  .events-card { grid-area: 2 / 3 / 4 / 5; }
+  .nexus-buttons { grid-area: 4 / 1 / 5 / 5; }
+  .calendar-card { grid-area: 5 / 1 / 8 / 5; }
+  .weekly-menu-card { grid-area: 8 / 1 / 9 / 5; }
+  .notes-card { grid-area: 9 / 1 / 10 / 3; }
+  .routine-card { grid-area: 9 / 3 / 10 / 5; }
+  .gallery-personal { grid-area: 5 / 5 / 8 / 7; }
+  .gallery-academic { grid-area: 5 / 7 / 8 / 9; }
   
   .card {
-    padding: 6px;
+    padding: 4px;
   }
   
   .nexus-buttons {
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
   }
   
-  /* Scroll para todas las tarjetas que puedan necesitarlo */
+  /* Tarjetas más compactas */
   .calendar-card {
     overflow: visible;
-    min-height: 300px;
+    min-height: 180px;
   }
   
   .notes-card, .routine-card {
     overflow: visible;
-    min-height: 200px;
+    min-height: 120px;
   }
   
   .gallery-personal, .gallery-academic {
     overflow-y: auto;
-    max-height: 400px;
+    max-height: 200px;
   }
   
-  /* Asegurar scroll en el contenedor principal */
+  /* Headers más pequeños en tablet */
+  .card-header h3 {
+    font-size: 0.75em;
+  }
+  
+  /* Forzar scroll en todo */
   html, body {
     overflow-y: auto;
+    height: 100vh;
   }
 }
 

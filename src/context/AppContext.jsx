@@ -36,7 +36,7 @@ const defaultCategories = {
     label: 'Académico', 
     color: '#c8a2c8', 
     cover: 'https://images.unsplash.com/photo-1532153975070-2e9ab71f1b14?auto=format&fit=crop&w=600&q=80', 
-    subcats: ['Data Science', 'Investigación', 'Maestría', 'Laboratorio', 'Química', 'Análisis de Datos'], 
+    subcats: ['Data Science', 'Investigación', 'Maestría', 'Laboratorio'], 
     customFields: ['materia', 'profesor', 'grupo', 'plataforma'],
     dataRoot: 'academic'
   },
