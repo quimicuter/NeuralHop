@@ -184,6 +184,7 @@ export function subscribeToAllEntries(callback) {
 // FILTER HELPERS - Filtrado en memoria (para queries compuestas)
 // ─────────────────────────────────────────────
 export function filterEntries(entries, filters = {}) {
+  if (!entries || !Array.isArray(entries)) return []
   return entries.filter(entry => {
     if (filters.type && entry.type !== filters.type) return false
     if (filters.scope && entry.scope !== filters.scope) return false

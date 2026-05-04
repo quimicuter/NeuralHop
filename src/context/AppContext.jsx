@@ -67,7 +67,7 @@ const initialState = {
 function appReducer(state, action) {
   switch (action.type) {
     case 'SET_ENTRIES':
-      return { ...state, entries: action.payload }
+      return { ...state, entries: action.payload || [] }
 
     case 'SET_NOTES':
       return { ...state, notes: action.payload }
