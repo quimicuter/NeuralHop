@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import { useApp } from '../context/AppContext'
 import './NotesRepository.css'
 
 const NotesRepository = () => {
+  const { state, actions } = useApp()
   const [notes, setNotes] = useState([])
   const [isAddingNote, setIsAddingNote] = useState(false)
   const [newNote, setNewNote] = useState({ title: '', content: '', color: '#fbf72486' })
@@ -10,15 +12,38 @@ const NotesRepository = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   useEffect(() => {
-    const savedNotes = localStorage.getItem('neuralhop-notes')
-    if (savedNotes) {
-      setNotes(JSON.parse(savedNotes))
+    // Cargar notas desde Firebase y localStorage
+    const loadNotes = () => {
+      // Primero intentar cargar desde el estado global (Firebase)
+      if (state.notes && state.notes.length > 0) {
+        setNotes(state.notes)
+        // Sincronizar localStorage como respaldo
+        localStorage.setItem('neuralhop-notes', JSON.stringify(state.notes))
+      } else {
+        // Si no hay notas en Firebase, cargar desde localStorage
+        const savedNotes = localStorage.getItem('neuralhop-notes')
+        if (savedNotes) {
+          const localNotes = JSON.parse(savedNotes)
+          setNotes(localNotes)
+          // Sincronizar notas locales con Firebase
+          actions.setNotes(localNotes)
+        }
+      }
     }
-  }, [])
+    loadNotes()
+  }, [state.notes])
 
   const saveNotes = (updatedNotes) => {
+    // Guardar en localStorage como respaldo inmediato
     localStorage.setItem('neuralhop-notes', JSON.stringify(updatedNotes))
     setNotes(updatedNotes)
+    
+    // Sincronizar con Firebase a través del contexto
+    try {
+      actions.setNotes(updatedNotes)
+    } catch (error) {
+      console.warn('Error sincronizando notas con Firebase:', error)
+    }
   }
 
   const handleAddNote = () => {

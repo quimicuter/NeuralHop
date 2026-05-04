@@ -99,6 +99,7 @@ const initialState = {
   shoppingList: [],
   weeklyMenu: {},
   enmsWeekPlan: ['', '', '', '', '', ''],
+  notes: [], // Añadir notas al estado global
   taskIdCounter: 300,
   habitIdCounter: 20,
   monthOffset: 0
@@ -149,6 +150,35 @@ function appReducer(state, action) {
       return {
         ...state,
         habits: state.habits.filter(habit => habit.id !== action.payload)
+      }
+    
+    case 'SET_NOTES':
+      return { ...state, notes: action.payload }
+    
+    case 'ADD_NOTE':
+      return {
+        ...state,
+        notes: [...state.notes, { ...action.payload, id: Date.now() }]
+      }
+    
+    case 'UPDATE_NOTE':
+      return {
+        ...state,
+        notes: state.notes.map(note => 
+          note.id === action.payload.id ? { ...note, ...action.payload } : note
+        )
+      }
+    
+    case 'DELETE_NOTE':
+      return {
+        ...state,
+        notes: state.notes.filter(note => note.id !== action.payload)
+      }
+    
+    case 'DELETE_NOTES':
+      return {
+        ...state,
+        notes: state.notes.filter(note => !action.payload.includes(note.id))
       }
     
     case 'SET_MONTH_OFFSET':
@@ -218,6 +248,32 @@ export function AppProvider({ children }) {
     
     deleteHabit: (habitId) => {
       dispatch({ type: 'DELETE_HABIT', payload: habitId })
+      saveToMemory()
+    },
+    
+    // Acciones para notas
+    setNotes: (notes) => {
+      dispatch({ type: 'SET_NOTES', payload: notes })
+      saveToMemory()
+    },
+    
+    addNote: (note) => {
+      dispatch({ type: 'ADD_NOTE', payload: note })
+      saveToMemory()
+    },
+    
+    updateNote: (note) => {
+      dispatch({ type: 'UPDATE_NOTE', payload: note })
+      saveToMemory()
+    },
+    
+    deleteNote: (noteId) => {
+      dispatch({ type: 'DELETE_NOTE', payload: noteId })
+      saveToMemory()
+    },
+    
+    deleteNotes: (noteIds) => {
+      dispatch({ type: 'DELETE_NOTES', payload: noteIds })
       saveToMemory()
     },
     
