@@ -84,8 +84,8 @@ function ClockWidget() {
         <div className="date">{formatDate(time)}</div>
       </div>
       <div className="lyric-quote">
-        <div className="lyric-text">{currentLyric.texto}</div>
-        <div className="lyric-author">{currentLyric.autor}</div>
+        <div className="text-sm font-serif italic text-gray-700 text-center px-2 mt-1 leading-relaxed">{currentLyric.texto}</div>
+        <div className="text-[10px] text-gray-400 font-sans uppercase tracking-widest text-center mt-1">{currentLyric.autor}</div>
       </div>
     </div>
   )

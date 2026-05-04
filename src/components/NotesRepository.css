@@ -57,10 +57,12 @@
   flex: 1;
   overflow-y: auto;
   max-height: 400px;
-  padding-right: 4px;
+  padding-right: 6px;
   display: flex;
   flex-direction: column;
-  gap: 8px; /* Espaciado uniforme */
+  justify-content: flex-start; /* Evita que estire los elementos */
+  align-items: stretch;
+  gap: 6px;
   /* Ocultar barra de scroll para estética limpia */
   scrollbar-width: none;
 }
@@ -87,12 +89,12 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 5px;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  height: max-content;
-  align-self: flex-start;
+  height: max-content; /* Obliga a la tarjeta a medir solo lo que mide su texto */
+  flex-shrink: 0;
 }
 
 .note-item:hover {

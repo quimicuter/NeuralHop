@@ -211,59 +211,61 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = 'task' }) {
           </div>
 
           <div className="form-section">
-            <label className="form-label centered">Título</label>
+            <label className="form-label centered text-xs">Título</label>
             <div className="input-container">
               <input 
                 type="text" 
                 name="title" 
                 value={formData.title} 
                 onChange={handleChange} 
-                className="form-input petite centered"
+                className="form-input petite centered py-2 px-3"
                 placeholder="Escribe el título..."
                 required 
               />
             </div>
           </div>
 
-          <div className="form-section">
-            <label className="form-label centered">Ámbito</label>
-            <div className="pill-group centered">
-              {categoryOptions.map(option => (
-                <button
-                  key={option.value}
-                  type="button"
-                  className={`pill-btn petite ${formData.category === option.value ? 'active' : ''}`}
-                  onClick={() => handlePillClick('category', option.value)}
-                >
-                  <span className="pill-emoji">{option.emoji}</span>
-                  <span className="pill-label">{option.label}</span>
-                </button>
-              ))}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="form-section">
+              <label className="form-label centered text-xs">Ámbito</label>
+              <div className="pill-group centered">
+                {categoryOptions.map(option => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className={`pill-btn petite text-xs ${formData.category === option.value ? 'active' : ''}`}
+                    onClick={() => handlePillClick('category', option.value)}
+                  >
+                    <span className="pill-emoji">{option.emoji}</span>
+                    <span className="pill-label">{option.label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div className="form-section">
-            <label className="form-label centered">
-              {formData.category === 'general' ? 'Categoría Libre' : 'Módulo'}
-            </label>
-            <div className="pill-group centered">
-              {getModuleOptions().map(option => (
-                <button
-                  key={option.value}
-                  type="button"
-                  className={`pill-btn petite ${getSelectedModule() === option.value ? 'active' : ''}`}
-                  onClick={() => {
-                    if (formData.category === 'general') {
-                      handlePillClick('freeCategory', option.value)
-                    } else {
-                      handlePillClick('subcategory', option.value)
-                    }
-                  }}
-                >
-                  <span className="pill-emoji">{option.emoji}</span>
-                  <span className="pill-label">{option.label}</span>
-                </button>
-              ))}
+            <div className="form-section">
+              <label className="form-label centered text-xs">
+                {formData.category === 'general' ? 'Categoría Libre' : 'Módulo'}
+              </label>
+              <div className="pill-group centered">
+                {getModuleOptions().map(option => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className={`pill-btn petite text-xs ${getSelectedModule() === option.value ? 'active' : ''}`}
+                    onClick={() => {
+                      if (formData.category === 'general') {
+                        handlePillClick('freeCategory', option.value)
+                      } else {
+                        handlePillClick('subcategory', option.value)
+                      }
+                    }}
+                  >
+                    <span className="pill-emoji">{option.emoji}</span>
+                    <span className="pill-label">{option.label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -309,25 +311,44 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = 'task' }) {
           )}
 
           {formData.type === 'task' && (
-            <div className="form-section">
-              <label className="form-label centered">Fecha Límite</label>
-              <div className="date-time-group centered">
-                <input 
-                  type="date" 
-                  name="deadline" 
-                  value={formData.deadline} 
-                  onChange={handleChange} 
-                  className="form-input petite centered"
-                  placeholder="Fecha límite"
-                />
-                <input 
-                  type="time" 
-                  name="deadlineTime" 
-                  value={formData.deadlineTime} 
-                  onChange={handleChange} 
-                  className="form-input petite centered"
-                  placeholder="Hora (opcional)"
-                />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="form-section">
+                <label className="form-label centered text-xs">Fecha Límite</label>
+                <div className="date-time-group centered">
+                  <input 
+                    type="date" 
+                    name="deadline" 
+                    value={formData.deadline} 
+                    onChange={handleChange} 
+                    className="form-input petite centered py-1.5 px-3"
+                    placeholder="Fecha límite"
+                  />
+                  <input 
+                    type="time" 
+                    name="deadlineTime" 
+                    value={formData.deadlineTime} 
+                    onChange={handleChange} 
+                    className="form-input petite centered py-1.5 px-3"
+                    placeholder="Hora (opcional)"
+                  />
+                </div>
+              </div>
+              
+              <div className="form-section">
+                <label className="form-label centered text-xs">Prioridad</label>
+                <div className="pill-group centered">
+                  {priorityOptions.map(option => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      className={`pill-btn petite text-xs ${formData.priority === option.value ? 'active' : ''}`}
+                      onClick={() => handlePillClick('priority', option.value)}
+                    >
+                      <span className="pill-emoji">{option.emoji}</span>
+                      <span className="pill-label">{option.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           )}
@@ -368,13 +389,13 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = 'task' }) {
           </div>
 
           <div className="form-section">
-            <label className="form-label centered">Notas</label>
+            <label className="form-label centered text-xs">Notas</label>
             <div className="input-container">
               <textarea 
                 name="notes" 
                 value={formData.notes} 
                 onChange={handleChange} 
-                className="form-textarea petite centered"
+                className="form-textarea petite centered py-2 px-3"
                 placeholder="Añade notas adicionales..."
                 rows={2}
               />
