@@ -27,82 +27,48 @@ const defaultCategories = {
     label: 'Personal', 
     color: '#ffb3c6', 
     cover: 'https://images.unsplash.com/photo-1490730141103-6cac27aaab94?auto=format&fit=crop&w=600&q=80', 
-    subcats: ['Selfcare', 'Mindfulness', 'Vida Social', 'Recetas'], 
+    subcats: ['Selfcare', 'Mindfulness', 'Vida Social', 'Fitness', 'Skincare', 'Haircare'], 
     customFields: [],
     dataRoot: 'personal'
   },
-  escolar: { 
+  academico: { 
     icon: "🎓", 
     label: 'Académico', 
     color: '#c8a2c8', 
     cover: 'https://images.unsplash.com/photo-1532153975070-2e9ab71f1b14?auto=format&fit=crop&w=600&q=80', 
-    subcats: ['Curso Análisis de Datos', 'Química', 'Maestría', 'Ciencias de Datos'], 
-    customFields: ['materia', 'profesor', 'grupo'],
+    subcats: ['Data Science', 'Investigación', 'Maestría', 'Laboratorio', 'Química', 'Análisis de Datos'], 
+    customFields: ['materia', 'profesor', 'grupo', 'plataforma'],
     dataRoot: 'academic'
   },
-  datascience: { 
-    icon: "📊", 
-    label: 'Ciencias de Datos', 
-    color: '#3b82f6', 
-    cover: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80', 
-    subcats: ['Clases', 'Tareas', 'Proyectos', 'Plataformas'], 
-    customFields: ['plataforma', 'profesor', 'deadline'],
-    dataRoot: 'datascience'
-  },
-  profesional: { 
-    icon: "💼", 
-    label: 'Profesional', 
-    color: '#ff9aa2', 
-    cover: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=600&q=80', 
-    subcats: ['ENMS | Laboratorio de Química'], 
+  global: {
+    icon: "�",
+    label: 'Global',
+    color: '#3b82f6',
+    cover: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80',
+    subcats: ['Grimorio', 'Agenda', 'ShopList', 'Notas'],
     customFields: [],
-    dataRoot: 'professional'
-  },
-  recetario: {
-    icon: "🤌🏻",
-    label: 'Recetario',
-    color: '#ffa500',
-    cover: 'https://images.unsplash.com/photo-1543397667-603d6b5c5e5c?auto=format&fit=crop&w=600&q=80',
-    subcats: ['Desayunos', 'Comidas', 'Cenas', 'Postres'],
-    customFields: ['ingredientes', 'tiempoPreparacion', 'dificultad', 'porciones'],
-    dataRoot: 'recetario'
-  },
-  bienestar: {
-    icon: "🧘🏻‍♀️",
-    label: 'Bienestar',
-    color: '#87ceeb',
-    cover: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?auto=format&fit=crop&w=600&q=80',
-    subcats: ['Fitness', 'Mindfulness', 'Skincare', 'Haircare'],
-    customFields: ['series', 'repeticiones', 'linkVideo', 'duracion'],
-    dataRoot: 'bienestar'
-  },
-  notas: {
-    icon: "📝",
-    label: 'Notas',
-    color: '#fbbf24',
-    cover: 'https://images.unsplash.com/photo-1610477169453-5b7398412921?auto=format&fit=crop&w=600&q=80',
-    subcats: ['Rápidas', 'Ideas', 'Recordatorios'],
-    customFields: ['contenido', 'etiqueta', 'color'],
-    dataRoot: 'notas'
+    dataRoot: 'global'
   }
 }
 
 const defaultTasks = [
-  { id: 1, type: 'event', title: 'Experimentación (Regreso Semana Santa)', category: 'profesional', subcategory: 'ENMS Labs', date: '2026-04-13', priority: 'high', status: 'todo', recurring: false, enmsMateria: 'Experimentación', enmsProfesor: 'Por Asignar', enmsGrupo: 'Grupo A', enmsPractica: 'Práctica 1' },
-  { id: 2, type: 'task', title: 'Reporte Semanal', category: 'profesional', subcategory: 'ENMS Labs', date: '', priority: 'high', status: 'todo', recurring: true, recurrenceType: 'weekly', recurrenceStart: '', weeklyDay: 1, tags: ['reporte'], notes: 'Cada lunes sin excepción' },
+  // Personal Tasks
+  { id: 1, type: 'task', title: 'Rutina Pilates Completa', category: 'personal', subcategory: 'Fitness', date: '', priority: 'high', status: 'todo', tags: ['pilates', 'ejercicio'], series: '3', repeticiones: '15', linkVideo: 'https://youtube.com/watch?v=pilates', duracion: '45 min', notes: 'Enfocado en core y flexibilidad' },
+  { id: 2, type: 'task', title: 'Meditación Guiada', category: 'personal', subcategory: 'Mindfulness', date: '', priority: 'medium', status: 'todo', tags: ['meditacion', 'relajacion'], series: '1', repeticiones: '1', linkVideo: 'https://youtube.com/watch?v=meditacion', duracion: '20 min', notes: 'Meditación para reducir estrés' },
+  { id: 3, type: 'task', title: 'Rutina Facial Completa', category: 'personal', subcategory: 'Skincare', date: '', priority: 'medium', status: 'todo', tags: ['skincare', 'rostro'], series: '1', repeticiones: '1', linkVideo: '', duracion: '30 min', notes: 'Limpieza, exfoliación e hidratación' },
+  { id: 4, type: 'task', title: 'Masaje Capilar con Aceites', category: 'personal', subcategory: 'Haircare', date: '', priority: 'low', status: 'todo', tags: ['haircare', 'natural'], series: '1', repeticiones: '1', linkVideo: '', duracion: '15 min', notes: 'Con aceite de coco y romero' },
+  { id: 5, type: 'task', title: 'Café con Amigas', category: 'personal', subcategory: 'Vida Social', date: '', priority: 'medium', status: 'todo', tags: ['social', 'amigos'], notes: 'Planificar encuentro semanal' },
   
-  // Recetario Tasks con campos especializados
-  { id: 101, type: 'task', title: 'Chilaquiles Verdes Económicos', category: 'recetario', subcategory: 'Desayunos', date: '', priority: 'medium', status: 'todo', tags: ['desayuno', 'economico'], ingredientes: 'Tortillas viejas, tomatillo, chile serrano, cebolla, cilantro, queso fresco', tiempoPreparacion: '20 min', dificultad: 'Fácil', porciones: '4', notes: 'Clásico mexicano perfecto para aprovechar tortillas' },
-  { id: 102, type: 'task', title: 'Enfrijoladas de Queso', category: 'recetario', subcategory: 'Comidas', date: '', priority: 'medium', status: 'todo', tags: ['almuerzo', 'cena'], ingredientes: 'Frijoles negros molidos, tortillas, queso panela, aguacate', tiempoPreparacion: '15 min', dificultad: 'Fácil', porciones: '3', notes: 'Cremosas y reconfortantes' },
-  { id: 103, type: 'task', title: 'Sopa de Fideo con Verduras', category: 'recetario', subcategory: 'Comidas', date: '', priority: 'medium', status: 'todo', tags: ['almuerzo', 'saludable'], ingredientes: 'Fideo, chayote, zanahoria, calabacita, consomé', tiempoPreparacion: '25 min', dificultad: 'Fácil', porciones: '6', notes: 'Nutritiva y económica' },
-  { id: 104, type: 'task', title: 'Tostadas de Atún con Elotitos', category: 'recetario', subcategory: 'Cenas', date: '', priority: 'low', status: 'todo', tags: ['cena', 'rapido'], ingredientes: 'Lata de atún, mayonesa, elotitos, tostadas, salsa', tiempoPreparacion: '10 min', dificultad: 'Fácil', porciones: '2', notes: 'Perfecto para cena rápida' },
-  { id: 105, type: 'task', title: 'Huevos a la Mexicana', category: 'recetario', subcategory: 'Desayunos', date: '', priority: 'medium', status: 'todo', tags: ['desayuno', 'clasico'], ingredientes: 'Huevo, jitomate, cebolla, chile serrano', tiempoPreparacion: '15 min', dificultad: 'Fácil', porciones: '2', notes: 'Desayuno tradicional mexicano' },
+  // Académico Tasks
+  { id: 101, type: 'task', title: 'Proyecto Data Science', category: 'academico', subcategory: 'Data Science', date: '', priority: 'high', status: 'todo', tags: ['proyecto', 'datos'], plataforma: 'GitHub', profesor: 'Dr. Smith', grupo: 'Grupo A', notes: 'Análisis de dataset de ventas' },
+  { id: 102, type: 'task', title: 'Investigación Química', category: 'academico', subcategory: 'Investigación', date: '', priority: 'high', status: 'todo', tags: ['investigacion', 'quimica'], materia: 'Química Avanzada', profesor: 'Dra. Johnson', grupo: 'Laboratorio 1', notes: 'Experimento con catalizadores' },
+  { id: 103, type: 'task', title: 'Tesis Maestría', category: 'academico', subcategory: 'Maestría', date: '', priority: 'high', status: 'todo', tags: ['tesis', 'maestria'], materia: 'Metodología', profesor: 'Dr. Martinez', grupo: 'Grupo B', notes: 'Capítulo 3: Metodología' },
+  { id: 104, type: 'task', title: 'Reporte Laboratorio', category: 'academico', subcategory: 'Laboratorio', date: '', priority: 'medium', status: 'todo', tags: ['laboratorio', 'reporte'], materia: 'Lab Química', profesor: 'Mtra. Garcia', grupo: 'Grupo A', notes: 'Práctica 5: Cinética' },
   
-  // Bienestar Tasks con campos especializados
-  { id: 201, type: 'task', title: 'Rutina Pilates Completa', category: 'bienestar', subcategory: 'Fitness', date: '', priority: 'high', status: 'todo', tags: ['pilates', 'ejercicio'], series: '3', repeticiones: '15', linkVideo: 'https://youtube.com/watch?v=pilates', duracion: '45 min', notes: 'Enfocado en core y flexibilidad' },
-  { id: 202, type: 'task', title: 'Meditación Guiada', category: 'bienestar', subcategory: 'Mindfulness', date: '', priority: 'medium', status: 'todo', tags: ['meditacion', 'relajacion'], series: '1', repeticiones: '1', linkVideo: 'https://youtube.com/watch?v=meditacion', duracion: '20 min', notes: 'Meditación para reducir estrés' },
-  { id: 203, type: 'task', title: 'Rutina Facial Completa', category: 'bienestar', subcategory: 'Skincare', date: '', priority: 'medium', status: 'todo', tags: ['skincare', 'rostro'], series: '1', repeticiones: '1', linkVideo: '', duracion: '30 min', notes: 'Limpieza, exfoliación e hidratación' },
-  { id: 204, type: 'task', title: 'Masaje Capilar con Aceites', category: 'bienestar', subcategory: 'Haircare', date: '', priority: 'low', status: 'todo', tags: ['haircare', 'natural'], series: '1', repeticiones: '1', linkVideo: '', duracion: '15 min', notes: 'Con aceite de coco y romero' }
+  // Global Tasks
+  { id: 201, type: 'task', title: 'Actualizar Grimorio', category: 'global', subcategory: 'Grimorio', date: '', priority: 'medium', status: 'todo', tags: ['grimorio', 'actualizacion'], notes: 'Añadir nuevos hechizos y rituales' },
+  { id: 202, type: 'event', title: 'Reunión Semanal', category: 'global', subcategory: 'Agenda', date: '2026-04-10', priority: 'high', status: 'todo', tags: ['reunion', 'semanal'], notes: 'Revisión de objetivos semanales' },
+  { id: 203, type: 'task', title: 'Compras Semana', category: 'global', subcategory: 'ShopList', date: '', priority: 'medium', status: 'todo', tags: ['compras', 'semana'], notes: 'Supermercado y artículos personales' }
 ]
 
 const defaultHabits = [
