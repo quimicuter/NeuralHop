@@ -1631,7 +1631,7 @@ body {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 2px;
-  margin-top: 26px;
+  margin-top: 8px;
   margin-bottom: 2px;
   padding-bottom: 2px;
   border-bottom: 1px solid rgba(190, 102, 146, 0.897);
