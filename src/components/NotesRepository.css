@@ -25,29 +25,30 @@
 }
 
 .add-note-btn {
-  background: rgba(236, 72, 153, 0.15);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(236, 72, 153, 0.3);
-  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: #000000;
   padding: 0;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 18px;
-  font-weight: 300;
+  font-size: 14px;
+  font-weight: 500;
   transition: all 0.3s ease;
-  width: 28px; /* Círculo perfecto y pequeño */
-  height: 28px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   line-height: 1;
 }
 
 .add-note-btn:hover {
-  background: rgba(236, 72, 153, 0.3);
-  transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(236, 72, 153, 0.4);
+  background: rgba(255, 255, 255, 0.55);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* --- LISTA DE NOTAS --- */

@@ -2120,34 +2120,36 @@ body {
 
 /* Responsive Design - Tablet y Celular */
 
-/* Tablet Layout (768px - 1024px) */
+/* Tablet Layout (768px - 1024px) - Adaptativo a cualquier proporción */
 @media (max-width: 1024px) and (min-width: 768px) {
   .app-container {
     padding: 6px;
     height: 100vh;
-    overflow-y: auto;
+    overflow-y: auto; /* Siempre permitir scroll */
+    overflow-x: hidden;
   }
   
   .nexus-grid {
     gap: 6px;
     padding: 6px;
     grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(12, 1fr);
-    min-height: 120vh; /* Asegurar que haya espacio suficiente */
+    grid-template-rows: repeat(14, 1fr); /* Más filas para contenido extra */
+    min-height: 140vh; /* Altura mínima mayor */
     overflow-y: auto;
+    overflow-x: hidden;
   }
   
-  /* Ajustar grid para tablet con más espacio */
+  /* Ajustar grid para tablet con espacio adicional */
   .welcome-card { grid-area: 1 / 1 / 3 / 5; }
   .tasks-card { grid-area: 3 / 1 / 6 / 3; }
   .events-card { grid-area: 3 / 3 / 6 / 5; }
   .weekly-menu-card { grid-area: 6 / 1 / 8 / 5; }
   .nexus-buttons { grid-area: 1 / 5 / 2 / 9; }
-  .calendar-card { grid-area: 2 / 5 / 7 / 9; }
-  .notes-card { grid-area: 7 / 5 / 9 / 7; }
-  .routine-card { grid-area: 7 / 7 / 9 / 9; }
-  .gallery-personal { grid-area: 1 / 9 / 6 / 11; }
-  .gallery-academic { grid-area: 6 / 9 / 11 / 11; }
+  .calendar-card { grid-area: 2 / 5 / 8 / 9; } /* Más espacio para calendario */
+  .notes-card { grid-area: 8 / 5 / 10 / 7; }
+  .routine-card { grid-area: 8 / 7 / 10 / 9; }
+  .gallery-personal { grid-area: 1 / 9 / 7 / 11; }
+  .gallery-academic { grid-area: 7 / 9 / 11 / 11; }
   
   .card {
     padding: 6px;
@@ -2158,18 +2160,25 @@ body {
     gap: 8px;
   }
   
-  /* Asegurar que las tarjetas no se corten */
+  /* Scroll para todas las tarjetas que puedan necesitarlo */
   .calendar-card {
     overflow: visible;
+    min-height: 300px;
   }
   
   .notes-card, .routine-card {
     overflow: visible;
+    min-height: 200px;
   }
   
   .gallery-personal, .gallery-academic {
     overflow-y: auto;
-    max-height: 100%;
+    max-height: 400px;
+  }
+  
+  /* Asegurar scroll en el contenedor principal */
+  html, body {
+    overflow-y: auto;
   }
 }
 
