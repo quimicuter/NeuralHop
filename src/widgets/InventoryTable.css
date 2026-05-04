@@ -1,0 +1,81 @@
+.inventory-table-widget {
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 20px;
+  padding: 1.25rem;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.inventory-header {
+  margin-bottom: 1rem;
+}
+
+.inventory-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.inventory-subtitle {
+  font-size: 0.75rem;
+  color: #888;
+  margin: 0.25rem 0 0 0;
+  font-style: italic;
+}
+
+.inventory-filters {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.inventory-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.6rem;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.75rem;
+}
+
+.inventory-filter:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.inventory-filter.active {
+  background: rgba(102, 126, 234, 0.15);
+  border-color: #667eea;
+  color: #667eea;
+  font-weight: 500;
+}
+
+.inventory-item-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.inventory-item-emoji {
+  font-size: 1rem;
+}
+
+.inventory-quantity {
+  font-size: 0.85rem;
+  color: #444;
+  font-weight: 500;
+}
+
+.inventory-status-badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}

@@ -1,0 +1,194 @@
+.relationship-radar {
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  padding: 1.25rem;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.radar-header {
+  margin-bottom: 1rem;
+}
+
+.radar-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.radar-subtitle {
+  font-size: 0.75rem;
+  color: #888;
+  margin: 0.25rem 0 0 0;
+}
+
+.radar-container {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  margin: 1.5rem auto;
+}
+
+/* Concentric rings */
+.radar-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px dashed rgba(0, 0, 0, 0.1);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.radar-ring-outer {
+  width: 100%;
+  height: 100%;
+}
+
+.radar-ring-middle {
+  width: 66%;
+  height: 66%;
+}
+
+.radar-ring-inner {
+  width: 33%;
+  height: 33%;
+  border-style: solid;
+  border-color: rgba(244, 143, 177, 0.3);
+}
+
+/* Center */
+.radar-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+/* Contacts */
+.radar-contact {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all 0.3s ease;
+}
+
+.radar-contact.inner {
+  /* Positioned by JavaScript rotation */
+  transform: translate(-50%, -50%) rotate(var(--contact-angle)) translateX(45px) rotate(calc(var(--contact-angle) * -1));
+}
+
+.radar-contact.middle {
+  transform: translate(-50%, -50%) rotate(var(--contact-angle)) translateX(90px) rotate(calc(var(--contact-angle) * -1));
+}
+
+.radar-contact.outer {
+  transform: translate(-50%, -50%) rotate(var(--contact-angle)) translateX(130px) rotate(calc(var(--contact-angle) * -1));
+}
+
+.radar-avatar {
+  width: 44px;
+  height: 44px;
+  background: var(--contact-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 3px solid white;
+}
+
+.radar-avatar-emoji {
+  font-size: 1.4rem;
+}
+
+.radar-contact-info {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.radar-contact-name {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+}
+
+.radar-contact-days {
+  display: block;
+  font-size: 0.6rem;
+  color: #888;
+}
+
+/* Legend */
+.radar-legend {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.radar-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.radar-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.radar-legend-dot.inner {
+  background: #f48fb1;
+}
+
+.radar-legend-dot.middle {
+  background: #90caf9;
+}
+
+.radar-legend-dot.outer {
+  background: #a5d6a7;
+}
+
+@media (max-width: 480px) {
+  .radar-container {
+    width: 240px;
+    height: 240px;
+  }
+  
+  .radar-contact.inner {
+    transform: translate(-50%, -50%) rotate(var(--contact-angle)) translateX(40px) rotate(calc(var(--contact-angle) * -1));
+  }
+  
+  .radar-contact.middle {
+    transform: translate(-50%, -50%) rotate(var(--contact-angle)) translateX(75px) rotate(calc(var(--contact-angle) * -1));
+  }
+  
+  .radar-contact.outer {
+    transform: translate(-50%, -50%) rotate(var(--contact-angle)) translateX(110px) rotate(calc(var(--contact-angle) * -1));
+  }
+}

@@ -1,0 +1,159 @@
+.table-view {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.table-toolbar {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.table-column-toggle {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  color: #444;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+
+.table-column-toggle:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.table-column-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  padding: 0.75rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(16px);
+  z-index: 100;
+  min-width: 150px;
+}
+
+.table-column-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  font-size: 0.8rem;
+  color: #444;
+  cursor: pointer;
+}
+
+.table-column-option input {
+  accent-color: #666;
+}
+
+.table-container {
+  overflow-x: auto;
+  border-radius: 16px;
+}
+
+.glass-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.glass-table thead {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.glass-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #444;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.glass-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  color: #333;
+}
+
+.glass-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.glass-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.table-row {
+  cursor: pointer;
+}
+
+.table-empty {
+  text-align: center;
+  color: #888;
+  padding: 2rem;
+  font-style: italic;
+}
+
+/* Blur effect class for JournalTable */
+.blur-content {
+  filter: blur(4px);
+  transition: filter 0.3s ease;
+}
+
+tr:hover .blur-content {
+  filter: blur(0);
+}
+
+/* Status badges */
+.status-badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-todo {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.status-in-progress {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.status-done {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+@media (max-width: 768px) {
+  .glass-table {
+    font-size: 0.75rem;
+  }
+  
+  .glass-table th,
+  .glass-table td {
+    padding: 0.5rem 0.6rem;
+  }
+}

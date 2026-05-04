@@ -1,0 +1,121 @@
+.code-snippet-widget {
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 20px;
+  padding: 1.25rem;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.snippet-header {
+  margin-bottom: 1rem;
+}
+
+.snippet-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.snippet-subtitle {
+  font-size: 0.75rem;
+  color: #888;
+  margin: 0.25rem 0 0 0;
+  font-style: italic;
+}
+
+.snippet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.snippet-card {
+  background: rgba(30, 30, 46, 0.95);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.snippet-card:hover {
+  transform: translateY(-2px);
+}
+
+.snippet-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.snippet-filename {
+  font-size: 0.75rem;
+  color: #cdd6f4;
+  font-family: 'Fira Code', 'Consolas', monospace;
+}
+
+.snippet-language {
+  font-size: 0.65rem;
+  color: #89b4fa;
+  background: rgba(137, 180, 250, 0.15);
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+
+.snippet-code {
+  padding: 0.75rem;
+  margin: 0;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: #cdd6f4;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.snippet-code .keyword {
+  color: #f38ba8;
+}
+
+.snippet-code .function {
+  color: #89b4fa;
+}
+
+.snippet-code .string {
+  color: #a6e3a1;
+}
+
+.snippet-code .comment {
+  color: #6c7086;
+}
+
+.snippet-code .number {
+  color: #fab387;
+}
+
+.snippet-add-btn {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 0.75rem;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px dashed rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.snippet-add-btn:hover {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 640px) {
+  .snippet-code {
+    font-size: 0.7rem;
+  }
+}

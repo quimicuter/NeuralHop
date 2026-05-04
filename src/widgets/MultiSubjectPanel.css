@@ -1,0 +1,151 @@
+.multi-subject-panel {
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 20px;
+  padding: 1.25rem;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.subject-header {
+  margin-bottom: 1rem;
+}
+
+.subject-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.subject-subtitle {
+  font-size: 0.75rem;
+  color: #888;
+  margin: 0.25rem 0 0 0;
+  font-style: italic;
+}
+
+.subject-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.subject-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
+}
+
+.subject-tab:hover {
+  background: rgba(255, 255, 255, 0.7);
+  transform: translateY(-1px);
+}
+
+.subject-tab.active {
+  background: var(--subject-bg, rgba(102, 126, 234, 0.15));
+  border-color: var(--subject-color, #667eea);
+  color: var(--subject-color, #667eea);
+  font-weight: 500;
+}
+
+.subject-tab-emoji {
+  font-size: 1rem;
+}
+
+.subject-tab-label {
+  white-space: nowrap;
+}
+
+.subject-content {
+  min-height: 150px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.subject-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  color: #888;
+  padding: 1.5rem 1rem;
+}
+
+.subject-empty-emoji {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.6;
+}
+
+.subject-empty p {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.85rem;
+}
+
+.subject-empty-hint {
+  font-size: 0.7rem;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.subject-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.subject-entry-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.subject-entry-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.subject-entry-title {
+  flex: 1;
+  color: #444;
+}
+
+.subject-entry-date {
+  font-size: 0.7rem;
+  color: #888;
+}
+
+.subject-add-btn {
+  width: 100%;
+  padding: 0.6rem;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px dashed rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.subject-add-btn:hover {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(0, 0, 0, 0.3);
+}

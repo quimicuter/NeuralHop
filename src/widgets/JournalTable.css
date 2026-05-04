@@ -1,0 +1,63 @@
+.journal-table-widget {
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  padding: 1.25rem;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.journal-header {
+  margin-bottom: 1rem;
+}
+
+.journal-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.journal-subtitle {
+  font-size: 0.75rem;
+  color: #888;
+  margin: 0.25rem 0 0 0;
+  font-style: italic;
+}
+
+/* Blur effect for journal content - blur(4px) estricto */
+.journal-content-blur {
+  max-width: 300px;
+}
+
+.journal-blur-text {
+  display: block;
+  filter: blur(4px) !important;
+  transition: filter 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #555;
+  font-size: 0.8rem;
+  user-select: none;
+}
+
+/* Reveal on hover - solo en la fila específica */
+tbody tr:hover .journal-blur-text,
+.journal-blur-text:hover {
+  filter: blur(0) !important;
+  user-select: text;
+}
+
+/* Mood emoji styling */
+.journal-mood {
+  font-size: 1.2rem;
+}
+
+/* Custom styling for journal table */
+.journal-table-widget .glass-table {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.journal-table-widget .glass-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.6);
+}

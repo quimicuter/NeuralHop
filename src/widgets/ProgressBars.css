@@ -1,0 +1,120 @@
+.progress-bars-widget {
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 20px;
+  padding: 1.5rem;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.progress-header {
+  margin-bottom: 1.25rem;
+}
+
+.progress-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.progress-subtitle {
+  font-size: 0.75rem;
+  color: #888;
+  margin: 0.25rem 0 0 0;
+  font-style: italic;
+}
+
+.progress-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.progress-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.progress-circle-container {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 0.75rem;
+}
+
+.progress-circle-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.progress-circle-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.5);
+  stroke-width: 6;
+}
+
+.progress-circle-fill {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+.progress-circle-inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.progress-percentage {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #555;
+  margin-top: 0.25rem;
+}
+
+.progress-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #444;
+  line-height: 1.3;
+  max-width: 90px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .progress-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  
+  .progress-circle-container {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .progress-emoji {
+    font-size: 1.1rem;
+  }
+  
+  .progress-percentage {
+    font-size: 0.65rem;
+  }
+  
+  .progress-label {
+    font-size: 0.7rem;
+  }
+}

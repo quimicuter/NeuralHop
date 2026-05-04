@@ -1,0 +1,89 @@
+.network-contact-widget {
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 20px;
+  padding: 1.25rem;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.network-header {
+  margin-bottom: 1rem;
+}
+
+.network-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.network-subtitle {
+  font-size: 0.75rem;
+  color: #888;
+  margin: 0.25rem 0 0 0;
+  font-style: italic;
+}
+
+.network-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.network-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.network-card:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateX(4px);
+}
+
+.network-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  border: 2px solid;
+  flex-shrink: 0;
+}
+
+.network-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.network-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 0.25rem 0;
+}
+
+.network-role {
+  font-size: 0.75rem;
+  color: #666;
+  margin: 0 0 0.15rem 0;
+}
+
+.network-institution {
+  font-size: 0.7rem;
+  color: #888;
+  margin: 0 0 0.25rem 0;
+}
+
+.network-last-contact {
+  font-size: 0.65rem;
+  color: #999;
+  font-style: italic;
+  margin: 0;
+}
