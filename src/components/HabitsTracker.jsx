@@ -1,23 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useApp } from '../context/AppContext'
 
 function HabitsTracker() {
-  const { state, actions } = useApp()
-  const [habits, setHabits] = useState([])
+  const { state, actions, getHabits } = useApp()
 
-  useEffect(() => {
-    // Filtrado estricto: solo hábitos
-    const realHabits = state.habits.filter(habit => 
-      habit.type === 'habit'
-    )
-    setHabits(realHabits)
-  }, [state.habits])
+  const habits = getHabits ? getHabits() : []
 
   const handleCheckboxChange = (habitId) => {
     const habit = habits.find(h => h.id === habitId)
     if (habit) {
-      actions.updateHabit({
-        ...habit,
+      actions.updateEntry(habitId, {
         completed: !habit.completed
       })
     }

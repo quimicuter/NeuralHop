@@ -1,57 +1,25 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useApp } from '../context/AppContext'
-import { getFirestore, collection, query, where, orderBy, limit, onSnapshot } from 'firebase/firestore'
 import './TaskHistoryModal.css'
 
 function TaskHistoryModal({ isOpen, onClose }) {
-  const { actions } = useApp()
-  const [completedTasks, setCompletedTasks] = useState([])
+  const { actions, getCompletedTasks } = useApp()
 
-  useEffect(() => {
-    if (!isOpen) return
-
-    const db = getFirestore()
-    const tasksQuery = query(
-      collection(db, "tasks"),
-      where("completed", "==", true),
-      orderBy("completedAt", "desc"),
-      limit(20)
-    )
-
-    const unsubscribe = onSnapshot(tasksQuery, (snapshot) => {
-      const tasks = []
-      snapshot.forEach((doc) => {
-        const taskData = { id: doc.id, ...doc.data() }
-        // Filtrado estricto: solo tareas reales
-        if (taskData.type === 'task') {
-          tasks.push(taskData)
-        }
-      })
-      setCompletedTasks(tasks)
-    }, (error) => {
-      console.error('Error loading completed tasks:', error)
-    })
-
-    return () => unsubscribe()
-  }, [isOpen])
+  const completedTasks = getCompletedTasks ? getCompletedTasks() : []
 
   const getModuleEmoji = (task) => {
     const moduleEmojis = {
-      'self-care': '🛀',
+      'selfcare': '🛀',
       'mindfulness': '🧘‍♀️',
-      'recetario': '🍳',
-      'hobbies': '🎨',
+      'vida-social': '🥂',
+      'fitness': '💪',
+      'data-science': '�',
+      'investigacion': '🔬',
       'maestria': '🎓',
       'lab': '🧪',
-      'idiomas': '🗣️',
-      'investigacion': '🔬',
-      'social': '🥂',
-      'cumpleaños': '🎂',
-      'otro': '📌'
+      'idiomas': '�️'
     }
-    
-    const module = task.subcategory || task.freeCategory
-    return moduleEmojis[module] || '📌'
+    return moduleEmojis[task.module] || '📌'
   }
 
   const getPriorityColor = (priority) => {
@@ -85,8 +53,7 @@ function TaskHistoryModal({ isOpen, onClose }) {
 
   const handleUncompleteTask = async (task) => {
     try {
-      await actions.updateTask({
-        ...task,
+      await actions.updateEntry(task.id, {
         completed: false,
         status: 'todo',
         completedAt: null

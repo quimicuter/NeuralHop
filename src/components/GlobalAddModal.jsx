@@ -116,7 +116,45 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = 'task' }) {
       entryData.date = formData.deadline
     }
 
-    actions.addEntry(formData.type, entryData)
+    // Construir entryData para la nueva colección 'entries'
+    const newEntry = {
+      type: formData.type,
+      title: formData.title,
+      scope: formData.category === 'general' ? 'global' : formData.category,
+      module: formData.category === 'general' ? formData.freeCategory : formData.subcategory,
+      status: 'todo',
+      priority: formData.priority,
+      completed: false,
+      tags: [],
+      metadata: {}
+    }
+
+    // Añadir campos específicos por tipo
+    if (formData.type === 'event') {
+      newEntry.deadline = formData.date
+      newEntry.metadata = {
+        startTime: formData.startTime,
+        endTime: formData.endTime,
+        location: formData.location
+      }
+    } else if (formData.type === 'task') {
+      newEntry.deadline = formData.deadline
+      newEntry.metadata = {
+        deadlineTime: formData.deadlineTime
+      }
+    } else if (formData.type === 'habit') {
+      newEntry.metadata = {
+        habitDays: formData.habitDays,
+        recurring: formData.recurring,
+        recurrenceType: formData.recurrenceType
+      }
+    }
+
+    if (formData.notes) {
+      newEntry.content = formData.notes
+    }
+
+    actions.addEntry(newEntry)
     onClose()
     setFormData({
       type: 'task',

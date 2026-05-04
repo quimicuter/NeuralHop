@@ -1,28 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useApp } from '../context/AppContext'
 
 function SimpleEvents() {
-  const { state, actions } = useApp()
-  const [events, setEvents] = useState([])
+  const { state, actions, getEvents } = useApp()
 
-  useEffect(() => {
-    // Filtrado estricto: solo eventos reales y no completados
-    const realEvents = state.tasks.filter(item => 
-      item.type === 'event' && 
-      !item.completed
-    )
-    setEvents(realEvents)
-  }, [state.tasks])
+  const events = getEvents ? getEvents() : []
 
   const handleEventToggle = (eventId) => {
-    const event = events.find(e => e.id === eventId)
-    if (event) {
-      actions.updateTask({
-        ...event,
-        completed: true,
-        status: 'completed'
-      })
-    }
+    actions.updateEntry(eventId, {
+      completed: true,
+      status: 'done'
+    })
   }
 
   const getCategoryColor = (category) => {

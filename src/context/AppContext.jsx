@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react'
 import { initializeApp } from 'firebase/app'
-import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, orderBy, limit, where } from 'firebase/firestore'
+import { initEntryEngine, subscribeToAllEntries, addEntry, updateEntry, deleteEntry, filterEntries } from '../engine/EntryEngine'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -12,13 +12,11 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 }
 
-let db = null
 try {
   const app = initializeApp(firebaseConfig)
-  db = getFirestore(app)
+  initEntryEngine(app)
 } catch (e) {
   console.warn('Firebase initialization failed:', e)
-  db = null
 }
 
 const defaultCategories = {
@@ -53,8 +51,7 @@ const defaultCategories = {
 
 const initialState = {
   categories: defaultCategories,
-  tasks: [],
-  habits: [],
+  entries: [],
   pageData: {},
   dashboard: { links: [], biblioteca: [], bgImage: '' },
   quickNotesList: [],
@@ -63,94 +60,47 @@ const initialState = {
   shoppingList: [],
   weeklyMenu: {},
   enmsWeekPlan: ['', '', '', '', '', ''],
-  notes: [], // Añadir notas al estado global
-  taskIdCounter: 300,
-  habitIdCounter: 20,
+  notes: [],
   monthOffset: 0
 }
 
 function appReducer(state, action) {
   switch (action.type) {
-    case 'SET_STATE':
-      return { ...state, ...action.payload }
-    
-    case 'ADD_TASK':
-      return {
-        ...state,
-        tasks: [...state.tasks, { ...action.payload, id: state.taskIdCounter++ }],
-        taskIdCounter: state.taskIdCounter + 1
-      }
-    
-    case 'UPDATE_TASK':
-      return {
-        ...state,
-        tasks: state.tasks.map(task => 
-          task.id === action.payload.id ? { ...task, ...action.payload } : task
-        )
-      }
-    
-    case 'DELETE_TASK':
-      return {
-        ...state,
-        tasks: state.tasks.filter(task => task.id !== action.payload)
-      }
-    
-    case 'ADD_HABIT':
-      return {
-        ...state,
-        habits: [...state.habits, { ...action.payload, id: state.habitIdCounter++ }],
-        habitIdCounter: state.habitIdCounter + 1
-      }
-    
-    case 'UPDATE_HABIT':
-      return {
-        ...state,
-        habits: state.habits.map(habit => 
-          habit.id === action.payload.id ? { ...habit, ...action.payload } : habit
-        )
-      }
-    
-    case 'DELETE_HABIT':
-      return {
-        ...state,
-        habits: state.habits.filter(habit => habit.id !== action.payload)
-      }
-    
-    case 'SET_TASKS':
-      return { ...state, tasks: action.payload }
-    
+    case 'SET_ENTRIES':
+      return { ...state, entries: action.payload }
+
     case 'SET_NOTES':
       return { ...state, notes: action.payload }
-    
+
     case 'ADD_NOTE':
       return {
         ...state,
-        notes: [...state.notes, { ...action.payload, id: Date.now() }]
+        notes: [...(state.notes || []), { ...action.payload, id: Date.now() }]
       }
-    
+
     case 'UPDATE_NOTE':
       return {
         ...state,
-        notes: state.notes.map(note => 
+        notes: (state.notes || []).map(note => 
           note.id === action.payload.id ? { ...note, ...action.payload } : note
         )
       }
-    
+
     case 'DELETE_NOTE':
       return {
         ...state,
-        notes: state.notes.filter(note => note.id !== action.payload)
+        notes: (state.notes || []).filter(note => note.id !== action.payload)
       }
-    
+
     case 'DELETE_NOTES':
       return {
         ...state,
-        notes: state.notes.filter(note => !action.payload.includes(note.id))
+        notes: (state.notes || []).filter(note => !action.payload.includes(note.id))
       }
-    
+
     case 'SET_MONTH_OFFSET':
       return { ...state, monthOffset: action.payload }
-    
+
     default:
       return state
   }
@@ -161,151 +111,53 @@ const AppContext = createContext()
 export function AppProvider({ children }) {
   const [state, dispatch] = useReducer(appReducer, initialState)
 
-  // Suscripción a tareas en tiempo real desde Firebase
+  // Suscripción global a entries en tiempo real
   useEffect(() => {
-    if (!db) return
-
-    const tasksQuery = query(collection(db, "tasks"))
-    const unsubscribe = onSnapshot(tasksQuery, (snapshot) => {
-      const tasks = []
-      snapshot.forEach((doc) => {
-        tasks.push({ id: doc.id, ...doc.data() })
-      })
-      dispatch({ type: 'SET_TASKS', payload: tasks })
-    }, (error) => {
-      console.error('Error listening to tasks:', error)
+    const unsubscribe = subscribeToAllEntries((entries) => {
+      dispatch({ type: 'SET_ENTRIES', payload: entries })
     })
-
     return () => unsubscribe()
   }, [])
 
-  // Suscripción a hábitos en tiempo real desde Firebase
-  useEffect(() => {
-    if (!db) return
-
-    const habitsQuery = query(collection(db, "habits"))
-    const unsubscribe = onSnapshot(habitsQuery, (snapshot) => {
-      const habits = []
-      snapshot.forEach((doc) => {
-        habits.push({ id: doc.id, ...doc.data() })
-      })
-      dispatch({ type: 'SET_HABITS', payload: habits })
-    }, (error) => {
-      console.error('Error listening to habits:', error)
-    })
-
-    return () => unsubscribe()
-  }, [])
+  // Helpers derivados del estado de entries
+  const getEntries = (filters) => filterEntries(state.entries, filters)
+  const getTasks = () => filterEntries(state.entries, { type: 'task', completed: false })
+  const getHabits = () => filterEntries(state.entries, { type: 'habit' })
+  const getEvents = () => filterEntries(state.entries, { type: 'event', completed: false })
+  const getCompletedTasks = () => filterEntries(state.entries, { type: 'task', completed: true })
 
   const actions = {
-    addTask: async (task) => {
-      if (!db) return
-      try {
-        const taskRef = doc(collection(db, "tasks"))
-        await setDoc(taskRef, { ...task, completed: false, createdAt: new Date() })
-      } catch (e) {
-        console.error('Error adding task to Firebase:', e)
-      }
+    // ─── EntryEngine Universal ───
+    addEntry: async (entryData) => {
+      return await addEntry(entryData)
     },
-    
-    updateTask: async (task) => {
-      if (!db) return
-      try {
-        const taskRef = doc(db, "tasks", task.id)
-        await updateDoc(taskRef, task)
-      } catch (e) {
-        console.error('Error updating task in Firebase:', e)
-      }
+    updateEntry: async (entryId, updates) => {
+      return await updateEntry(entryId, updates)
     },
-    
-    deleteTask: async (taskId) => {
-      if (!db) return
-      try {
-        const taskRef = doc(db, "tasks", taskId)
-        await deleteDoc(taskRef)
-      } catch (e) {
-        console.error('Error deleting task from Firebase:', e)
-      }
+    deleteEntry: async (entryId) => {
+      return await deleteEntry(entryId)
     },
-    
-    addHabit: async (habit) => {
-      if (!db) return
-      try {
-        const habitRef = doc(collection(db, "habits"))
-        await setDoc(habitRef, { ...habit, completed: false, createdAt: new Date() })
-      } catch (e) {
-        console.error('Error adding habit to Firebase:', e)
-      }
-    },
-    
-    updateHabit: async (habit) => {
-      if (!db) return
-      try {
-        const habitRef = doc(db, "habits", habit.id)
-        await updateDoc(habitRef, habit)
-      } catch (e) {
-        console.error('Error updating habit in Firebase:', e)
-      }
-    },
-    
-    deleteHabit: async (habitId) => {
-      if (!db) return
-      try {
-        const habitRef = doc(db, "habits", habitId)
-        await deleteDoc(habitRef)
-      } catch (e) {
-        console.error('Error deleting habit from Firebase:', e)
-      }
-    },
-    
-    // Acciones para notas
-    setNotes: (notes) => {
-      dispatch({ type: 'SET_NOTES', payload: notes })
-    },
-    
-    addNote: (note) => {
-      dispatch({ type: 'ADD_NOTE', payload: note })
-    },
-    
-    updateNote: (note) => {
-      dispatch({ type: 'UPDATE_NOTE', payload: note })
-    },
-    
-    deleteNote: (noteId) => {
-      dispatch({ type: 'DELETE_NOTE', payload: noteId })
-    },
-    
-    deleteNotes: (noteIds) => {
-      dispatch({ type: 'DELETE_NOTES', payload: noteIds })
-    },
-    
-    setMonthOffset: (offset) => {
-      dispatch({ type: 'SET_MONTH_OFFSET', payload: offset })
-    },
-    
+
+    // ─── Helpers de filtrado ───
+    getEntries,
+    getTasks,
+    getHabits,
+    getEvents,
+    getCompletedTasks,
+
+    // ─── Notas (se migrarán a entries en Fase E) ───
+    setNotes: (notes) => dispatch({ type: 'SET_NOTES', payload: notes }),
+    addNote: (note) => dispatch({ type: 'ADD_NOTE', payload: note }),
+    updateNote: (note) => dispatch({ type: 'UPDATE_NOTE', payload: note }),
+    deleteNote: (noteId) => dispatch({ type: 'DELETE_NOTE', payload: noteId }),
+    deleteNotes: (noteIds) => dispatch({ type: 'DELETE_NOTES', payload: noteIds }),
+
+    setMonthOffset: (offset) => dispatch({ type: 'SET_MONTH_OFFSET', payload: offset }),
     getState: () => state,
-    
-    addEntry: (type, data) => {
-      const entryData = { ...data, type }
-      
-      switch (type) {
-        case 'task':
-        case 'event':
-          dispatch({ type: 'ADD_TASK', payload: entryData })
-          break
-        case 'habit':
-          dispatch({ type: 'ADD_HABIT', payload: entryData })
-          break
-        default:
-          dispatch({ type: 'ADD_TASK', payload: entryData })
-      }
-      
-      saveToMemory()
-    }
   }
 
   return (
-    <AppContext.Provider value={{ state, actions }}>
+    <AppContext.Provider value={{ state, actions, getEntries, getTasks, getHabits, getEvents, getCompletedTasks }}>
       {children}
     </AppContext.Provider>
   )

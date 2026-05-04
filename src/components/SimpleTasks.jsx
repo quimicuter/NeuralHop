@@ -3,28 +3,16 @@ import { useApp } from '../context/AppContext'
 import TaskHistoryModal from './TaskHistoryModal'
 
 function SimpleTasks() {
-  const { state, actions } = useApp()
-  const [tasks, setTasks] = useState([])
+  const { state, actions, getTasks } = useApp()
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false)
 
-  useEffect(() => {
-    // Filtrado estricto: solo tareas reales y no completadas
-    const realTasks = state.tasks.filter(task => 
-      task.type === 'task' && 
-      !task.completed
-    )
-    setTasks(realTasks)
-  }, [state.tasks])
+  const tasks = getTasks ? getTasks() : []
 
   const handleTaskToggle = (taskId) => {
-    const task = tasks.find(t => t.id === taskId)
-    if (task) {
-      actions.updateTask({
-        ...task,
-        completed: true,
-        status: 'completed'
-      })
-    }
+    actions.updateEntry(taskId, {
+      completed: true,
+      status: 'done'
+    })
   }
 
   const getCategoryColor = (category) => {
