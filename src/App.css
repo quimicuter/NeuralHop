@@ -25,21 +25,6 @@
   --color-p4: #394555;
   --color-p5: #797A7C;
   --color-p6: #3B1723;
-  
-  /* FUENTES Y ESPACIADO COMPACTOS */
-  --font-size-xs: 10px;
-  --font-size-sm: 11px;
-  --font-size-base: 12px;
-  --font-size-lg: 13px;
-  --font-size-xl: 14px;
-  --font-size-2xl: 16px;
-  
-  --spacing-xs: 2px;
-  --spacing-sm: 4px;
-  --spacing-base: 6px;
-  --spacing-lg: 8px;
-  --spacing-xl: 10px;
-  --spacing-2xl: 12px;
 }
 
 html, body, #root {
@@ -101,9 +86,10 @@ body {
   -webkit-backdrop-filter: none;
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 20px;
-  padding: 12px;
+  padding: 8px;
   overflow: hidden;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
+  margin: 0;
 }
 
 .welcome-content {
@@ -142,13 +128,13 @@ body {
 }
 
 .tasks-card {
-  grid-area: 4 / 1 / 9 / 3; /* rows 4-8, cols 1-2 (2x5) */
+  grid-area: 4 / 1 / 9 / 3; /* rows 4-8, cols 1-2 (5x2) */
   background: rgba(255, 255, 255, 0.582); /* Same transparency as weekly-menu-card */
   backdrop-filter: none; /* Removed blur */
   -webkit-backdrop-filter: none;
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 20px;
-  padding: 12px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -156,13 +142,13 @@ body {
 }
 
 .events-card {
-  grid-area: 4 / 3 / 9 / 5; /* rows 4-8, cols 3-4 (2x5) */
+  grid-area: 4 / 3 / 9 / 5; /* rows 4-8, cols 3-4 (5x2) */
   background: rgba(255, 255, 255, 0.582); /* Same transparency as weekly-menu-card */
   backdrop-filter: none; /* Removed blur */
   -webkit-backdrop-filter: none;
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 20px;
-  padding: 12px;
+  padding: 8px;
   height: 100%;
   overflow: hidden;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
@@ -188,7 +174,7 @@ body {
   -webkit-backdrop-filter: none;
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 20px;
-  padding: 12px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -202,7 +188,7 @@ body {
   -webkit-backdrop-filter: none;
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 20px;
-  padding: 12px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -228,26 +214,26 @@ body {
 
 /* BLOQUE DERECHO (Columnas 11-12) */
 .gallery-personal {
-  grid-area: 1 / 11 / 7 / 13; /* rows 1-6, cols 11-12 (2x6) */
-  background: rgba(255, 255, 255, 0.582); /* Same transparency as weekly-menu-card */
-  backdrop-filter: none; /* Removed blur */
-  -webkit-backdrop-filter: none;
+  grid-area: 1 / 11 / 7 / 13; /* rows 1-6, cols 11-12 (6x2) */
+  background: rgba(255, 255, 255, 0.582);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 20px;
-  padding: 12px;
+  padding: 8px;
   overflow-y: auto;
   overflow-x: hidden;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
 }
 
 .gallery-academic {
-  grid-area: 7 / 11 / 13 / 13; /* rows 7-12, cols 11-12 (2x6) */
-  background: rgba(255, 255, 255, 0.582); /* Same transparency as weekly-menu-card */
-  backdrop-filter: none; /* Removed blur */
-  -webkit-backdrop-filter: none;
+  grid-area: 7 / 11 / 13 / 13; /* rows 7-12, cols 11-12 (6x2) */
+  background: rgba(255, 255, 255, 0.582);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 20px;
-  padding: 12px;
+  padding: 8px;
   overflow-y: auto;
   overflow-x: hidden;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
@@ -853,23 +839,22 @@ body {
   font-size: 1.1em;
 }
 
-/* Card Headers with Add Buttons - Compact Style */
+/* Card Headers with Add Buttons - Estandarizados */
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-base) var(--spacing-lg);
-  margin-bottom: var(--spacing-sm);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 .card-header h3 {
-  font-family: 'Playfair Display', serif;
-  font-size: var(--font-size-sm);
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
-  color: var(--color-p4);
+  color: #000000;
+  font-size: 0.85em;
   margin: 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .add-btn {
@@ -2133,7 +2118,151 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
-/* Responsive Design */
+/* Responsive Design - Tablet y Celular */
+
+/* Tablet Layout (768px - 1024px) */
+@media (max-width: 1024px) and (min-width: 768px) {
+  .app-container {
+    padding: 6px;
+  }
+  
+  .nexus-grid {
+    gap: 6px;
+    padding: 6px;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+  }
+  
+  /* Ajustar grid para tablet */
+  .welcome-card { grid-area: 1 / 1 / 3 / 5; }
+  .tasks-card { grid-area: 3 / 1 / 6 / 3; }
+  .events-card { grid-area: 3 / 3 / 6 / 5; }
+  .weekly-menu-card { grid-area: 6 / 1 / 8 / 5; }
+  .nexus-buttons { grid-area: 1 / 5 / 2 / 9; }
+  .calendar-card { grid-area: 2 / 5 / 6 / 9; }
+  .notes-card { grid-area: 6 / 5 / 8 / 7; }
+  .routine-card { grid-area: 6 / 7 / 8 / 9; }
+  .gallery-personal { grid-area: 1 / 9 / 6 / 11; }
+  .gallery-academic { grid-area: 6 / 9 / 11 / 11; }
+  
+  .card {
+    padding: 6px;
+  }
+  
+  .nexus-buttons {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+/* Mobile Layout (< 768px) */
+@media (max-width: 767px) {
+  .app-container {
+    padding: 4px;
+  }
+  
+  .nexus-grid {
+    gap: 4px;
+    padding: 4px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(12, 1fr);
+    height: 100vh;
+    overflow-y: auto;
+  }
+  
+  /* Ajustar grid para celular */
+  .welcome-card { 
+    grid-area: 1 / 1 / 3 / 5; 
+    padding: 6px;
+  }
+  .tasks-card { 
+    grid-area: 3 / 1 / 5 / 3; 
+    padding: 6px;
+  }
+  .events-card { 
+    grid-area: 3 / 3 / 5 / 5; 
+    padding: 6px;
+  }
+  .nexus-buttons { 
+    grid-area: 5 / 1 / 6 / 5;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 6px;
+  }
+  .calendar-card { 
+    grid-area: 6 / 1 / 9 / 5; 
+    padding: 6px;
+  }
+  .notes-card { 
+    grid-area: 9 / 1 / 11 / 3; 
+    padding: 6px;
+  }
+  .routine-card { 
+    grid-area: 9 / 3 / 11 / 5; 
+    padding: 6px;
+  }
+  .gallery-personal { 
+    grid-area: 11 / 1 / 13 / 3; 
+    padding: 6px;
+  }
+  .gallery-academic { 
+    grid-area: 11 / 3 / 13 / 5; 
+    padding: 6px;
+  }
+  
+  /* Headers más pequeños en mobile */
+  .card-header {
+    margin-bottom: 6px;
+    padding-bottom: 4px;
+  }
+  
+  .card-header h3 {
+    font-size: 0.8em;
+  }
+  
+  /* Botones más pequeños */
+  .nexus-pill-btn {
+    padding: 6px 12px;
+    font-size: 0.8em;
+  }
+  
+  .task-btn.circular {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+  
+  /* Galerías optimizadas para mobile */
+  .gallery-grid {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  
+  .gallery-card {
+    height: 60px;
+  }
+  
+  /* Notas más compactas */
+  .note-item {
+    padding: 8px;
+    margin-bottom: 6px;
+  }
+  
+  .note-title {
+    font-size: 12px;
+  }
+  
+  /* Tareas y hábitos más compactos */
+  .task-item {
+    padding: 2px 4px;
+  }
+  
+  .habit-item {
+    padding: 3px 5px;
+  }
+}
+
+/* Responsive Design Original */
 @media (max-width: 1024px) {
   .bento-grid {
     grid-template-columns: 1fr;
@@ -2164,212 +2293,5 @@ body {
   .pill-btn {
     padding: 0.425rem 0.875rem;
     font-size: 0.8rem;
-  }
-}
-
-/* Responsive Design - Tablet y Móvil */
-@media (max-width: 1024px) {
-  /* Tablet */
-  .nexus-grid {
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(18, 1fr);
-    gap: 6px;
-    padding: 8px;
-    height: 100vh;
-    overflow-y: auto;
-  }
-  
-  .welcome-card {
-    grid-column: 1 / span 10;
-    grid-row: 1 / span 2;
-  }
-  
-  .tasks-card {
-    grid-column: 1 / span 5;
-    grid-row: 3 / span 4;
-  }
-  
-  .events-card {
-    grid-column: 6 / span 5;
-    grid-row: 3 / span 4;
-  }
-  
-  .weekly-menu-card {
-    grid-column: 1 / span 10;
-    grid-row: 7 / span 3;
-  }
-  
-  .nexus-buttons {
-    grid-column: 1 / span 10;
-    grid-row: 10 / span 1;
-  }
-  
-  .calendar-card {
-    grid-column: 1 / span 6;
-    grid-row: 11 / span 5;
-  }
-  
-  .notes-card {
-    grid-column: 7 / span 4;
-    grid-row: 11 / span 3;
-  }
-  
-  .routine-card {
-    grid-column: 7 / span 4;
-    grid-row: 14 / span 2;
-  }
-  
-  .gallery-personal {
-    grid-column: 1 / span 5;
-    grid-row: 16 / span 2;
-  }
-  
-  .gallery-academic {
-    grid-column: 6 / span 5;
-    grid-row: 16 / span 2;
-  }
-}
-
-@media (max-width: 768px) {
-  /* Móvil */
-  .nexus-grid {
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(20, 1fr);
-    gap: 4px;
-    padding: 6px;
-    height: 100vh;
-    overflow-y: auto;
-  }
-  
-  .welcome-card {
-    grid-column: 1 / span 6;
-    grid-row: 1 / span 2;
-  }
-  
-  .tasks-card {
-    grid-column: 1 / span 3;
-    grid-row: 3 / span 3;
-  }
-  
-  .events-card {
-    grid-column: 4 / span 3;
-    grid-row: 3 / span 3;
-  }
-  
-  .weekly-menu-card {
-    grid-column: 1 / span 6;
-    grid-row: 6 / span 3;
-  }
-  
-  .nexus-buttons {
-    grid-column: 1 / span 6;
-    grid-row: 9 / span 1;
-    flex-wrap: wrap;
-    gap: 2px;
-  }
-  
-  .nexus-pill-btn {
-    font-size: 10px;
-    padding: 4px 8px;
-  }
-  
-  .calendar-card {
-    grid-column: 1 / span 6;
-    grid-row: 10 / span 4;
-  }
-  
-  .notes-card {
-    grid-column: 1 / span 3;
-    grid-row: 14 / span 3;
-  }
-  
-  .routine-card {
-    grid-column: 4 / span 3;
-    grid-row: 14 / span 3;
-  }
-  
-  .gallery-personal {
-    grid-column: 1 / span 3;
-    grid-row: 17 / span 2;
-  }
-  
-  .gallery-academic {
-    grid-column: 4 / span 3;
-    grid-row: 17 / span 2;
-  }
-  
-  .gallery-grid {
-    grid-template-columns: 1fr;
-    gap: 2px;
-  }
-  
-  .gallery-card {
-    height: 60px;
-  }
-}
-
-@media (max-width: 480px) {
-  /* Móvil pequeño */
-  .nexus-grid {
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(24, 1fr);
-    gap: 3px;
-    padding: 4px;
-  }
-  
-  .welcome-card {
-    grid-column: 1 / span 4;
-    grid-row: 1 / span 2;
-  }
-  
-  .tasks-card {
-    grid-column: 1 / span 2;
-    grid-row: 3 / span 3;
-  }
-  
-  .events-card {
-    grid-column: 3 / span 2;
-    grid-row: 3 / span 3;
-  }
-  
-  .weekly-menu-card {
-    grid-column: 1 / span 4;
-    grid-row: 6 / span 3;
-  }
-  
-  .nexus-buttons {
-    grid-column: 1 / span 4;
-    grid-row: 9 / span 2;
-    flex-direction: column;
-  }
-  
-  .nexus-pill-btn {
-    font-size: 9px;
-    padding: 3px 6px;
-  }
-  
-  .calendar-card {
-    grid-column: 1 / span 4;
-    grid-row: 11 / span 5;
-  }
-  
-  .notes-card {
-    grid-column: 1 / span 2;
-    grid-row: 16 / span 4;
-  }
-  
-  .routine-card {
-    grid-column: 3 / span 2;
-    grid-row: 16 / span 4;
-  }
-  
-  .gallery-personal {
-    grid-column: 1 / span 2;
-    grid-row: 20 / span 2;
-  }
-  
-  .gallery-academic {
-    grid-column: 3 / span 2;
-    grid-row: 20 / span 2;
   }
 }
