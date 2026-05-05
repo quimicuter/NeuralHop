@@ -1,46 +1,21 @@
 import React from 'react'
 import './NetworkContact.css'
 
-// Seed data estricto - Investigación Hub
-// SOLO: Dr. Niveen Khashab y Carlos Saul Osorio-González
-const RESEARCH_CONTACTS = [
-  { 
-    id: 'dr-niveen-khashab', 
-    name: 'Dr. Niveen Khashab', 
-    emoji: '🔬', 
-    color: '#667eea',
-    institution: 'KAUST',
-    role: 'Principal Investigator'
-  },
-  { 
-    id: 'carlos-saul-osorio', 
-    name: 'Carlos Saul Osorio-González', 
-    emoji: '🧪', 
-    color: '#f093fb',
-    institution: 'Research Lab',
-    role: 'Collaborator'
-  }
-]
-
 function NetworkContact({ entries, onContactClick }) {
-  // Mapear entries de tipo contacto de investigación
-  const contactEntries = entries?.filter(e => 
+  // Solo usar entries de Firebase de tipo 'research-contact' o con contactType
+  const contacts = (entries || []).filter(e => 
     e.type === 'research-contact' || e.metadata?.contactType === 'research'
-  ) || []
-
-  const contacts = RESEARCH_CONTACTS.map(contact => {
-    const entry = contactEntries.find(e => 
-      e.metadata?.contactId === contact.id || 
-      e.title?.toLowerCase().includes(contact.name.toLowerCase())
-    )
-    
-    return {
-      ...contact,
-      lastInteraction: entry?.metadata?.lastInteraction,
-      notes: entry?.metadata?.notes,
-      entryId: entry?.id
-    }
-  })
+  ).map(entry => ({
+    id: entry.metadata?.contactId || entry.id,
+    name: entry.title,
+    emoji: entry.metadata?.emoji || '🔬',
+    color: entry.metadata?.color || '#667eea',
+    institution: entry.metadata?.institution || 'Institución no definida',
+    role: entry.metadata?.role || 'Contacto de investigación',
+    lastInteraction: entry.metadata?.lastInteraction,
+    notes: entry.metadata?.notes,
+    entryId: entry.id
+  }))
 
   return (
     <div className="network-contact-widget">

@@ -1,49 +1,18 @@
 import React from 'react'
 import './CodeSnippet.css'
 
-// Seed data de snippets Python para Data Science
-const DEFAULT_SNIPPETS = [
-  {
-    id: 'pandas-import',
-    filename: 'data_import.py',
-    language: 'python',
-    code: `import pandas as pd
-import numpy as np
-
-# Cargar dataset
-df = pd.read_csv('data.csv')
-print(df.head())
-print(df.describe())`
-  },
-  {
-    id: 'matplotlib-viz',
-    filename: 'visualization.py',
-    language: 'python',
-    code: `import matplotlib.pyplot as plt
-import seaborn as sns
-
-# Crear visualización
-plt.figure(figsize=(10, 6))
-sns.scatterplot(data=df, x='x', y='y', hue='category')
-plt.title('Análisis de Datos')
-plt.show()`
-  }
-]
-
 function CodeSnippet({ entries, onAddSnippet, onSnippetClick }) {
   // Mapear entries de tipo 'code' o con code en metadata
   const codeEntries = entries?.filter(e => 
     e.type === 'code' || e.metadata?.code
   ) || []
 
-  const snippets = codeEntries.length > 0
-    ? codeEntries.map(entry => ({
-        id: entry.id,
-        filename: entry.metadata?.filename || 'snippet.py',
-        language: entry.metadata?.language || 'python',
-        code: entry.metadata?.code || entry.content
-      }))
-    : DEFAULT_SNIPPETS
+  const snippets = codeEntries.map(entry => ({
+    id: entry.id,
+    filename: entry.metadata?.filename || 'snippet.py',
+    language: entry.metadata?.language || 'python',
+    code: entry.metadata?.code || entry.content
+  }))
 
   const renderHighlightedCode = (code) => {
     // Simple syntax highlighting para Python

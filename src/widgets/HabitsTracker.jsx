@@ -1,61 +1,44 @@
-import React, { useState } from 'react'
+import React from 'react'
 
-function HabitsTracker() {
-  // Mock data for habits
-  const [habits, setHabits] = useState([
-    {
-      id: 1,
-      name: "Masaje cuero cabelludo",
-      nextDueDate: "domingo",
-      daysUntilNext: 0,
-      streak: 3,
-      isCompleted: false
-    },
-    {
-      id: 2,
-      name: "Meditación matutina",
-      nextDueDate: "hoy",
-      daysUntilNext: 0,
-      streak: 7,
-      isCompleted: true
-    },
-    {
-      id: 3,
-      name: "Leer 15 minutos",
-      nextDueDate: "mañana",
-      daysUntilNext: 1,
-      streak: 12,
-      isCompleted: false
-    },
-    {
-      id: 4,
-      name: "Ejercicio de estiramiento",
-      nextDueDate: "martes",
-      daysUntilNext: 2,
-      streak: 5,
-      isCompleted: false
-    },
-    {
-      id: 5,
-      name: "Toma de vitaminas",
-      nextDueDate: "jueves",
-      daysUntilNext: 4,
-      streak: 20,
-      isCompleted: false
+function HabitsTracker({ entries, onToggleHabit }) {
+  // Mapear entries de Firebase de tipo 'habit' a formato de visualización
+  const habits = (entries || []).filter(e => e.type === 'habit').map(entry => {
+    // Calcular días hasta próxima repetición basado en habitDays y última fecha
+    const today = new Date()
+    const dayOfWeek = today.getDay() // 0 = Domingo, 1 = Lunes, etc.
+    const habitDays = entry.metadata?.habitDays || []
+    
+    // Encontrar próximo día del hábito
+    let daysUntilNext = null
+    if (habitDays.length > 0) {
+      const nextDays = habitDays.filter(d => d >= dayOfWeek)
+      if (nextDays.length > 0) {
+        daysUntilNext = nextDays[0] - dayOfWeek
+      } else {
+        daysUntilNext = 7 - dayOfWeek + habitDays[0]
+      }
     }
-  ])
+    
+    const nextDueLabels = ['Hoy', 'Mañana', 'En 2 días', 'En 3 días', 'En 4 días', 'En 5 días', 'En 6 días']
+    
+    return {
+      id: entry.id,
+      name: entry.title,
+      nextDueDate: daysUntilNext !== null ? nextDueLabels[daysUntilNext] : 'Programado',
+      daysUntilNext: daysUntilNext ?? 7,
+      streak: entry.metadata?.streak || 0,
+      isCompleted: entry.completed || false,
+      habitDays: habitDays
+    }
+  })
 
-  // Filter habits to show only those with daysUntilNext <= 2
+  // Filter habits to show only those with daysUntilNext <= 2 (próximos a vencer)
   const visibleHabits = habits.filter(habit => habit.daysUntilNext <= 2)
 
   const handleCheckboxChange = (habitId) => {
-    setHabits(prevHabits => 
-      prevHabits.map(habit => 
-        habit.id === habitId 
-          ? { ...habit, isCompleted: !habit.isCompleted }
-          : habit
-      )
-    )
+    if (onToggleHabit) {
+      onToggleHabit(habitId)
+    }
   }
 
   const getProximityText = (daysUntilNext, nextDueDate) => {

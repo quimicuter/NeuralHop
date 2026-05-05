@@ -1,40 +1,20 @@
 import React from 'react'
 import './MultimediaRepo.css'
 
-// Videos predefinidos como seed data
-const DEFAULT_VIDEOS = [
-  {
-    id: 'rutina-ciatica',
-    title: 'Rutina para Ciática',
-    emoji: '🦵',
-    category: 'Alivio de dolor',
-    youtubeId: null // El usuario agregará el ID
-  },
-  {
-    id: 'distension-abdominal',
-    title: 'Distensión Abdominal',
-    emoji: '🫃',
-    category: 'Bienestar digestivo',
-    youtubeId: null
-  }
-]
-
 function MultimediaRepo({ entries, onAddVideo, onVideoClick }) {
   // Mapear entries de tipo 'video' o con youtubeId en metadata
   const videoEntries = entries?.filter(e => 
     e.type === 'video' || e.metadata?.youtubeId
   ) || []
 
-  // Combinar entries con videos por defecto
-  const videos = videoEntries.length > 0 
-    ? videoEntries.map(entry => ({
-        id: entry.id,
-        title: entry.title,
-        emoji: entry.metadata?.emoji || '📺',
-        category: entry.metadata?.category || 'Fitness',
-        youtubeId: entry.metadata?.youtubeId
-      }))
-    : DEFAULT_VIDEOS
+  // Solo usar entries de Firebase
+  const videos = videoEntries.map(entry => ({
+    id: entry.id,
+    title: entry.title,
+    emoji: entry.metadata?.emoji || '📺',
+    category: entry.metadata?.category || 'Fitness',
+    youtubeId: entry.metadata?.youtubeId
+  }))
 
   const getYoutubeEmbedUrl = (youtubeId) => {
     if (!youtubeId) return null

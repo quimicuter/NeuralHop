@@ -1,41 +1,16 @@
 import React from 'react'
 import './ProgressBars.css'
 
-// 3 metas predefinidas para Fitness Hub
-const DEFAULT_GOALS = [
-  {
-    id: 'split-completo',
-    title: 'Split Completo',
-    emoji: '🤸',
-    color: '#f48fb1', // Pink
-    defaultProgress: 65
-  },
-  {
-    id: 'destensar-cadera',
-    title: 'Destensar Cadera',
-    emoji: '🧘',
-    color: '#81d4fa', // Light Blue
-    defaultProgress: 40
-  },
-  {
-    id: 'crecimiento-gluteos',
-    title: 'Crecimiento Glúteos',
-    emoji: '🍑',
-    color: '#ce93d8', // Purple
-    defaultProgress: 55
-  }
-]
-
 function ProgressBars({ entries, onGoalClick }) {
-  // Mapear entries a metas (si existen) o usar valores por defecto
-  const goals = DEFAULT_GOALS.map(goal => {
-    const entry = entries?.find(e => e.metadata?.goalId === goal.id)
-    return {
-      ...goal,
-      progress: entry?.metadata?.progress ?? goal.defaultProgress,
-      entryId: entry?.id
-    }
-  })
+  // Solo usar entries de Firebase de tipo 'goal'
+  const goals = (entries || []).filter(e => e.type === 'goal' || e.metadata?.goalId).map(entry => ({
+    id: entry.metadata?.goalId || entry.id,
+    title: entry.title,
+    emoji: entry.metadata?.emoji || '🎯',
+    color: entry.metadata?.color || '#90caf9',
+    progress: entry.metadata?.progress || 0,
+    entryId: entry.id
+  }))
 
   const circumference = 2 * Math.PI * 42 // r=42
 

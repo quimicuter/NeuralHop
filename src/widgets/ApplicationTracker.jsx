@@ -2,34 +2,20 @@ import React from 'react'
 import TableView from '../views/TableView'
 import './ApplicationTracker.css'
 
-// Seed data predefinida - Maestría Hub
-const DEFAULT_APPLICATIONS = [
-  {
-    id: 'kaust-vsrp-2026',
-    program: 'KAUST VSRP 2026',
-    laboratory: 'Smart Hybrid Materials Laboratory',
-    status: 'draft',
-    deadline: '2026-02-15',
-    progress: 25
-  }
-]
-
 function ApplicationTracker({ entries, onRowClick }) {
   // Mapear entries de tipo aplicación
   const applicationEntries = entries?.filter(e => 
     e.type === 'application' || e.metadata?.applicationType
   ) || []
 
-  const applications = applicationEntries.length > 0
-    ? applicationEntries.map(entry => ({
-        id: entry.id,
-        program: entry.title,
-        laboratory: entry.metadata?.laboratory || 'Por definir',
-        status: entry.status || entry.metadata?.status || 'todo',
-        deadline: entry.metadata?.deadline,
-        progress: entry.metadata?.progress || 0
-      }))
-    : DEFAULT_APPLICATIONS
+  const applications = applicationEntries.map(entry => ({
+    id: entry.id,
+    program: entry.title,
+    laboratory: entry.metadata?.laboratory || 'Por definir',
+    status: entry.status || entry.metadata?.status || 'todo',
+    deadline: entry.metadata?.deadline,
+    progress: entry.metadata?.progress || 0
+  }))
 
   const columns = [
     { key: 'program', title: 'Programa' },

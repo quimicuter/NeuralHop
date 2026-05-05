@@ -1,31 +1,24 @@
 import React from 'react'
 import './RelationshipRadar.css'
 
-// Seed data actualizada - Mindfulness Hub
-const DEFAULT_CONTACTS = [
-  { id: 'jaquelina', name: 'Jaquelina', emoji: '👩', color: '#f48fb1' },
-  { id: 'jose-carlos', name: 'Jose Carlos', emoji: '👨', color: '#90caf9' },
-  { id: 'amigo-1', name: 'Amigo 1', emoji: '👤', color: '#a5d6a7' }
-]
-
 function RelationshipRadar({ entries }) {
-  // Calcular días desde último contacto para cada persona
-  const contacts = DEFAULT_CONTACTS.map(contact => {
-    const entry = entries.find(e => 
-      e.metadata?.contactId === contact.id || 
-      e.title?.toLowerCase().includes(contact.name.toLowerCase())
-    )
-    
-    const lastContact = entry?.metadata?.lastContactDate || entry?.metadata?.lastContact
+  // Solo usar entries de Firebase de tipo 'contact-entry' o con contactId
+  const contacts = (entries || []).filter(e => 
+    e.type === 'contact-entry' || e.metadata?.contactId
+  ).map(entry => {
+    const lastContact = entry.metadata?.lastContactDate || entry.metadata?.lastContact
     const daysSince = lastContact 
       ? Math.ceil((new Date() - new Date(lastContact)) / (1000 * 60 * 60 * 24))
       : null
     
     return {
-      ...contact,
+      id: entry.metadata?.contactId || entry.id,
+      name: entry.title,
+      emoji: entry.metadata?.emoji || '👤',
+      color: entry.metadata?.color || '#90caf9',
       daysSince,
       lastContact,
-      entryId: entry?.id
+      entryId: entry.id
     }
   })
 

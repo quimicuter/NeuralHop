@@ -1,50 +1,26 @@
 import React from 'react'
 import './CyclicTracker.css'
 
-const DEFAULT_CYCLES = [
-  {
-    id: 'lavado-cabello',
-    title: 'Lavado de cabello',
-    emoji: '🧴',
-    frequency: 'Cada 2-3 días',
-    lastDone: null,
-    color: '#81d4fa'
-  },
-  {
-    id: 'exfoliacion',
-    title: 'Exfoliación',
-    emoji: '✨',
-    frequency: '2-3 veces/semana',
-    lastDone: null,
-    color: '#ce93d8'
-  },
-  {
-    id: 'corte-mensual',
-    title: 'Corte mensual',
-    emoji: '✂️',
-    frequency: 'Mensual',
-    lastDone: null,
-    color: '#a5d6a7'
-  },
-  {
-    id: 'planchado',
-    title: 'Planchado',
-    emoji: '💆‍♀️',
-    frequency: 'Según necesidad',
-    lastDone: null,
-    color: '#ffcc80'
-  }
-]
+// Configuración de tipos de ciclos disponibles (no datos, solo metadatos de UI)
+const CYCLE_TEMPLATES = {
+  'lavado-cabello': { emoji: '🧴', color: '#81d4fa' },
+  'exfoliacion': { emoji: '✨', color: '#ce93d8' },
+  'corte-mensual': { emoji: '✂️', color: '#a5d6a7' },
+  'planchado': { emoji: '💆‍♀️', color: '#ffcc80' }
+}
 
 function CyclicTracker({ entries, onCycleComplete }) {
-  // Mapear entries a ciclos
-  const cycles = DEFAULT_CYCLES.map(cycle => {
-    const entry = entries.find(e => e.metadata?.cycleId === cycle.id)
+  // Solo usar entries de Firebase - mapear a ciclos
+  const cycles = (entries || []).filter(e => e.type === 'cycle' || e.metadata?.cycleId).map(entry => {
+    const template = CYCLE_TEMPLATES[entry.metadata?.cycleId] || { emoji: '🔄', color: '#90caf9' }
     return {
-      ...cycle,
-      entryId: entry?.id,
-      lastDone: entry?.metadata?.lastDone,
-      completed: entry?.completed || false
+      id: entry.metadata?.cycleId || entry.id,
+      title: entry.title,
+      emoji: template.emoji,
+      color: template.color,
+      entryId: entry.id,
+      lastDone: entry.metadata?.lastDone,
+      completed: entry.completed || false
     }
   })
 

@@ -1,463 +1,148 @@
 import React, { useState, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import './GlobalAddModal.css'
 
-function GlobalAddModal({ isOpen, onClose, preselectedType = 'task' }) {
+// ===== CONFIGURACIÓN CENTRALIZADA =====
+const SCOPE_MODULES = {
+  personal: ['selfcare', 'mindfulness', 'vida-social', 'fitness', 'foodie'],
+  academico: ['data-science', 'investigacion', 'maestria', 'laboratorio', 'idiomas'],
+  general: ['cumpleanos', 'finanzas', 'tramites']
+}
+
+const SCOPE_LABELS = {
+  personal: { label: 'Personal', emoji: '👤' },
+  academico: { label: 'Académico', emoji: '🎓' },
+  general: { label: 'General', emoji: '🌍' }
+}
+
+const MODULE_CONFIG = {
+  // Personal
+  'selfcare': { label: 'Selfcare', emoji: '🛀', allowsHabits: true },
+  'mindfulness': { label: 'Mindfulness', emoji: '🧘‍♀️', allowsHabits: true },
+  'vida-social': { label: 'Vida Social', emoji: '🥂', allowsHabits: false },
+  'fitness': { label: 'Fitness', emoji: '💪', allowsHabits: true },
+  'foodie': { label: 'Foodie', emoji: '🍜', allowsHabits: true },
+  // Académico
+  'data-science': { label: 'Data Science', emoji: '📊', allowsHabits: false },
+  'investigacion': { label: 'Investigación', emoji: '🔬', allowsHabits: true },
+  'maestria': { label: 'Maestría', emoji: '🎓', allowsHabits: false },
+  'laboratorio': { label: 'Laboratorio', emoji: '🧪', allowsHabits: false },
+  'idiomas': { label: 'Idiomas', emoji: '🗣️', allowsHabits: true },
+  // General
+  'cumpleanos': { label: 'Cumpleaños', emoji: '🎂', allowsHabits: false, isBirthday: true },
+  'finanzas': { label: 'Finanzas', emoji: '💰', allowsHabits: false },
+  'tramites': { label: 'Trámites', emoji: '📋', allowsHabits: false }
+}
+
+const TYPE_CONFIG = {
+  task: { label: 'Tarea', emoji: '📝', allowedScopes: ['personal', 'academico', 'general'] },
+  event: { label: 'Evento', emoji: '📅', allowedScopes: ['personal', 'academico', 'general'] },
+  habit: { label: 'Hábito', emoji: '🔄', allowedScopes: ['personal', 'academico', 'general'] }
+}
+
+const PRIORITY_CONFIG = {
+  low: { label: 'Baja', emoji: '🟢', color: '#22c55e' },
+  medium: { label: 'Media', emoji: '🟡', color: '#eab308' },
+  high: { label: 'Alta', emoji: '🔴', color: '#ef4444' }
+}
+
+const WEEK_DAYS = [
+  { value: 1, label: 'L' },
+  { value: 2, label: 'M' },
+  { value: 3, label: 'M' },
+  { value: 4, label: 'J' },
+  { value: 5, label: 'V' },
+  { value: 6, label: 'S' },
+  { value: 0, label: 'D' }
+]
+
+// ===== COMPONENTE PRINCIPAL =====
+function GlobalAddModal({ isOpen, onClose }) {
   const { actions } = useApp()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  
+  // Estado del formulario con estructura cascada
   const [formData, setFormData] = useState({
-    type: preselectedType,
+    // Nivel 1: Ámbito (requerido primero)
+    scope: '',
+    // Nivel 2: Módulo (requiere ámbito)
+    module: '',
+    // Nivel 3: Tipo (requiere módulo)
+    type: '',
+    // Datos base
     title: '',
-    category: 'personal',
-    subcategory: '',
-    freeCategory: '',
-    date: '',
-    startTime: '',
-    endTime: '',
-    location: '',
+    description: '',
+    // Metadata dinámica
     deadline: '',
     deadlineTime: '',
     priority: 'medium',
+    eventDate: '',
+    eventTime: '',
+    eventEndTime: '',
+    location: '',
     recurring: false,
     recurrenceType: 'weekly',
     habitDays: [],
-    notes: '',
-    // Campos especializados
-    metadata: {
-      code: '',
-      filename: '',
-      language: 'python',
-      weekNumber: '',
-      tags: [],
-      paperTag: '',
-      journal: '',
-      laboratory: '',
-      program: '',
-      requirementId: '',
-      inventoryCategory: '',
-      quantity: '',
-      unit: '',
-      subject: '',
-      translation: '',
-      language: '',
-      front: '',
-      back: '',
-      productCategory: '',
-      cycleId: '',
-      contactId: '',
-      youtubeId: '',
-      goalId: '',
-      progress: 0
-    }
+    // Wizard cumpleaños
+    birthdayName: '',
+    birthDate: '',
+    hasParty: false,
+    partyDate: '',
+    partyTime: ''
   })
 
-  // Actualizar el tipo cuando cambia preselectedType
+  // Resetear formulario cuando se abre el modal
   useEffect(() => {
-    setFormData(prev => ({ ...prev, type: preselectedType }))
-  }, [preselectedType])
+    if (isOpen) {
+      setFormData({
+        scope: '',
+        module: '',
+        type: '',
+        title: '',
+        description: '',
+        deadline: '',
+        deadlineTime: '',
+        priority: 'medium',
+        eventDate: '',
+        eventTime: '',
+        eventEndTime: '',
+        location: '',
+        recurring: false,
+        recurrenceType: 'weekly',
+        habitDays: [],
+        birthdayName: '',
+        birthDate: '',
+        hasParty: false,
+        partyDate: '',
+        partyTime: ''
+      })
+      setIsSubmitting(false)
+    }
+  }, [isOpen])
 
-  // ─── TIPOS DINÁMICOS POR RUTA ───
-  const location = useLocation()
-  const currentPath = location.pathname
-  
-  // Detectar si estamos en un Hub específico
-  const isInHub = currentPath.startsWith('/hub/')
-  const hubModule = isInHub ? currentPath.split('/')[3] : null
-  
-  // Tipos base disponibles siempre
-  const baseTypeOptions = [
-    { value: 'task', label: 'Tarea', emoji: '📝' },
-    { value: 'event', label: 'Evento', emoji: '📅' },
-    { value: 'habit', label: 'Hábito', emoji: '🔄' }
-  ]
-  
-  // Tipos especializados por Hub
-  const specializedTypeOptions = {
-    'data-science': [
-      { value: 'code', label: 'Code Snippet', emoji: '🐍' },
-      { value: 'course-module', label: 'Módulo Curso', emoji: '📚' }
-    ],
-    'investigacion': [
-      { value: 'paper', label: 'Paper', emoji: '📄' }
-    ],
-    'maestria': [
-      { value: 'application', label: 'Aplicación', emoji: '🎓' },
-      { value: 'titulacion', label: 'Requisito Titulación', emoji: '✅' }
-    ],
-    'lab': [
-      { value: 'inventory', label: 'Inventario', emoji: '📦' },
-      { value: 'experiment', label: 'Experimento', emoji: '🔬' }
-    ],
-    'idiomas': [
-      { value: 'flashcard', label: 'Flashcard', emoji: '🎴' },
-      { value: 'vocabulary', label: 'Vocabulario', emoji: '📖' }
-    ],
-    'selfcare': [
-      { value: 'product', label: 'Producto', emoji: '🧴' },
-      { value: 'cycle', label: 'Ciclo', emoji: '🔄' }
-    ],
-    'mindfulness': [
-      { value: 'journal', label: 'Entrada Diario', emoji: '📓' },
-      { value: 'contact-entry', label: 'Contacto', emoji: '💞' }
-    ],
-    'vida-social': [
-      { value: 'wishlist', label: 'Lista Deseos', emoji: '🎁' },
-      { value: 'memory', label: 'Recuerdo', emoji: '📸' }
-    ],
-    'fitness': [
-      { value: 'video', label: 'Video Rutina', emoji: '🎬' },
-      { value: 'goal', label: 'Meta Fitness', emoji: '🎯' }
-    ]
-  }
-  
-  // Combinar tipos base + especializados del hub actual
-  const typeOptions = isInHub && specializedTypeOptions[hubModule]
-    ? [...baseTypeOptions, ...specializedTypeOptions[hubModule]]
-    : baseTypeOptions
-
-  const categoryOptions = [
-    { value: 'personal', label: 'Personal', emoji: '👤' },
-    { value: 'escolar', label: 'Académico', emoji: '🎓' },
-    { value: 'general', label: 'General', emoji: '🌍' }
-  ]
-
-  const personalModules = [
-    { value: 'self-care', label: 'Self Care', emoji: '🛀' },
-    { value: 'mindfulness', label: 'Mindfulness', emoji: '🧘‍♀️' },
-    { value: 'vida-social', label: 'Vida Social', emoji: '🥂' },
-    { value: 'fitness', label: 'Fitness', emoji: '💪' }
-  ]
-
-  const academicModules = [
-    { value: 'maestria', label: 'Maestría', emoji: '🎓' },
-    { value: 'data-science', label: 'Data Science', emoji: '📊' },
-    { value: 'lab', label: 'Lab', emoji: '🧪' },
-    { value: 'idiomas', label: 'Idiomas', emoji: '🗣️' },
-    { value: 'investigacion', label: 'Investigación', emoji: '🔬' }
-  ]
-
-  const generalCategories = [
-    { value: 'social', label: 'Social', emoji: '🥂' },
-    { value: 'cumpleaños', label: 'Cumpleaños', emoji: '🎂' },
-    { value: 'otro', label: 'Otro', emoji: '📌' }
-  ]
-
-  const priorityOptions = [
-    { value: 'low', label: 'Baja', emoji: '🟢' },
-    { value: 'medium', label: 'Media', emoji: '🟡' },
-    { value: 'high', label: 'Alta', emoji: '🔴' }
-  ]
-
-  const weekDays = [
-    { value: 1, label: 'L' },
-    { value: 2, label: 'M' },
-    { value: 3, label: 'M' },
-    { value: 4, label: 'J' },
-    { value: 5, label: 'V' },
-    { value: 6, label: 'S' },
-    { value: 0, label: 'D' }
-  ]
-
-  // ─── OPCIONES ESPECIALIZADAS ───
-  const paperTagOptions = [
-    { value: 'smart-materials', label: 'Smart Materials' },
-    { value: 'biomass-conversion', label: 'Biomass Conversion' },
-    { value: 'metabolic-diseases', label: 'Metabolic Diseases' }
-  ]
-  
-  const inventoryCategoryOptions = [
-    { value: 'reactivos', label: 'Reactivos' },
-    { value: 'material-roto', label: 'Material Roto' },
-    { value: 'protocolos', label: 'Protocolos' }
-  ]
-  
-  const subjectOptions = [
-    { value: 'experimentacion', label: 'Experimentación en Ingenierías' },
-    { value: 'quimica-organica', label: 'Química Orgánica' },
-    { value: 'quimica-2', label: 'Química 2' }
-  ]
-  
-  const languageOptions = [
-    { value: 'frances', label: 'Français' },
-    { value: 'aleman', label: 'Deutsch' },
-    { value: 'italiano', label: 'Italiano' },
-    { value: 'japones', label: '日本語' },
-    { value: 'toefl', label: 'TOEFL' }
-  ]
-  
-  const productCategoryOptions = [
-    { value: 'skincare', label: 'Skincare' },
-    { value: 'haircare', label: 'Haircare' },
-    { value: 'gel-nail-polish', label: 'Gel Nail Polish' }
-  ]
-  
-  const cycleOptions = [
-    { value: 'lavado', label: 'Lavado de cabello' },
-    { value: 'exfoliacion', label: 'Exfoliación' },
-    { value: 'corte', label: 'Corte mensual' },
-    { value: 'planchado', label: 'Planchado' }
-  ]
-  
-  const titulacionOptions = [
-    { value: 'tesis', label: 'Tesis/Proyecto de titulación' },
-    { value: 'acto', label: 'Acto protocolario' },
-    { value: 'liberacion', label: 'Liberación de servicio social' },
-    { value: 'certificado', label: 'Certificado de idioma' },
-    { value: 'credits', label: '100% de créditos aprobados' },
-    { value: 'constancia', label: 'Constancia de no adeudo' }
-  ]
-
-  useEffect(() => {
-    // Auto-set annual recurrence for birthday events
-    if (formData.type === 'event' && formData.category === 'general' && formData.freeCategory === 'cumpleaños') {
-      setFormData(prev => ({
-        ...prev,
-        recurring: true,
-        recurrenceType: 'annual'
-      }))
-    }
-  }, [formData.type, formData.category, formData.freeCategory])
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    
-    const entryData = {
-      ...formData,
-      id: Date.now().toString(), // Generar ID único
-      status: 'todo',
-      tags: [],
-      createdAt: new Date().toISOString()
-    }
-
-    // Set appropriate category based on selection
-    if (formData.category === 'general') {
-      entryData.category = 'general'
-      entryData.subcategory = formData.freeCategory
-    } else {
-      entryData.subcategory = formData.subcategory
-    }
-
-    // Para eventos, usar la fecha del evento
-    if (formData.type === 'event' && formData.date) {
-      entryData.date = formData.date
-    }
-    // Para tareas, usar la fecha límite si existe
-    else if (formData.type === 'task' && formData.deadline) {
-      entryData.date = formData.deadline
-    }
-
-    // Construir entryData para la nueva colección 'entries'
-    const newEntry = {
-      type: formData.type,
-      title: formData.title,
-      scope: formData.category === 'general' ? 'global' : formData.category,
-      module: formData.category === 'general' ? formData.freeCategory : formData.subcategory,
-      status: 'todo',
-      priority: formData.priority,
-      completed: false,
-      tags: [],
-      metadata: {}
-    }
-
-    // Añadir campos específicos por tipo
-    if (formData.type === 'event') {
-      newEntry.deadline = formData.date
-      newEntry.metadata = {
-        startTime: formData.startTime,
-        endTime: formData.endTime,
-        location: formData.location
+  // ===== HANDLERS =====
+  const updateField = (field, value) => {
+    setFormData(prev => {
+      const updates = { [field]: value }
+      
+      // Lógica de cascada: si cambia un nivel superior, resetear los inferiores
+      if (field === 'scope') {
+        updates.module = ''
+        updates.type = ''
       }
-    } else if (formData.type === 'task') {
-      newEntry.deadline = formData.deadline
-      newEntry.metadata = {
-        deadlineTime: formData.deadlineTime
+      if (field === 'module') {
+        updates.type = ''
+        // Resetear campos específicos del módulo anterior
+        if (MODULE_CONFIG[value]?.isBirthday) {
+          updates.type = 'event'
+        }
       }
-    } else if (formData.type === 'habit') {
-      newEntry.metadata = {
-        habitDays: formData.habitDays,
-        recurring: formData.recurring,
-        recurrenceType: formData.recurrenceType
-      }
-    }
-    
-    // ─── TIPOS ESPECIALIZADOS ───
-    else if (formData.type === 'code') {
-      newEntry.metadata = {
-        code: formData.metadata.code,
-        filename: formData.metadata.filename || 'snippet.py',
-        language: formData.metadata.language || 'python'
-      }
-      newEntry.content = formData.metadata.code
-    }
-    else if (formData.type === 'course-module') {
-      newEntry.metadata = {
-        weekNumber: formData.metadata.weekNumber,
-        topic: formData.title,
-        courseId: 'data-science-main'
-      }
-    }
-    else if (formData.type === 'paper') {
-      newEntry.metadata = {
-        paperType: true,
-        tags: [formData.metadata.paperTag],
-        journal: formData.metadata.journal
-      }
-      newEntry.status = 'idea' // Papers empiezan en "idea"
-    }
-    else if (formData.type === 'application') {
-      newEntry.metadata = {
-        applicationType: true,
-        program: formData.metadata.program,
-        laboratory: formData.metadata.laboratory,
-        deadline: formData.deadline,
-        progress: 0
-      }
-    }
-    else if (formData.type === 'titulacion') {
-      newEntry.metadata = {
-        requirementId: formData.metadata.requirementId
-      }
-      newEntry.completed = false
-    }
-    else if (formData.type === 'inventory') {
-      newEntry.metadata = {
-        inventoryType: true,
-        category: formData.metadata.inventoryCategory,
-        quantity: formData.metadata.quantity,
-        unit: formData.metadata.unit,
-        status: 'available',
-        lastUpdated: new Date().toISOString()
-      }
-    }
-    else if (formData.type === 'experiment') {
-      newEntry.metadata = {
-        subject: formData.metadata.subject,
-        date: formData.date
-      }
-    }
-    else if (formData.type === 'flashcard') {
-      newEntry.metadata = {
-        flashcardData: true,
-        front: formData.metadata.front,
-        back: formData.metadata.back,
-        language: formData.metadata.language,
-        translation: formData.metadata.back
-      }
-      newEntry.completed = false
-    }
-    else if (formData.type === 'vocabulary') {
-      newEntry.metadata = {
-        language: formData.metadata.language,
-        translation: formData.metadata.translation
-      }
-      newEntry.completed = false
-    }
-    else if (formData.type === 'product') {
-      newEntry.metadata = {
-        category: formData.metadata.productCategory
-      }
-    }
-    else if (formData.type === 'cycle') {
-      newEntry.metadata = {
-        cycleId: formData.metadata.cycleId,
-        lastDone: new Date().toISOString()
-      }
-    }
-    else if (formData.type === 'journal') {
-      newEntry.metadata = {
-        mood: 'neutral'
-      }
-    }
-    else if (formData.type === 'contact-entry') {
-      newEntry.metadata = {
-        contactId: formData.metadata.contactId,
-        lastContactDate: new Date().toISOString()
-      }
-    }
-    else if (formData.type === 'wishlist') {
-      newEntry.metadata = {
-        isWishlist: true,
-        estimatedPrice: ''
-      }
-      newEntry.status = 'ideas'
-    }
-    else if (formData.type === 'memory') {
-      newEntry.metadata = {
-        photoUrl: '',
-        location: formData.location
-      }
-    }
-    else if (formData.type === 'video') {
-      newEntry.metadata = {
-        youtubeId: formData.metadata.youtubeId
-      }
-    }
-    else if (formData.type === 'goal') {
-      newEntry.metadata = {
-        goalId: formData.metadata.goalId,
-        progress: 0
-      }
-    }
-
-    if (formData.notes) {
-      newEntry.content = formData.notes
-    }
-
-    actions.addEntry(newEntry)
-    onClose()
-    setFormData({
-      type: 'task',
-      title: '',
-      category: isInHub ? (hubModule && ['selfcare', 'mindfulness', 'vida-social', 'fitness'].includes(hubModule) ? 'personal' : 'escolar') : 'personal',
-      subcategory: isInHub ? hubModule : '',
-      freeCategory: '',
-      date: '',
-      startTime: '',
-      endTime: '',
-      location: '',
-      deadline: '',
-      deadlineTime: '',
-      priority: 'medium',
-      recurring: false,
-      recurrenceType: 'weekly',
-      habitDays: [],
-      notes: '',
-      metadata: {
-        code: '',
-        filename: '',
-        language: 'python',
-        weekNumber: '',
-        tags: [],
-        paperTag: '',
-        journal: '',
-        laboratory: '',
-        program: '',
-        requirementId: '',
-        inventoryCategory: '',
-        quantity: '',
-        unit: '',
-        subject: '',
-        translation: '',
-        front: '',
-        back: '',
-        productCategory: '',
-        cycleId: '',
-        contactId: '',
-        youtubeId: '',
-        goalId: '',
-        progress: 0
-      }
+      
+      return { ...prev, ...updates }
     })
   }
 
-  const handlePillClick = (name, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
-
-  const handleDayClick = (dayValue) => {
+  const toggleHabitDay = (dayValue) => {
     setFormData(prev => ({
       ...prev,
       habitDays: prev.habitDays.includes(dayValue)
@@ -466,559 +151,483 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = 'task' }) {
     }))
   }
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }))
+  // ===== VALIDACIONES DEL EMBUDO =====
+  const canSelectModule = formData.scope !== ''
+  const canSelectType = formData.module !== ''
+  const currentModuleConfig = MODULE_CONFIG[formData.module] || {}
+  const canSelectHabit = currentModuleConfig.allowsHabits
+  const isBirthdayModule = currentModuleConfig.isBirthday
+
+  // Tipos disponibles según el módulo
+  const getAvailableTypes = () => {
+    const types = [
+      { value: 'task', label: 'Tarea', emoji: '📝' },
+      { value: 'event', label: 'Evento', emoji: '📅' }
+    ]
+    
+    if (canSelectHabit) {
+      types.push({ value: 'habit', label: 'Hábito', emoji: '🔄' })
+    }
+    
+    return types
   }
-  
-  const handleMetadataChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      metadata: {
-        ...prev.metadata,
-        [name]: value
+
+  // ===== SUBMIT CON LOADING STATE =====
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (isSubmitting) return
+
+    setIsSubmitting(true)
+
+    try {
+      let payloads = []
+
+      // ===== WIZARD CUMPLEAÑOS: Crear 2 registros =====
+      if (isBirthdayModule && formData.birthdayName && formData.birthDate) {
+        // 1. Recordatorio del cumpleaños (entry general)
+        payloads.push({
+          type: 'event',
+          title: `🎂 Cumpleaños de ${formData.birthdayName}`,
+          scope: 'general',
+          module: 'cumpleanos',
+          status: 'todo',
+          priority: 'medium',
+          completed: false,
+          deadline: formData.birthDate,
+          metadata: {
+            isBirthdayReminder: true,
+            birthdayPerson: formData.birthdayName,
+            birthDate: formData.birthDate,
+            recurring: true,
+            recurrenceType: 'annual'
+          }
+        })
+
+        // 2. Evento de fiesta (si aplica)
+        if (formData.hasParty && formData.partyDate) {
+          payloads.push({
+            type: 'event',
+            title: `🎉 Fiesta de ${formData.birthdayName}`,
+            scope: 'personal',
+            module: 'vida-social',
+            status: 'todo',
+            priority: 'high',
+            completed: false,
+            deadline: formData.partyDate,
+            metadata: {
+              isBirthdayParty: true,
+              birthdayPerson: formData.birthdayName,
+              startTime: formData.partyTime,
+              relatedReminder: 'cumpleanos'
+            }
+          })
+        }
       }
-    }))
+      // ===== FLUJO NORMAL =====
+      else {
+        const basePayload = {
+          type: formData.type,
+          title: formData.title,
+          scope: formData.scope,
+          module: formData.module,
+          status: 'todo',
+          priority: formData.priority,
+          completed: false,
+          metadata: {}
+        }
+
+        // Metadata específica por tipo
+        if (formData.type === 'task') {
+          basePayload.deadline = formData.deadline
+          basePayload.metadata = {
+            deadlineTime: formData.deadlineTime,
+            description: formData.description
+          }
+        }
+        else if (formData.type === 'event') {
+          basePayload.deadline = formData.eventDate
+          basePayload.metadata = {
+            startTime: formData.eventTime,
+            endTime: formData.eventEndTime,
+            location: formData.location,
+            recurring: formData.recurring,
+            recurrenceType: formData.recurrenceType,
+            description: formData.description
+          }
+        }
+        else if (formData.type === 'habit') {
+          basePayload.metadata = {
+            habitDays: formData.habitDays,
+            recurring: true,
+            recurrenceType: 'weekly',
+            description: formData.description
+          }
+        }
+
+        payloads.push(basePayload)
+      }
+
+      // Enviar todos los payloads a Firebase
+      for (const payload of payloads) {
+        await actions.addEntry(payload)
+      }
+
+      // Cerrar modal solo si todo fue exitoso
+      onClose()
+    } catch (error) {
+      console.error('Error al guardar:', error)
+      alert('Error al guardar. Por favor intenta de nuevo.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (!isOpen) return null
 
-  const getModuleOptions = () => {
-    switch (formData.category) {
-      case 'personal':
-        return personalModules
-      case 'escolar':
-        return academicModules
-      case 'general':
-        return generalCategories
-      default:
-        return []
-    }
-  }
-
-  const getSelectedModule = () => {
-    if (formData.category === 'general') {
-      return formData.freeCategory
-    }
-    return formData.subcategory
-  }
-
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content global-add-modal centered" onClick={(e) => e.stopPropagation()}>
-        <div className="modal-header centered">
-          <h2 className="text-xl font-semibold text-gray-800">Agregar Nueva Entrada</h2>
+      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <h2>Nueva Entrada</h2>
           <button className="modal-close" onClick={onClose}>✕</button>
         </div>
-        
-        <form onSubmit={handleSubmit} className="modal-form centered">
-          <div className="form-section">
-            <label className="form-label centered">Tipo</label>
-            <div className="pill-group centered">
-              {typeOptions.map(option => (
-                <button
-                  key={option.value}
-                  type="button"
-                  className={`pill-btn petite ${formData.type === option.value ? 'active' : ''}`}
-                  onClick={() => handlePillClick('type', option.value)}
-                >
-                  <span className="pill-emoji">{option.emoji}</span>
-                  <span className="pill-label">{option.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
 
-          <div className="form-section">
-            <label className="form-label centered text-xs">Título</label>
-            <div className="input-container">
-              <input 
-                type="text" 
-                name="title" 
-                value={formData.title} 
-                onChange={handleChange} 
-                className="form-input petite centered py-2 px-3"
-                placeholder="Escribe el título..."
-                required 
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="modal-form">
+          {/* ===== COLUMNA IZQUIERDA: Embudo y Título ===== */}
+          <div className="modal-column modal-column-left">
+            
+            {/* NIVEL 1: ÁMBITO */}
             <div className="form-section">
-              <label className="form-label centered text-xs">Ámbito</label>
-              <div className="pill-group centered">
-                {categoryOptions.map(option => (
+              <span className="form-section-title">Paso 1: Selecciona el Ámbito</span>
+              <div className="pill-group">
+                {Object.entries(SCOPE_LABELS).map(([key, config]) => (
                   <button
-                    key={option.value}
+                    key={key}
                     type="button"
-                    className={`pill-btn petite text-xs ${formData.category === option.value ? 'active' : ''}`}
-                    onClick={() => handlePillClick('category', option.value)}
+                    className={`pill-btn ${formData.scope === key ? 'active' : ''}`}
+                    onClick={() => updateField('scope', key)}
                   >
-                    <span className="pill-emoji">{option.emoji}</span>
-                    <span className="pill-label">{option.label}</span>
+                    <span className="pill-emoji">{config.emoji}</span>
+                    <span className="pill-label">{config.label}</span>
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="form-section">
-              <label className="form-label centered text-xs">
-                {formData.category === 'general' ? 'Categoría Libre' : 'Módulo'}
-              </label>
-              <div className="pill-group centered">
-                {getModuleOptions().map(option => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    className={`pill-btn petite text-xs ${getSelectedModule() === option.value ? 'active' : ''}`}
-                    onClick={() => {
-                      if (formData.category === 'general') {
-                        handlePillClick('freeCategory', option.value)
-                      } else {
-                        handlePillClick('subcategory', option.value)
-                      }
-                    }}
-                  >
-                    <span className="pill-emoji">{option.emoji}</span>
-                    <span className="pill-label">{option.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Dynamic fields based on type */}
-          {formData.type === 'event' && (
-            <div className="form-section">
-              <label className="form-label centered">Detalles del Evento</label>
-              <div className="date-time-group centered">
-                <input 
-                  type="date" 
-                  name="date" 
-                  value={formData.date} 
-                  onChange={handleChange} 
-                  className="form-input petite centered"
-                  placeholder="Fecha"
-                />
-                <input 
-                  type="time" 
-                  name="startTime" 
-                  value={formData.startTime} 
-                  onChange={handleChange} 
-                  className="form-input petite centered"
-                  placeholder="Inicio"
-                />
-                <input 
-                  type="time" 
-                  name="endTime" 
-                  value={formData.endTime} 
-                  onChange={handleChange} 
-                  className="form-input petite centered"
-                  placeholder="Fin"
-                />
-                <input 
-                  type="text" 
-                  name="location" 
-                  value={formData.location} 
-                  onChange={handleChange} 
-                  className="form-input petite centered"
-                  placeholder="Ubicación / Link"
-                />
-              </div>
-            </div>
-          )}
-
-          {formData.type === 'task' && (
-            <div className="grid grid-cols-2 gap-4">
-              <div className="form-section">
-                <label className="form-label centered text-xs">Fecha Límite</label>
-                <div className="date-time-group centered">
-                  <input 
-                    type="date" 
-                    name="deadline" 
-                    value={formData.deadline} 
-                    onChange={handleChange} 
-                    className="form-input petite centered py-1.5 px-3"
-                    placeholder="Fecha límite"
-                  />
-                  <input 
-                    type="time" 
-                    name="deadlineTime" 
-                    value={formData.deadlineTime} 
-                    onChange={handleChange} 
-                    className="form-input petite centered py-1.5 px-3"
-                    placeholder="Hora (opcional)"
-                  />
+            {/* NIVEL 2: MÓDULO (bloqueado hasta seleccionar ámbito) */}
+            <div className={`form-section ${!canSelectModule ? 'section-blocked' : ''}`}>
+              <span className="form-section-title">
+                Paso 2: Selecciona el Módulo
+                {!canSelectModule && <span style={{ marginLeft: '0.5rem', opacity: 0.5 }}>🔒</span>}
+              </span>
+              {canSelectModule && (
+                <div className="pill-group">
+                  {SCOPE_MODULES[formData.scope]?.map(moduleKey => {
+                    const config = MODULE_CONFIG[moduleKey]
+                    return (
+                      <button
+                        key={moduleKey}
+                        type="button"
+                        className={`pill-btn ${formData.module === moduleKey ? 'active' : ''}`}
+                        onClick={() => updateField('module', moduleKey)}
+                      >
+                        <span className="pill-emoji">{config.emoji}</span>
+                        <span className="pill-label">{config.label}</span>
+                      </button>
+                    )
+                  })}
                 </div>
-              </div>
-              
-              <div className="form-section">
-                <label className="form-label centered text-xs">Prioridad</label>
-                <div className="pill-group centered">
-                  {priorityOptions.map(option => (
+              )}
+              {!canSelectModule && (
+                <div className="empty-hint">Selecciona un ámbito primero</div>
+              )}
+            </div>
+
+            {/* NIVEL 3: TIPO (bloqueado hasta seleccionar módulo) */}
+            <div className={`form-section ${!canSelectType ? 'section-blocked' : ''}`}>
+              <span className="form-section-title">
+                Paso 3: Selecciona el Tipo
+                {!canSelectType && <span style={{ marginLeft: '0.5rem', opacity: 0.5 }}>🔒</span>}
+              </span>
+              {canSelectType && (
+                <div className="pill-group">
+                  {getAvailableTypes().map(type => (
                     <button
-                      key={option.value}
+                      key={type.value}
                       type="button"
-                      className={`pill-btn petite text-xs ${formData.priority === option.value ? 'active' : ''}`}
-                      onClick={() => handlePillClick('priority', option.value)}
+                      className={`pill-btn ${formData.type === type.value ? 'active' : ''}`}
+                      onClick={() => updateField('type', type.value)}
                     >
-                      <span className="pill-emoji">{option.emoji}</span>
-                      <span className="pill-label">{option.label}</span>
+                      <span className="pill-emoji">{type.emoji}</span>
+                      <span className="pill-label">{type.label}</span>
                     </button>
                   ))}
                 </div>
-              </div>
+              )}
+              {!canSelectType && (
+                <div className="empty-hint">Selecciona un módulo primero</div>
+              )}
             </div>
-          )}
 
-          {formData.type === 'habit' && (
-            <div className="form-section">
-              <label className="form-label centered">Días de la semana</label>
-              <div className="pill-group centered">
-                {weekDays.map(day => (
-                  <button
-                    key={day.value}
-                    type="button"
-                    className={`pill-btn petite day-pill ${formData.habitDays.includes(day.value) ? 'active' : ''}`}
-                    onClick={() => handleDayClick(day.value)}
-                  >
-                    <span className="pill-label">{day.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* ─── CAMPOS ESPECIALIZADOS ─── */}
-          
-          {/* Code Snippet */}
-          {formData.type === 'code' && (
-            <div className="form-section">
-              <label className="form-label centered">🐍 Code Snippet</label>
-              <input
-                type="text"
-                name="filename"
-                value={formData.metadata.filename}
-                onChange={handleMetadataChange}
-                className="form-input petite centered mb-2"
-                placeholder="Nombre del archivo (ej: data_analysis.py)"
-              />
-              <textarea
-                name="code"
-                value={formData.metadata.code}
-                onChange={handleMetadataChange}
-                className="form-textarea petite centered py-2 px-3"
-                placeholder="Pega tu código Python aquí..."
-                rows={4}
-                style={{ fontFamily: 'monospace', fontSize: '0.8rem' }}
-              />
-            </div>
-          )}
-          
-          {/* Course Module */}
-          {formData.type === 'course-module' && (
-            <div className="form-section">
-              <label className="form-label centered">📚 Módulo del Curso</label>
-              <input
-                type="number"
-                name="weekNumber"
-                value={formData.metadata.weekNumber}
-                onChange={handleMetadataChange}
-                className="form-input petite centered"
-                placeholder="Número de semana (1-12)"
-                min="1"
-                max="12"
-              />
-            </div>
-          )}
-          
-          {/* Paper */}
-          {formData.type === 'paper' && (
-            <div className="form-section">
-              <label className="form-label centered">📄 Paper de Investigación</label>
-              <select
-                name="paperTag"
-                value={formData.metadata.paperTag}
-                onChange={handleMetadataChange}
-                className="form-input petite centered mb-2"
-              >
-                <option value="">Selecciona tag...</option>
-                {paperTagOptions.map(opt => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))}
-              </select>
-              <input
-                type="text"
-                name="journal"
-                value={formData.metadata.journal}
-                onChange={handleMetadataChange}
-                className="form-input petite centered"
-                placeholder="Nombre de la revista (opcional)"
-              />
-            </div>
-          )}
-          
-          {/* Application */}
-          {formData.type === 'application' && (
-            <div className="form-section">
-              <label className="form-label centered">🎓 Aplicación Académica</label>
-              <input
-                type="text"
-                name="program"
-                value={formData.metadata.program}
-                onChange={handleMetadataChange}
-                className="form-input petite centered mb-2"
-                placeholder="Programa (ej: KAUST VSRP 2026)"
-              />
-              <input
-                type="text"
-                name="laboratory"
-                value={formData.metadata.laboratory}
-                onChange={handleMetadataChange}
-                className="form-input petite centered mb-2"
-                placeholder="Laboratorio"
-              />
-              <input
-                type="date"
-                name="deadline"
-                value={formData.deadline}
-                onChange={handleChange}
-                className="form-input petite centered"
-                placeholder="Fecha límite"
-              />
-            </div>
-          )}
-          
-          {/* Titulación */}
-          {formData.type === 'titulacion' && (
-            <div className="form-section">
-              <label className="form-label centered">✅ Requisito de Titulación</label>
-              <select
-                name="requirementId"
-                value={formData.metadata.requirementId}
-                onChange={handleMetadataChange}
-                className="form-input petite centered"
-              >
-                <option value="">Selecciona requisito...</option>
-                {titulacionOptions.map(opt => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))}
-              </select>
-            </div>
-          )}
-          
-          {/* Inventory */}
-          {formData.type === 'inventory' && (
-            <div className="form-section">
-              <label className="form-label centered">📦 Item de Inventario</label>
-              <select
-                name="inventoryCategory"
-                value={formData.metadata.inventoryCategory}
-                onChange={handleMetadataChange}
-                className="form-input petite centered mb-2"
-              >
-                <option value="">Categoría...</option>
-                {inventoryCategoryOptions.map(opt => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))}
-              </select>
-              <div className="grid grid-cols-2 gap-2">
-                <input
-                  type="number"
-                  name="quantity"
-                  value={formData.metadata.quantity}
-                  onChange={handleMetadataChange}
-                  className="form-input petite centered"
-                  placeholder="Cantidad"
-                />
+            {/* TÍTULO (visible cuando hay tipo seleccionado) */}
+            {formData.type && (
+              <div className="form-section metadata-section">
+                <label className="form-label">
+                  {isBirthdayModule ? 'Nombre del cumpleañero/a' : 'Título'}
+                </label>
                 <input
                   type="text"
-                  name="unit"
-                  value={formData.metadata.unit}
-                  onChange={handleMetadataChange}
-                  className="form-input petite centered"
-                  placeholder="Unidad (ml, g, etc)"
+                  className="form-input"
+                  value={isBirthdayModule ? formData.birthdayName : formData.title}
+                  onChange={(e) => updateField(isBirthdayModule ? 'birthdayName' : 'title', e.target.value)}
+                  placeholder={isBirthdayModule ? "Ej: María González" : "Escribe el título..."}
+                  required
                 />
               </div>
-            </div>
-          )}
-          
-          {/* Experiment */}
-          {formData.type === 'experiment' && (
-            <div className="form-section">
-              <label className="form-label centered">🔬 Experimento</label>
-              <select
-                name="subject"
-                value={formData.metadata.subject}
-                onChange={handleMetadataChange}
-                className="form-input petite centered mb-2"
-              >
-                <option value="">Materia...</option>
-                {subjectOptions.map(opt => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))}
-              </select>
-              <input
-                type="date"
-                name="date"
-                value={formData.date}
-                onChange={handleChange}
-                className="form-input petite centered"
-                placeholder="Fecha del experimento"
-              />
-            </div>
-          )}
-          
-          {/* Flashcard */}
-          {formData.type === 'flashcard' && (
-            <div className="form-section">
-              <label className="form-label centered">🎴 Flashcard</label>
-              <select
-                name="language"
-                value={formData.metadata.language}
-                onChange={handleMetadataChange}
-                className="form-input petite centered mb-2"
-              >
-                <option value="">Idioma...</option>
-                {languageOptions.map(opt => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))}
-              </select>
-              <input
-                type="text"
-                name="front"
-                value={formData.metadata.front}
-                onChange={handleMetadataChange}
-                className="form-input petite centered mb-2"
-                placeholder="Texto frontal (ej: Bonjour)"
-              />
-              <input
-                type="text"
-                name="back"
-                value={formData.metadata.back}
-                onChange={handleMetadataChange}
-                className="form-input petite centered"
-                placeholder="Texto trasero (ej: Hola)"
-              />
-            </div>
-          )}
-          
-          {/* Vocabulary */}
-          {formData.type === 'vocabulary' && (
-            <div className="form-section">
-              <label className="form-label centered">📖 Entrada de Vocabulario</label>
-              <select
-                name="language"
-                value={formData.metadata.language}
-                onChange={handleMetadataChange}
-                className="form-input petite centered mb-2"
-              >
-                <option value="">Idioma...</option>
-                {languageOptions.map(opt => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))}
-              </select>
-              <input
-                type="text"
-                name="translation"
-                value={formData.metadata.translation}
-                onChange={handleMetadataChange}
-                className="form-input petite centered"
-                placeholder="Traducción"
-              />
-            </div>
-          )}
-          
-          {/* Product */}
-          {formData.type === 'product' && (
-            <div className="form-section">
-              <label className="form-label centered">🧴 Producto</label>
-              <select
-                name="productCategory"
-                value={formData.metadata.productCategory}
-                onChange={handleMetadataChange}
-                className="form-input petite centered"
-              >
-                <option value="">Categoría...</option>
-                {productCategoryOptions.map(opt => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))}
-              </select>
-            </div>
-          )}
-          
-          {/* Cycle */}
-          {formData.type === 'cycle' && (
-            <div className="form-section">
-              <label className="form-label centered">🔄 Ciclo de Cuidado</label>
-              <select
-                name="cycleId"
-                value={formData.metadata.cycleId}
-                onChange={handleMetadataChange}
-                className="form-input petite centered"
-              >
-                <option value="">Selecciona ciclo...</option>
-                {cycleOptions.map(opt => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
-                ))}
-              </select>
-            </div>
-          )}
-          
-          {/* Video */}
-          {formData.type === 'video' && (
-            <div className="form-section">
-              <label className="form-label centered">🎬 Video de Rutina</label>
-              <input
-                type="text"
-                name="youtubeId"
-                value={formData.metadata.youtubeId}
-                onChange={handleMetadataChange}
-                className="form-input petite centered"
-                placeholder="YouTube Video ID (ej: dQw4w9WgXcQ)"
-              />
-            </div>
-          )}
+            )}
 
-          <div className="form-section">
-            <label className="form-label centered">Prioridad</label>
-            <div className="pill-group centered">
-              {priorityOptions.map(option => (
-                <button
-                  key={option.value}
-                  type="button"
-                  className={`pill-btn petite ${formData.priority === option.value ? 'active' : ''}`}
-                  onClick={() => handlePillClick('priority', option.value)}
-                >
-                  <span className="pill-emoji">{option.emoji}</span>
-                  <span className="pill-label">{option.label}</span>
-                </button>
-              ))}
-            </div>
+            {/* DESCRIPCIÓN OPCIONAL */}
+            {formData.type && !isBirthdayModule && (
+              <div className="form-section">
+                <label className="form-label">Descripción (opcional)</label>
+                <textarea
+                  className="form-textarea"
+                  value={formData.description}
+                  onChange={(e) => updateField('description', e.target.value)}
+                  placeholder="Añade detalles adicionales..."
+                  rows={2}
+                />
+              </div>
+            )}
+
           </div>
 
-          <div className="form-section">
-            <label className="form-label centered text-xs">Notas</label>
-            <div className="input-container">
-              <textarea 
-                name="notes" 
-                value={formData.notes} 
-                onChange={handleChange} 
-                className="form-textarea petite centered py-2 px-3"
-                placeholder="Añade notas adicionales..."
-                rows={2}
-              />
-            </div>
+          {/* ===== COLUMNA DERECHA: Metadata Dinámica ===== */}
+          <div className="modal-column modal-column-right">
+            
+            {/* METADATA: TAREA */}
+            {formData.type === 'task' && (
+              <div className="metadata-section">
+                <span className="form-section-title">📝 Detalles de la Tarea</span>
+                
+                <div className="form-section">
+                  <label className="form-label">Fecha límite</label>
+                  <div className="date-time-row">
+                    <input
+                      type="date"
+                      className="form-input"
+                      value={formData.deadline}
+                      onChange={(e) => updateField('deadline', e.target.value)}
+                      required
+                    />
+                    <input
+                      type="time"
+                      className="form-input"
+                      value={formData.deadlineTime}
+                      onChange={(e) => updateField('deadlineTime', e.target.value)}
+                      placeholder="Hora (opcional)"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-section">
+                  <label className="form-label">Prioridad</label>
+                  <div className="pill-group">
+                    {Object.entries(PRIORITY_CONFIG).map(([key, config]) => (
+                      <button
+                        key={key}
+                        type="button"
+                        className={`pill-btn ${formData.priority === key ? 'active' : ''}`}
+                        onClick={() => updateField('priority', key)}
+                      >
+                        <span className="pill-emoji">{config.emoji}</span>
+                        <span className="pill-label">{config.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* METADATA: EVENTO */}
+            {formData.type === 'event' && !isBirthdayModule && (
+              <div className="metadata-section">
+                <span className="form-section-title">📅 Detalles del Evento</span>
+                
+                <div className="form-section">
+                  <label className="form-label">Fecha</label>
+                  <input
+                    type="date"
+                    className="form-input"
+                    value={formData.eventDate}
+                    onChange={(e) => updateField('eventDate', e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="form-section">
+                  <label className="form-label">Horario</label>
+                  <div className="date-time-row">
+                    <input
+                      type="time"
+                      className="form-input"
+                      value={formData.eventTime}
+                      onChange={(e) => updateField('eventTime', e.target.value)}
+                      placeholder="Inicio"
+                    />
+                    <input
+                      type="time"
+                      className="form-input"
+                      value={formData.eventEndTime}
+                      onChange={(e) => updateField('eventEndTime', e.target.value)}
+                      placeholder="Fin"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-section">
+                  <label className="form-label">Ubicación / Link</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    value={formData.location}
+                    onChange={(e) => updateField('location', e.target.value)}
+                    placeholder="Ej: Salón 302 o https://zoom.com/..."
+                  />
+                </div>
+
+                <div className="form-section">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={formData.recurring}
+                      onChange={(e) => updateField('recurring', e.target.checked)}
+                    />
+                    Evento recurrente
+                  </label>
+                  {formData.recurring && (
+                    <select
+                      className="form-select"
+                      value={formData.recurrenceType}
+                      onChange={(e) => updateField('recurrenceType', e.target.value)}
+                      style={{ marginTop: '0.5rem' }}
+                    >
+                      <option value="daily">Diario</option>
+                      <option value="weekly">Semanal</option>
+                      <option value="monthly">Mensual</option>
+                      <option value="annual">Anual</option>
+                    </select>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* METADATA: HÁBITO */}
+            {formData.type === 'habit' && (
+              <div className="metadata-section">
+                <span className="form-section-title">🔄 Configuración del Hábito</span>
+                
+                <div className="form-section">
+                  <label className="form-label">Días de la semana</label>
+                  <div className="pill-group">
+                    {WEEK_DAYS.map(day => (
+                      <button
+                        key={day.value}
+                        type="button"
+                        className={`pill-btn day-pill ${formData.habitDays.includes(day.value) ? 'active' : ''}`}
+                        onClick={() => toggleHabitDay(day.value)}
+                      >
+                        <span className="pill-label">{day.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* WIZARD: CUMPLEAÑOS */}
+            {isBirthdayModule && formData.type === 'event' && (
+              <div className="birthday-wizard">
+                <div className="birthday-wizard-title">
+                  <span>🎂</span>
+                  <span>Wizard de Cumpleaños</span>
+                </div>
+
+                <div className="form-section">
+                  <label className="form-label">Fecha de nacimiento</label>
+                  <input
+                    type="date"
+                    className="form-input"
+                    value={formData.birthDate}
+                    onChange={(e) => updateField('birthDate', e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="form-section">
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={formData.hasParty}
+                      onChange={(e) => updateField('hasParty', e.target.checked)}
+                    />
+                    ¿Habrá fiesta?
+                  </label>
+                </div>
+
+                {formData.hasParty && (
+                  <>
+                    <div className="form-divider" />
+                    <div className="form-section">
+                      <label className="form-label">Fecha de la fiesta</label>
+                      <input
+                        type="date"
+                        className="form-input"
+                        value={formData.partyDate}
+                        onChange={(e) => updateField('partyDate', e.target.value)}
+                        required={formData.hasParty}
+                      />
+                    </div>
+                    <div className="form-section">
+                      <label className="form-label">Hora de la fiesta</label>
+                      <input
+                        type="time"
+                        className="form-input"
+                        value={formData.partyTime}
+                        onChange={(e) => updateField('partyTime', e.target.value)}
+                      />
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+
           </div>
 
-          <div className="form-actions centered">
-            <button type="button" onClick={onClose} className="btn-cancel">Cancelar</button>
-            <button type="submit" className="btn-submit">Agregar</button>
+          {/* ===== ACCIONES ===== */}
+          <div className="form-actions">
+            <button 
+              type="button" 
+              className="btn-cancel" 
+              onClick={onClose}
+              disabled={isSubmitting}
+            >
+              Cancelar
+            </button>
+            <button 
+              type="submit" 
+              className="btn-submit"
+              disabled={isSubmitting || !formData.type || (!isBirthdayModule && !formData.title) || (isBirthdayModule && !formData.birthdayName)}
+            >
+              {isSubmitting ? (
+                <>
+                  <span className="spinner" />
+                  <span>Guardando...</span>
+                </>
+              ) : (
+                <span>Guardar</span>
+              )}
+            </button>
           </div>
         </form>
       </div>

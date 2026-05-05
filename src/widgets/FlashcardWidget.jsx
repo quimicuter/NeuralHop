@@ -1,26 +1,17 @@
 import React, { useState } from 'react'
 import './FlashcardWidget.css'
 
-// Seed data para flashcards
-const DEFAULT_FLASHCARDS = [
-  { id: 1, front: 'Bonjour', back: 'Hola (Francés)', language: 'frances' },
-  { id: 2, front: 'Guten Tag', back: 'Buenos días (Alemán)', language: 'aleman' },
-  { id: 3, front: 'Ciao', back: 'Hola/Chao (Italiano)', language: 'italiano' }
-]
-
 function FlashcardWidget({ entries, onCardMastered }) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)
 
-  // Mapear entries o usar seed data
-  const flashcards = entries?.length > 0
-    ? entries.map(e => ({
-        id: e.id,
-        front: e.title,
-        back: e.metadata?.translation || e.content,
-        language: e.metadata?.language || 'general'
-      }))
-    : DEFAULT_FLASHCARDS
+  // Mapear entries de Firebase
+  const flashcards = (entries || []).map(e => ({
+    id: e.id,
+    front: e.title,
+    back: e.metadata?.translation || e.content,
+    language: e.metadata?.language || 'general'
+  }))
 
   const currentCard = flashcards[currentIndex]
 
