@@ -57,7 +57,7 @@ const WEEK_DAYS = [
 ]
 
 // ===== COMPONENTE PRINCIPAL =====
-function GlobalAddModal({ isOpen, onClose }) {
+function GlobalAddModal({ isOpen, onClose, preselectedType = '' }) {
   const { actions } = useApp()
   const [isSubmitting, setIsSubmitting] = useState(false)
   
@@ -68,7 +68,7 @@ function GlobalAddModal({ isOpen, onClose }) {
     // Nivel 2: Módulo (requiere ámbito)
     module: '',
     // Nivel 3: Tipo (requiere módulo)
-    type: '',
+    type: preselectedType || '',
     // Datos base
     title: '',
     description: '',
@@ -97,7 +97,7 @@ function GlobalAddModal({ isOpen, onClose }) {
       setFormData({
         scope: '',
         module: '',
-        type: '',
+        type: preselectedType || '',
         title: '',
         description: '',
         deadline: '',
@@ -118,7 +118,7 @@ function GlobalAddModal({ isOpen, onClose }) {
       })
       setIsSubmitting(false)
     }
-  }, [isOpen])
+  }, [isOpen, preselectedType])
 
   // ===== HANDLERS =====
   const updateField = (field, value) => {
