@@ -13,6 +13,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
   margin-bottom: 8px;
   padding-bottom: 6px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
@@ -219,32 +220,30 @@
 
 /* --- MODAL CENTRADO Y ESTÉTICO --- */
 .note-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(8px);
+  position: fixed !important;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
-  padding: 20px;
+  z-index: 99999;
+  padding: 24px;
 }
 
 .note-modal {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(25px);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(30px);
   border-radius: 24px;
   padding: 24px;
-  max-width: 400px;
-  width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  max-width: 480px;
+  width: min(100%, 480px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.18);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
+  position: relative;
 }
 
 .note-modal-header {

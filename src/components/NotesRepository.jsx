@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import ReactDOM from 'react-dom'
 import { useApp } from '../context/AppContext'
 import './NotesRepository.css'
 
@@ -217,9 +218,13 @@ const NotesRepository = () => {
       </div>
 
       {/* Modal estético para agregar/editar nota */}
-      {(isAddingNote || editingNote) && (
-        <div className="note-modal-overlay">
-          <div className="note-modal">
+      {isAddingNote || editingNote ? ReactDOM.createPortal(
+        <div className="note-modal-overlay" onClick={() => {
+          setIsAddingNote(false)
+          setEditingNote(null)
+          setNewNote({ title: '', content: '', color: '#fbf72486' })
+        }}>
+          <div className="note-modal" onClick={(e) => e.stopPropagation()}>
             <div className="note-modal-header">
               <h4 className="note-modal-title">{editingNote ? 'Editar Nota' : 'Nueva Nota'}</h4>
               <button 
@@ -292,8 +297,9 @@ const NotesRepository = () => {
               </div>
             </div>
           </div>
-        </div>
-      )}
+        </div>,
+        document.body
+      ) : null}
 
       {/* Modal de confirmación de eliminación (Legacy - ahora usamos window.confirm) */}
       {showDeleteConfirm && (
