@@ -4,12 +4,13 @@ import './NotesRepository.css'
 
 const NotesRepository = () => {
   const { state, actions } = useApp()
-  const [notes, setNotes] = useState([])
+  const [notes, setNotes] = useState([]) // EXORCISMO: Estado inicial estrictamente vacío
   const [isAddingNote, setIsAddingNote] = useState(false)
   const [newNote, setNewNote] = useState({ title: '', content: '', color: '#fbf72486' })
   const [editingNote, setEditingNote] = useState(null)
-  const [selectedNotes, setSelectedNotes] = useState(new Set())
+  const [selectedNoteId, setSelectedNoteId] = useState(null) // Cambiado: selección individual para eliminar
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [copiedId, setCopiedId] = useState(null) // Para feedback visual de copiado
 
   useEffect(() => {
     // Cargar notas desde Firebase y localStorage
@@ -74,25 +75,34 @@ const NotesRepository = () => {
     }
   }
 
-  const handleDeleteNotes = () => {
-    const updatedNotes = notes.filter(note => !selectedNotes.has(note.id))
+  const handleDeleteNote = (noteId) => {
+    if (window.confirm('¿Estás segura de que deseas eliminar esta nota?')) {
+      const updatedNotes = notes.filter(note => note.id !== noteId)
+      saveNotes(updatedNotes)
+    }
+  }
+
+  const handleDeleteSelected = () => {
+    const updatedNotes = notes.filter(note => note.id !== selectedNoteId)
     saveNotes(updatedNotes)
-    setSelectedNotes(new Set())
+    setSelectedNoteId(null)
     setShowDeleteConfirm(false)
   }
 
-  const handleCopyNote = (content) => {
-    navigator.clipboard.writeText(content)
+  const handleCopyNote = async (content, noteId) => {
+    try {
+      await navigator.clipboard.writeText(content)
+      setCopiedId(noteId)
+      setTimeout(() => setCopiedId(null), 2000) // Reset después de 2 segundos
+    } catch (err) {
+      console.error('Error al copiar:', err)
+    }
   }
 
-  const toggleNoteSelection = (noteId) => {
-    const newSelected = new Set(selectedNotes)
-    if (newSelected.has(noteId)) {
-      newSelected.delete(noteId)
-    } else {
-      newSelected.add(noteId)
-    }
-    setSelectedNotes(newSelected)
+  const handleNoteClick = (note, e) => {
+    // Si hizo clic en un botón de acción, no abrir edición
+    if (e.target.closest('.note-action-btn')) return
+    setEditingNote(note)
   }
 
   const formatDate = (dateString) => {
@@ -143,51 +153,60 @@ const NotesRepository = () => {
         </div>
       )}
 
-      {/* Lista de notas */}
+      {/* Lista de notas - REDISEÑO COMPLETO */}
       <div className="notes-list">
         {notes.length === 0 ? (
           <div className="empty-notes">
-            <p>📝 No tienes notas aún</p>
-            <p>Click en "+" para comenzar</p>
+            <p>No hay notas aún. ✨</p>
           </div>
         ) : (
           notes.map(note => (
             <div 
               key={note.id}
-              className={`note-item ${selectedNotes.has(note.id) ? 'selected' : ''}`}
-              onClick={() => toggleNoteSelection(note.id)}
+              className={`note-item ${selectedNoteId === note.id ? 'selected' : ''} ${copiedId === note.id ? 'just-copied' : ''}`}
+              onClick={(e) => handleNoteClick(note, e)}
               style={{ borderLeftColor: note.color }}
             >
+              {/* HEADER: Título izquierda, fecha + iconos derecha */}
               <div className="note-item-header">
                 <h4 className="note-item-title">{note.title}</h4>
-                <div className="note-actions">
-                  <button 
-                    className="note-action-btn"
-                    onClick={(e) => { e.stopPropagation(); setEditingNote(note); }}
-                  >
-                    ✏️
-                  </button>
-                  <button 
-                    className="note-action-btn"
-                    onClick={(e) => { e.stopPropagation(); handleCopyNote(note.content); }}
-                  >
-                    📋
-                  </button>
+                <div className="note-header-right">
+                  <span className="note-date">{formatDate(note.updatedAt)}</span>
+                  <div className="note-actions">
+                    <button 
+                      className="note-action-btn"
+                      onClick={(e) => { e.stopPropagation(); handleCopyNote(note.content, note.id); }}
+                      title="Copiar"
+                    >
+                      📋
+                    </button>
+                    <button 
+                      className="note-action-btn"
+                      onClick={(e) => { e.stopPropagation(); setEditingNote(note); }}
+                      title="Editar"
+                    >
+                      ✏️
+                    </button>
+                    <button 
+                      className="note-action-btn delete-btn"
+                      onClick={(e) => { e.stopPropagation(); handleDeleteNote(note.id); }}
+                      title="Eliminar"
+                    >
+                      ❌
+                    </button>
+                  </div>
                 </div>
               </div>
               
+              {/* CUERPO: Truncado con ellipsis (2 líneas máximo) */}
               <div className="note-preview">
-                <p className="note-content-text">
-                  {note.content.length > 80 
-                    ? `${note.content.substring(0, 80)}...` 
-                    : note.content
-                  }
-                </p>
+                <p className="note-content-text">{note.content}</p>
               </div>
               
-              <div className="note-meta">
-                <span className="note-date">{formatDate(note.updatedAt)}</span>
-              </div>
+              {/* Feedback visual de copiado */}
+              {copiedId === note.id && (
+                <div className="copy-feedback">¡Copiado!</div>
+              )}
             </div>
           ))
         )}
@@ -272,15 +291,15 @@ const NotesRepository = () => {
         </div>
       )}
 
-      {/* Modal de confirmación de eliminación */}
+      {/* Modal de confirmación de eliminación (Legacy - ahora usamos window.confirm) */}
       {showDeleteConfirm && (
         <div className="note-modal-overlay">
           <div className="note-modal confirm-modal">
-            <h4 className="note-modal-title">¿Eliminar notas?</h4>
-            <p className="confirm-text">Se eliminarán {selectedNotes.size} nota(s).</p>
+            <h4 className="note-modal-title">¿Eliminar nota?</h4>
+            <p className="confirm-text">Esta acción no se puede deshacer.</p>
             <div className="note-modal-actions">
               <button className="note-cancel-btn" onClick={() => setShowDeleteConfirm(false)}>Cancelar</button>
-              <button className="note-delete-btn" onClick={handleDeleteNotes}>Eliminar</button>
+              <button className="note-delete-btn" onClick={handleDeleteSelected}>Eliminar</button>
             </div>
           </div>
         </div>

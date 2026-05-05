@@ -3,8 +3,9 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0.5rem;
-  align-items: flex-start;
+  padding: 0.75rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* --- HEADER ESTÁNDAR COMO EL RESTO --- */
@@ -57,12 +58,13 @@
   flex: 1;
   overflow-y: auto;
   max-height: 400px;
-  padding-right: 6px;
+  padding-right: 4px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Evita que estire los elementos */
+  justify-content: flex-start;
   align-items: stretch;
-  gap: 6px;
+  gap: 8px;
+  width: 100%;
   /* Ocultar barra de scroll para estética limpia */
   scrollbar-width: none;
 }
@@ -73,108 +75,146 @@
 .empty-notes {
   text-align: center;
   padding: 40px 20px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
 }
 
 .empty-notes p {
-  margin: 8px 0;
-  font-size: 13px;
-  font-weight: 500;
-  text-shadow: 0 1px 3px rgba(147, 51, 234, 0.3);
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
 }
 
-/* --- TARJETITAS DE NOTAS (Delicadas) --- */
+/* --- TARJETAS DE NOTAS (REDISEÑO) --- */
 .note-item {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 5px;
-  margin-bottom: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-left: 4px solid transparent;
+  border-radius: 10px;
+  padding: 10px 12px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
   position: relative;
-  height: max-content; /* Obliga a la tarjeta a medir solo lo que mide su texto */
+  width: 100%;
+  box-sizing: border-box;
   flex-shrink: 0;
 }
 
 .note-item:hover {
-  background: rgba(147, 51, 234, 0.15);
+  background: rgba(255, 255, 255, 0.12);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .note-item.selected {
-  background: rgba(236, 72, 153, 0.15);
-  border-color: rgba(236, 72, 153, 0.3);
+  background: rgba(147, 51, 234, 0.2);
+  border-color: rgba(147, 51, 234, 0.4);
 }
 
+/* HEADER: Título izquierda, fecha + iconos derecha */
 .note-item-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 6px;
+  gap: 8px;
 }
 
-.note-color-indicator {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin-right: 8px;
-  flex-shrink: 0;
-  box-shadow: 0 0 6px rgba(236, 72, 153, 0.4);
-}
-
-.note-title {
+.note-item-title {
   color: rgba(255, 255, 255, 0.95);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   margin: 0;
   flex: 1;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; /* Truncar título si es muy largo */
+  text-overflow: ellipsis;
 }
 
+/* Lado derecho del header: fecha + iconos */
+.note-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.note-date {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+}
+
+/* Botones de acción */
 .note-actions {
   display: flex;
-  gap: 6px;
+  gap: 4px;
 }
 
 .note-action-btn {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.1);
   border: none;
-  font-size: 12px;
+  font-size: 13px;
   cursor: pointer;
-  opacity: 0.5;
-  transition: opacity 0.2s;
-  padding: 2px;
+  opacity: 0.6;
+  transition: all 0.2s ease;
+  padding: 4px 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.note-item:hover .note-action-btn {
+.note-action-btn:hover {
   opacity: 1;
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
 }
 
+.note-action-btn.delete-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+/* CUERPO: Truncado con ellipsis (2 líneas máximo) */
 .note-preview {
-  margin-bottom: 6px;
+  margin-top: 4px;
 }
 
-.note-content {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 10px;
-  line-height: 1.4;
+.note-content-text {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 11px;
+  line-height: 1.5;
   margin: 0;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* Máximo 2 líneas de texto */
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
+  box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.note-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.6);
+/* Feedback visual de copiado */
+.copy-feedback {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(34, 197, 94, 0.9);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  animation: fadeInOut 2s ease;
+  pointer-events: none;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+  20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
 }
 
 /* --- MODAL CENTRADO Y ESTÉTICO --- */
