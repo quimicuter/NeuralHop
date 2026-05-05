@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useApp } from '../context/AppContext'
-import TaskHistoryModal from './TaskHistoryModal'
 
 function SimpleTasks() {
   const { state, actions, getTasks } = useApp()
-  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false)
-
   const tasks = (getTasks && getTasks()) || []
 
   const handleTaskToggle = (taskId) => {
@@ -18,7 +15,9 @@ function SimpleTasks() {
   const getCategoryColor = (category) => {
     switch(category) {
       case 'personal': return '#ffb3c6'
-      case 'escolar': return '#c8a2c8'
+      case 'escolar':
+      case 'academico':
+      case 'academic': return '#c8a2c8'
       case 'general': return '#ff9aa2'
       default: return '#4A90E2'
     }
@@ -27,7 +26,9 @@ function SimpleTasks() {
   const getCategoryLabel = (category) => {
     switch(category) {
       case 'personal': return 'Personal'
-      case 'escolar': return 'Académico'
+      case 'escolar':
+      case 'academico':
+      case 'academic': return 'Académico'
       case 'general': return 'General'
       default: return category
     }
@@ -147,11 +148,6 @@ function SimpleTasks() {
           </div>
         )}
       </div>
-      
-      <TaskHistoryModal 
-        isOpen={isHistoryModalOpen} 
-        onClose={() => setIsHistoryModalOpen(false)} 
-      />
     </>
   )
 }

@@ -13,11 +13,12 @@ function TaskHistoryModal({ isOpen, onClose }) {
       'mindfulness': '🧘‍♀️',
       'vida-social': '🥂',
       'fitness': '💪',
-      'data-science': '�',
+      'data-science': '📊',
       'investigacion': '🔬',
       'maestria': '🎓',
-      'lab': '🧪',
-      'idiomas': '�️'
+      'laboratorio': '🧪',
+      'idiomas': '🗣️',
+      'cumpleanos': '🎂'
     }
     return moduleEmojis[task.module] || '📌'
   }

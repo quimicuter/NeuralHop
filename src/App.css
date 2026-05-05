@@ -29,10 +29,10 @@
 
 html, body, #root {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow: auto;
 }
 
 body {
@@ -41,9 +41,9 @@ body {
   color: var(--text-dark);
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow: auto;
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   background-image: url('https://images.unsplash.com/photo-1507525428034-b723a9ce6890?auto=format&fit=crop&w=1920&q=80');
   background-size: cover;
   background-position: center;
@@ -53,8 +53,8 @@ body {
 .app-container {
   position: relative;
   width: 100vw;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow: auto;
   margin: 0;
   padding: 0;
   max-width: none;
@@ -78,7 +78,48 @@ body {
   padding: 8px;
 }
 
-/* BLOQUE IZQUIERDO (Columnas 1-4) */
+@media (max-width: 1200px) {
+  .nexus-grid {
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(14, minmax(auto, 1fr));
+  }
+
+  .welcome-card { grid-area: 1 / 1 / 3 / 9; }
+  .nexus-buttons { grid-area: 3 / 1 / 4 / 9; }
+  .calendar-card { grid-area: 4 / 1 / 8 / 9; }
+  .tasks-card { grid-area: 8 / 1 / 10 / 5; }
+  .events-card { grid-area: 8 / 5 / 10 / 9; }
+  .notes-card { grid-area: 10 / 1 / 12 / 5; }
+  .routine-card { grid-area: 10 / 5 / 12 / 9; }
+  .gallery-personal, .gallery-academic { grid-area: auto / 1 / auto / 9; }
+  .gallery-personal { min-height: 240px; }
+  .gallery-academic { min-height: 240px; }
+}
+
+@media (max-width: 768px) {
+  .nexus-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+  }
+
+  .welcome-card,
+  .nexus-buttons,
+  .calendar-card,
+  .tasks-card,
+  .events-card,
+  .notes-card,
+  .routine-card,
+  .gallery-personal,
+  .gallery-academic {
+    grid-area: auto / auto / auto / auto;
+    width: 100%;
+  }
+
+  .nexus-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
 .welcome-card {
   grid-area: 1 / 1 / 4 / 5; /* rows 1-3, cols 1-4 (4x3) */
   background: rgba(255, 255, 255, 0.582); /* Same transparency as weekly-menu-card */

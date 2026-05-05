@@ -128,13 +128,20 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '' }) {
       // Lógica de cascada: si cambia un nivel superior, resetear los inferiores
       if (field === 'scope') {
         updates.module = ''
-        updates.type = ''
+        // Mantener el tipo preseleccionado si ya existe
+        if (prev.type) {
+          updates.type = prev.type
+        }
       }
       if (field === 'module') {
-        updates.type = ''
-        // Resetear campos específicos del módulo anterior
-        if (MODULE_CONFIG[value]?.isBirthday) {
+        const moduleConfig = MODULE_CONFIG[value] || {}
+        // Si el módulo es un cumpleaños, forzar evento
+        if (moduleConfig.isBirthday) {
           updates.type = 'event'
+        } else if (prev.type === 'habit' && !moduleConfig.allowsHabits) {
+          updates.type = ''
+        } else {
+          updates.type = prev.type
         }
       }
       
@@ -245,7 +252,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '' }) {
           }
         }
         else if (formData.type === 'event') {
-          basePayload.deadline = formData.eventDate
+          basePayload.date = formData.eventDate
           basePayload.metadata = {
             startTime: formData.eventTime,
             endTime: formData.eventEndTime,

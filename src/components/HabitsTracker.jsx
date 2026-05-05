@@ -19,9 +19,10 @@ function HabitsTracker() {
     const today = new Date()
     const todayDay = today.getDay()
     
-    if (habit.habitDays && habit.habitDays.length > 0) {
+    const habitDays = habit.metadata?.habitDays || []
+  if (habitDays.length > 0) {
       // Calcular próximo día basado en habitDays
-      const daysUntilNext = habit.habitDays
+      const daysUntilNext = habitDays
         .map(day => {
           const targetDay = day === 0 ? 7 : day // Convertir domingo (0) a 7 para cálculo
           const currentDay = todayDay === 0 ? 7 : todayDay

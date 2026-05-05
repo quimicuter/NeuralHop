@@ -140,19 +140,19 @@ function App() {
           {/* BLOQUE CENTRAL (Columnas 5-10) */}
           {/* Navegación (6x2) */}
           <div className="nexus-buttons flex justify-center items-center gap-3">
-            <button className="nexus-pill-btn agenda-btn">
+            <button className="nexus-pill-btn agenda-btn" onClick={() => setIsDataScienceHubOpen(true)}>
               <span>📅</span>
               <span>Agenda</span>
             </button>
-            <button className="nexus-pill-btn biblioteca-btn">
+            <button className="nexus-pill-btn biblioteca-btn" onClick={() => setIsDataScienceHubOpen(true)}>
               <span>📚</span>
               <span>Biblioteca</span>
             </button>
-            <button className="nexus-pill-btn grimorio-btn">
+            <button className="nexus-pill-btn grimorio-btn" onClick={() => setIsDataScienceHubOpen(true)}>
               <span>🔮</span>
               <span>Grimorio</span>
             </button>
-            <button className="nexus-pill-btn shoplist-btn">
+            <button className="nexus-pill-btn shoplist-btn" onClick={() => setIsDataScienceHubOpen(true)}>
               <span>🛒</span>
               <span>Shoplist</span>
             </button>
