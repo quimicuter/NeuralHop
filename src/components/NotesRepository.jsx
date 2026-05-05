@@ -102,6 +102,10 @@ const NotesRepository = () => {
   const handleNoteClick = (note, e) => {
     // Si hizo clic en un botón de acción, no abrir edición
     if (e.target.closest('.note-action-btn')) return
+    if (e.ctrlKey || e.metaKey) {
+      setSelectedNoteId(prev => prev === note.id ? null : note.id)
+      return
+    }
     setEditingNote(note)
   }
 
@@ -139,10 +143,10 @@ const NotesRepository = () => {
       </div>
 
       {/* Controles de selección */}
-      {selectedNotes.size > 0 && (
+      {selectedNoteId !== null && (
         <div className="selection-controls">
           <span className="selection-count">
-            {selectedNotes.size} nota{selectedNotes.size > 1 ? 's' : ''} seleccionada{selectedNotes.size > 1 ? 's' : ''}
+            1 nota seleccionada
           </span>
           <button 
             className="delete-selected-btn"
