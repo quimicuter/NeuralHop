@@ -1,535 +1,468 @@
-import React, { useState, useEffect } from 'react'
-import { useApp } from '../context/AppContext'
-import './GlobalAddModal.css'
+import { useState, useEffect, useCallback } from 'react';
+import { addEntry } from '../engine/EntryEngine';
+import './GlobalAddModal.css';
 
-// ===== CONFIGURACIÓN CENTRALIZADA =====
+// ============================================
+// CONFIGURACIÓN CENTRALIZADA
+// ============================================
 const SCOPE_MODULES = {
   personal: ['selfcare', 'mindfulness', 'vida-social', 'fitness', 'foodie'],
   academico: ['data-science', 'investigacion', 'maestria', 'laboratorio', 'idiomas'],
   general: ['cumpleanos', 'finanzas', 'tramites']
-}
-
-const SCOPE_LABELS = {
-  personal: { label: 'Personal', emoji: '👤', color: '#F6D7DC' },
-  academico: { label: 'Académico', emoji: '🎓', color: '#C8A2C8' },
-  general: { label: 'General', emoji: '🌍', color: '#A2D5C8' }
-}
+};
 
 const MODULE_CONFIG = {
-  'selfcare': { label: 'Self Care', emoji: '🛀', allowsHabits: true },
-  'mindfulness': { label: 'Mindfulness', emoji: '🧘‍♀️', allowsHabits: true },
-  'vida-social': { label: 'Vida Social', emoji: '🥂', allowsHabits: false },
-  'fitness': { label: 'Fitness', emoji: '💪', allowsHabits: true },
-  'foodie': { label: 'Foodie', emoji: '🍜', allowsHabits: true },
-  'data-science': { label: 'Data Science', emoji: '📊', allowsHabits: false },
-  'investigacion': { label: 'Investigación', emoji: '🔬', allowsHabits: true },
-  'maestria': { label: 'Maestría', emoji: '🎓', allowsHabits: false },
-  'laboratorio': { label: 'Laboratorio', emoji: '🧪', allowsHabits: false },
-  'idiomas': { label: 'Idiomas', emoji: '🗣️', allowsHabits: true },
-  'cumpleanos': { label: 'Cumpleaños', emoji: '🎂', allowsHabits: false, isBirthday: true },
-  'finanzas': { label: 'Finanzas', emoji: '💰', allowsHabits: false },
-  'tramites': { label: 'Trámites', emoji: '📋', allowsHabits: false }
-}
+  'selfcare': { emoji: '🧘', label: 'Selfcare', allowsHabits: true },
+  'mindfulness': { emoji: '🫂', label: 'Mindfulness', allowsHabits: true },
+  'vida-social': { emoji: '👥', label: 'Vida Social', allowsHabits: false },
+  'fitness': { emoji: '💪', label: 'Fitness', allowsHabits: true },
+  'foodie': { emoji: '🍽️', label: 'Foodie', allowsHabits: false },
+  'data-science': { emoji: '📊', label: 'Data Science', allowsHabits: false },
+  'investigacion': { emoji: '🔬', label: 'Investigación', allowsHabits: true },
+  'maestria': { emoji: '🎓', label: 'Maestría', allowsHabits: false },
+  'laboratorio': { emoji: '🧪', label: 'Laboratorio', allowsHabits: false },
+  'idiomas': { emoji: '🌍', label: 'Idiomas', allowsHabits: true },
+  'cumpleanos': { emoji: '🎂', label: 'Cumpleaños', allowsHabits: false, isBirthday: true },
+  'finanzas': { emoji: '💰', label: 'Finanzas', allowsHabits: false },
+  'tramites': { emoji: '📋', label: 'Trámites', allowsHabits: false }
+};
+
+const SCOPE_LABELS = {
+  personal: { emoji: '✨', label: 'Personal' },
+  academico: { emoji: '🎓', label: 'Académico' },
+  general: { emoji: '⚙️', label: 'General' }
+};
 
 const TYPE_CONFIG = {
-  task: { label: 'Tarea', emoji: '📝', color: '#F6D7DC' },
-  event: { label: 'Evento', emoji: '📅', color: '#D8B4FE' },
-  habit: { label: 'Hábito', emoji: '🔄', color: '#93C5FD' }
-}
+  tarea: { color: 'pink', icon: '☑️', label: 'Tarea' },
+  evento: { color: 'purple', icon: '📅', label: 'Evento' },
+  habito: { color: 'blue', icon: '🔁', label: 'Hábito' }
+};
 
-const PRIORITY_CONFIG = {
-  low: { label: 'Baja', emoji: '🟢' },
-  medium: { label: 'Media', emoji: '🟡' },
-  high: { label: 'Alta', emoji: '🔴' }
-}
+const PRIORITY_CONFIG = [
+  { value: 'critical', label: 'Crítica', color: '#ef4444', emoji: '🔥' },
+  { value: 'high', label: 'Alta', color: '#f97316', emoji: '⚡' },
+  { value: 'medium', label: 'Media', color: '#eab308', emoji: '📌' },
+  { value: 'low', label: 'Baja', color: '#22c55e', emoji: '🌱' }
+];
 
-const WEEK_DAYS = [
-  { value: 1, label: 'L' },
-  { value: 2, label: 'M' },
-  { value: 3, label: 'M' },
-  { value: 4, label: 'J' },
-  { value: 5, label: 'V' },
-  { value: 6, label: 'S' },
-  { value: 0, label: 'D' }
-]
+const FREQUENCY_OPTIONS = [
+  { value: 'daily', label: 'Diario' },
+  { value: 'weekly', label: 'Semanal' },
+  { value: 'monthly', label: 'Mensual' }
+];
 
-function GlobalAddModal({ isOpen, onClose, preselectedType = '' }) {
-  const { actions } = useApp()
-  const [isSubmitting, setIsSubmitting] = useState(false)
+// ============================================
+// COMPONENTE
+// ============================================
+const GlobalAddModal = ({ isOpen, onClose, onTaskAdded }) => {
+  // Estados del flujo de embudo
+  const [scope, setScope] = useState('personal');
+  const [module, setModule] = useState('selfcare');
+  const [type, setType] = useState('tarea');
+  
+  // Estados del formulario
+  const [title, setTitle] = useState('');
+  const [priority, setPriority] = useState('medium');
+  const [frequency, setFrequency] = useState('daily');
+  const [notes, setNotes] = useState('');
+  const [subtasks, setSubtasks] = useState(['']);
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
+  
+  // Wizard de cumpleaños
+  const [birthdayName, setBirthdayName] = useState('');
+  const [birthdayDate, setBirthdayDate] = useState('');
+  const [hasParty, setHasParty] = useState(false);
+  
+  // Estados UI
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [accentColor, setAccentColor] = useState('rgba(236, 72, 153, 0.3)');
 
-  const [formData, setFormData] = useState({
-    scope: 'personal',
-    module: 'selfcare',
-    type: 'task',
-    title: '',
-    description: '',
-    deadline: '',
-    deadlineTime: '',
-    priority: 'medium',
-    eventDate: '',
-    eventTime: '',
-    eventEndTime: '',
-    location: '',
-    recurring: false,
-    recurrenceType: 'weekly',
-    habitDays: [],
-    birthdayName: '',
-    birthDate: '',
-    hasParty: false,
-    partyDate: '',
-    partyTime: ''
-  })
-
+  // Resetear al abrir
   useEffect(() => {
     if (isOpen) {
-      setFormData({
-        scope: 'personal',
-        module: 'selfcare',
-        type: preselectedType || 'task',
-        title: '',
-        description: '',
-        deadline: '',
-        deadlineTime: '',
-        priority: 'medium',
-        eventDate: '',
-        eventTime: '',
-        eventEndTime: '',
-        location: '',
-        recurring: false,
-        recurrenceType: 'weekly',
-        habitDays: [],
-        birthdayName: '',
-        birthDate: '',
-        hasParty: false,
-        partyDate: '',
-        partyTime: ''
-      })
-      setIsSubmitting(false)
+      setScope('personal');
+      setModule('selfcare');
+      setType('tarea');
+      setTitle('');
+      setPriority('medium');
+      setFrequency('daily');
+      setNotes('');
+      setSubtasks(['']);
+      setDate('');
+      setTime('');
+      setBirthdayName('');
+      setBirthdayDate('');
+      setHasParty(false);
+      setIsSubmitting(false);
+      updateAccentColor('tarea');
     }
-  }, [isOpen, preselectedType])
+  }, [isOpen]);
 
-  const updateField = (field, value) => {
-    setFormData(prev => {
-      const updates = { [field]: value }
-      
-      if (field === 'scope') {
-        updates.module = SCOPE_MODULES[value][0]
-      }
-      if (field === 'module') {
-        const moduleConfig = MODULE_CONFIG[value] || {}
-        if (moduleConfig.isBirthday) {
-          updates.type = 'event'
-        }
-      }
-      
-      return { ...prev, ...updates }
-    })
-  }
+  // Actualizar color según tipo
+  const updateAccentColor = useCallback((newType) => {
+    const colors = {
+      tarea: 'rgba(236, 72, 153, 0.3)',    // Pink
+      evento: 'rgba(147, 51, 234, 0.3)',     // Purple
+      habito: 'rgba(59, 130, 246, 0.3)'      // Blue
+    };
+    setAccentColor(colors[newType] || colors.tarea);
+  }, []);
 
-  const toggleHabitDay = (dayValue) => {
-    setFormData(prev => ({
-      ...prev,
-      habitDays: prev.habitDays.includes(dayValue)
-        ? prev.habitDays.filter(d => d !== dayValue)
-        : [...prev.habitDays, dayValue]
-    }))
-  }
+  // Cambiar tipo
+  const handleTypeChange = (newType) => {
+    setType(newType);
+    updateAccentColor(newType);
+  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (isSubmitting || !formData.title) return
+  // Cambiar ámbito (resetea módulo)
+  const handleScopeChange = (newScope) => {
+    setScope(newScope);
+    const firstModule = SCOPE_MODULES[newScope][0];
+    setModule(firstModule);
+    
+    // Resetear tipo si no permite hábitos
+    const modConfig = MODULE_CONFIG[firstModule];
+    if (type === 'habito' && !modConfig.allowsHabits) {
+      setType('tarea');
+      updateAccentColor('tarea');
+    }
+  };
 
-    setIsSubmitting(true)
+  // Cambiar módulo
+  const handleModuleChange = (newModule) => {
+    setModule(newModule);
+    const modConfig = MODULE_CONFIG[newModule];
+    if (type === 'habito' && !modConfig.allowsHabits) {
+      setType('tarea');
+      updateAccentColor('tarea');
+    }
+  };
 
+  // Agregar subtask
+  const addSubtask = () => setSubtasks([...subtasks, '']);
+  const updateSubtask = (idx, val) => {
+    const updated = [...subtasks];
+    updated[idx] = val;
+    setSubtasks(updated);
+  };
+
+  // Guardar
+  const handleSave = async () => {
+    if (!title.trim() && !MODULE_CONFIG[module]?.isBirthday) return;
+    
+    setIsSubmitting(true);
+    
     try {
-      const currentModuleConfig = MODULE_CONFIG[formData.module] || {}
-      const isBirthdayModule = currentModuleConfig.isBirthday
-      let payloads = []
-
-      if (isBirthdayModule && formData.birthdayName && formData.birthDate) {
-        payloads.push({
-          type: 'event',
-          title: `🎂 Cumpleaños de ${formData.birthdayName}`,
+      // Wizard de cumpleaños - crea 2 registros
+      if (MODULE_CONFIG[module]?.isBirthday && birthdayName && birthdayDate) {
+        // 1. Recordatorio anual
+        await addEntry({
+          title: `🎂 Cumpleaños de ${birthdayName}`,
+          type: 'evento',
           scope: 'general',
           module: 'cumpleanos',
-          status: 'todo',
-          priority: 'medium',
-          completed: false,
-          deadline: formData.birthDate,
-          metadata: {
-            isBirthdayReminder: true,
-            birthdayPerson: formData.birthdayName,
-            birthDate: formData.birthDate,
-            recurring: true,
-            recurrenceType: 'annual'
-          }
-        })
+          date: birthdayDate,
+          priority: 'high',
+          notes: `Cumpleaños de ${birthdayName}`,
+          status: 'active',
+          isBirthdayReminder: true,
+          birthdayName
+        });
 
-        if (formData.hasParty && formData.partyDate) {
-          payloads.push({
-            type: 'event',
-            title: `🎉 Fiesta de ${formData.birthdayName}`,
+        // 2. Evento de fiesta si aplica
+        if (hasParty) {
+          await addEntry({
+            title: `🎉 Fiesta de ${birthdayName}`,
+            type: 'evento',
             scope: 'personal',
             module: 'vida-social',
-            status: 'todo',
-            priority: 'high',
-            completed: false,
-            deadline: formData.partyDate,
-            metadata: {
-              isBirthdayParty: true,
-              birthdayPerson: formData.birthdayName,
-              startTime: formData.partyTime
-            }
-          })
+            date: birthdayDate,
+            time: '20:00',
+            priority: 'medium',
+            notes: `Celebración de cumpleaños de ${birthdayName}`,
+            status: 'active'
+          });
         }
       } else {
-        const basePayload = {
-          type: formData.type,
-          title: formData.title,
-          scope: formData.scope,
-          module: formData.module,
-          status: 'todo',
-          priority: formData.priority,
-          completed: false,
-          metadata: {}
+        // Registro normal
+        const data = {
+          title: title.trim(),
+          type,
+          scope,
+          module,
+          priority,
+          notes: notes.trim(),
+          status: 'active'
+        };
+
+        if (type === 'habito') {
+          data.frequency = frequency;
+        }
+        if (type === 'evento' || date) {
+          data.date = date;
+          if (time) data.time = time;
+        }
+        if (subtasks.filter(s => s.trim()).length > 0) {
+          data.subtasks = subtasks.filter(s => s.trim()).map(s => ({ text: s, done: false }));
         }
 
-        if (formData.type === 'task') {
-          basePayload.deadline = formData.deadline
-          basePayload.metadata = {
-            deadlineTime: formData.deadlineTime,
-            description: formData.description
-          }
-        } else if (formData.type === 'event') {
-          basePayload.date = formData.eventDate
-          basePayload.metadata = {
-            startTime: formData.eventTime,
-            endTime: formData.eventEndTime,
-            location: formData.location,
-            recurring: formData.recurring,
-            recurrenceType: formData.recurrenceType,
-            description: formData.description
-          }
-        } else if (formData.type === 'habit') {
-          basePayload.metadata = {
-            habitDays: formData.habitDays,
-            recurring: true,
-            recurrenceType: 'weekly',
-            description: formData.description
-          }
-        }
-
-        payloads.push(basePayload)
+        await addEntry(data);
       }
 
-      for (const payload of payloads) {
-        await actions.addEntry(payload)
-      }
-
-      onClose()
-    } catch (error) {
-      console.error('Error al guardar:', error)
-      alert('Error al guardar. Por favor intenta de nuevo.')
+      onTaskAdded?.();
+      onClose();
+    } catch (err) {
+      console.error('Error saving:', err);
+      alert('Error al guardar. Intenta de nuevo.');
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
-  const currentModuleConfig = MODULE_CONFIG[formData.module] || {}
-  const isBirthdayModule = currentModuleConfig.isBirthday
-  
-  const getAvailableTypes = () => {
-    const types = ['task', 'event']
-    if (currentModuleConfig.allowsHabits) types.push('habit')
-    return types
-  }
+  const currentModules = SCOPE_MODULES[scope] || [];
+  const currentModuleConfig = MODULE_CONFIG[module] || {};
+  const availableTypes = ['tarea', 'evento', ...(currentModuleConfig.allowsHabits ? ['habito'] : [])];
+  const isBirthday = currentModuleConfig.isBirthday;
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        
-        <div className="modal-header">
-          <h1 className="modal-title">Centro de Control</h1>
-          <button className="modal-close" onClick={onClose}>✕</button>
+    <div className="gam-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="gam-modal">
+        {/* HEADER FIJO */}
+        <div className="gam-header-fixed">
+          <h2 className="gam-title">Nueva Entrada</h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="modal-body">
-          
-          <div className="modal-left">
-            
-            <div className="funnel-section">
-              <h3 className="funnel-title">Ámbito</h3>
-              <div className="scope-pills">
-                {Object.entries(SCOPE_LABELS).map(([key, config]) => (
-                  <button
-                    key={key}
-                    type="button"
-                    className={`scope-pill ${formData.scope === key ? 'active' : ''}`}
-                    onClick={() => updateField('scope', key)}
-                    style={formData.scope === key ? { background: config.color, borderColor: config.color } : {}}
-                  >
-                    <span>{config.emoji}</span>
-                    <span>{config.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="funnel-section">
-              <h3 className="funnel-title">Módulo</h3>
-              <div className="module-circles">
-                {SCOPE_MODULES[formData.scope]?.map(moduleKey => {
-                  const config = MODULE_CONFIG[moduleKey]
-                  return (
-                    <button
-                      key={moduleKey}
-                      type="button"
-                      className={`module-circle ${formData.module === moduleKey ? 'active' : ''}`}
-                      onClick={() => updateField('module', moduleKey)}
-                      title={config.label}
-                    >
-                      <span className="module-emoji">{config.emoji}</span>
-                      <span className="module-label">{config.label.substring(0, 8)}</span>
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-
-            <div className="form-fields">
-              <div className="form-group">
-                <label className="form-label">
-                  {isBirthdayModule ? 'Nombre' : 'Título'}
-                </label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={isBirthdayModule ? formData.birthdayName : formData.title}
-                  onChange={(e) => setFormData({ ...formData, [isBirthdayModule ? 'birthdayName' : 'title']: e.target.value })}
-                  placeholder="Escribe aquí..."
-                  required
-                />
-              </div>
-
-              {!isBirthdayModule && (
-                <div className="form-group">
-                  <label className="form-label">Descripción</label>
-                  <textarea
-                    className="form-textarea"
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="Notas adicionales..."
-                  />
-                </div>
-              )}
+        {/* CUERPO CON SCROLL */}
+        <div className="gam-body">
+          {/* COLUMNA IZQUIERDA - NAVEGACIÓN */}
+          <div className="gam-col-left">
+            <div className="gam-scope-nav">
+              {Object.entries(SCOPE_LABELS).map(([key, { emoji, label }]) => (
+                <button
+                  key={key}
+                  className={`gam-pill-vertical ${scope === key ? 'active' : ''}`}
+                  onClick={() => handleScopeChange(key)}
+                >
+                  <span className="gam-pill-emoji">{emoji}</span>
+                  <span className="gam-pill-label">{label}</span>
+                </button>
+              ))}
             </div>
           </div>
 
-          <div className="modal-right">
-            
-            <div className="type-tabs">
-              {getAvailableTypes().map(typeKey => {
-                const config = TYPE_CONFIG[typeKey]
+          {/* COLUMNA DERECHA - CONTENIDO */}
+          <div className="gam-col-right">
+            {/* MÓDULOS EN GRID 2 COL */}
+            <div className="gam-modules-grid">
+              {currentModules.map((modKey) => {
+                const mod = MODULE_CONFIG[modKey];
                 return (
-                  <button
-                    key={typeKey}
-                    type="button"
-                    className={`type-tab ${formData.type === typeKey ? 'active' : ''}`}
-                    onClick={() => updateField('type', typeKey)}
-                    style={formData.type === typeKey ? { background: config.color } : {}}
+                  <div
+                    key={modKey}
+                    className={`gam-module-card ${module === modKey ? 'selected' : ''}`}
+                    onClick={() => handleModuleChange(modKey)}
                   >
-                    <span>{config.emoji}</span>
-                    <span>{config.label}</span>
-                  </button>
-                )
+                    <div className="gam-module-emoji">{mod.emoji}</div>
+                    <span className="gam-module-name">{mod.label}</span>
+                  </div>
+                );
               })}
             </div>
 
-            <div className="metadata-box">
-              
-              {formData.type === 'task' && (
-                <div className="metadata-grid">
-                  <div className="metadata-col">
-                    <div className="form-group">
-                      <label className="form-label">Fecha Límite</label>
+            {/* CONTENIDO DINÁMICO SEGÚN MÓDULO */}
+            {isBirthday ? (
+              /* TARJETA DE CUMPLEAÑOS SIN TABS */
+              <div className="gam-birthday-card">
+                <div className="gam-card-header">
+                  <span className="gam-card-icon">🎂</span>
+                  <span className="gam-card-title">Registro de Cumpleaños</span>
+                </div>
+                
+                <div className="gam-card-body">
+                  <div className="gam-field-compact">
+                    <label className="gam-label-compact">Nombre del cumpleañero/a</label>
+                    <input
+                      type="text"
+                      className="gam-input-compact"
+                      value={birthdayName}
+                      onChange={(e) => setBirthdayName(e.target.value)}
+                      placeholder="Ej: María"
+                    />
+                  </div>
+                  
+                  <div className="gam-field-row-compact">
+                    <div className="gam-field-compact">
+                      <label className="gam-label-compact">Fecha de nacimiento</label>
                       <input
                         type="date"
-                        className="form-input"
-                        value={formData.deadline}
-                        onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+                        className="gam-input-compact"
+                        value={birthdayDate}
+                        onChange={(e) => setBirthdayDate(e.target.value)}
                       />
                     </div>
-                    <div className="form-group">
-                      <label className="form-label">Hora</label>
+                    
+                    <label className="gam-toggle-compact">
                       <input
-                        type="time"
-                        className="form-input"
-                        value={formData.deadlineTime}
-                        onChange={(e) => setFormData({ ...formData, deadlineTime: e.target.value })}
+                        type="checkbox"
+                        checked={hasParty}
+                        onChange={(e) => setHasParty(e.target.checked)}
                       />
-                    </div>
+                      <span className="gam-toggle-label">¿Habrá fiesta? 🎉</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* FORMULARIO NORMAL CON TABS */
+              <>
+                {/* TABS DE TIPO */}
+                <div className="gam-tabs-fused">
+                  {availableTypes.map((t) => (
+                    <button
+                      key={t}
+                      className={`gam-tab-fused gam-tab-${t} ${type === t ? 'active' : ''}`}
+                      onClick={() => handleTypeChange(t)}
+                    >
+                      {TYPE_CONFIG[t].icon} {TYPE_CONFIG[t].label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* CONTENT CARD */}
+                <div className="gam-content-fused" style={{ '--accent': accentColor }}>
+                  {/* TÍTULO */}
+                  <div className="gam-field-compact">
+                    <input
+                      type="text"
+                      className="gam-input-title-compact"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      placeholder="Título..."
+                      autoFocus
+                    />
                   </div>
 
-                  <div className="metadata-col">
-                    <div className="form-group">
-                      <label className="form-label">Prioridad</label>
-                      <div className="priority-pills">
-                        {Object.entries(PRIORITY_CONFIG).map(([key, config]) => (
-                          <button
-                            key={key}
-                            type="button"
-                            className={`priority-pill ${formData.priority === key ? 'active' : ''}`}
-                            onClick={() => setFormData({ ...formData, priority: key })}
-                          >
-                            {config.emoji}
-                          </button>
-                        ))}
+                  {/* PRIORIDAD/FRECUENCIA + FECHA/HORA */}
+                  <div className="gam-field-row-compact">
+                    {type === 'habito' ? (
+                      <div className="gam-field-compact">
+                        <label className="gam-label-compact">Frecuencia</label>
+                        <select
+                          className="gam-select-compact"
+                          value={frequency}
+                          onChange={(e) => setFrequency(e.target.value)}
+                        >
+                          {FREQUENCY_OPTIONS.map((f) => (
+                            <option key={f.value} value={f.value}>{f.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                    ) : (
+                      <div className="gam-field-compact">
+                        <label className="gam-label-compact">Prioridad</label>
+                        <select
+                          className="gam-select-compact"
+                          value={priority}
+                          onChange={(e) => setPriority(e.target.value)}
+                        >
+                          {PRIORITY_CONFIG.map((p) => (
+                            <option key={p.value} value={p.value}>
+                              {p.emoji} {p.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                    
+                    <div className="gam-field-compact">
+                      <label className="gam-label-compact">
+                        Fecha {type === 'evento' && 'y hora'}
+                      </label>
+                      <div className="gam-datetime-compact">
+                        <input
+                          type="date"
+                          className="gam-input-compact"
+                          value={date}
+                          onChange={(e) => setDate(e.target.value)}
+                        />
+                        {type === 'evento' && (
+                          <input
+                            type="time"
+                            className="gam-input-compact"
+                            value={time}
+                            onChange={(e) => setTime(e.target.value)}
+                          />
+                        )}
                       </div>
                     </div>
                   </div>
-                </div>
-              )}
 
-              {formData.type === 'event' && !isBirthdayModule && (
-                <div className="metadata-grid">
-                  <div className="metadata-col">
-                    <div className="form-group">
-                      <label className="form-label">Fecha</label>
-                      <input
-                        type="date"
-                        className="form-input"
-                        value={formData.eventDate}
-                        onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">Inicio</label>
-                      <input
-                        type="time"
-                        className="form-input"
-                        value={formData.eventTime}
-                        onChange={(e) => setFormData({ ...formData, eventTime: e.target.value })}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="metadata-col">
-                    <div className="form-group">
-                      <label className="form-label">Fin</label>
-                      <input
-                        type="time"
-                        className="form-input"
-                        value={formData.eventEndTime}
-                        onChange={(e) => setFormData({ ...formData, eventEndTime: e.target.value })}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">Ubicación</label>
-                      <input
-                        type="text"
-                        className="form-input"
-                        value={formData.location}
-                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                        placeholder="📍"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {formData.type === 'habit' && (
-                <div className="metadata-grid">
-                  <div className="metadata-col">
-                    <label className="form-label">Días de la Semana</label>
-                    <div className="week-days">
-                      {WEEK_DAYS.map(day => (
-                        <button
-                          key={day.value}
-                          type="button"
-                          className={`day-btn ${formData.habitDays.includes(day.value) ? 'active' : ''}`}
-                          onClick={() => toggleHabitDay(day.value)}
-                        >
-                          {day.label}
+                  {/* SUBTAREAS + NOTAS EN 2 COL */}
+                  <div className="gam-two-col-compact">
+                    <div className="gam-col-compact">
+                      <label className="gam-label-compact">Subtareas</label>
+                      <div className="gam-subtasks-compact">
+                        {subtasks.map((st, idx) => (
+                          <div key={idx} className="gam-subtask-item-compact">
+                            <input type="checkbox" disabled className="gam-checkbox-compact" />
+                            <input
+                              type="text"
+                              className="gam-input-subtask-compact"
+                              value={st}
+                              onChange={(e) => updateSubtask(idx, e.target.value)}
+                              placeholder="Subtarea..."
+                            />
+                          </div>
+                        ))}
+                        <button className="gam-btn-add-sub-compact" onClick={addSubtask}>
+                          + Agregar
                         </button>
-                      ))}
+                      </div>
                     </div>
-                  </div>
-                </div>
-              )}
 
-              {isBirthdayModule && (
-                <div className="metadata-grid">
-                  <div className="metadata-col">
-                    <div className="form-group">
-                      <label className="form-label">Fecha de Nacimiento</label>
-                      <input
-                        type="date"
-                        className="form-input"
-                        value={formData.birthDate}
-                        onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
-                        required
+                    <div className="gam-col-compact">
+                      <label className="gam-label-compact">Notas</label>
+                      <textarea
+                        className="gam-textarea-compact"
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
+                        placeholder="Notas adicionales..."
+                        rows={4}
                       />
                     </div>
                   </div>
-
-                  <div className="metadata-col">
-                    <label className="form-label">¿Habrá Fiesta?</label>
-                    <label className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        checked={formData.hasParty}
-                        onChange={(e) => setFormData({ ...formData, hasParty: e.target.checked })}
-                      />
-                      <span>Crear evento de fiesta</span>
-                    </label>
-                    
-                    {formData.hasParty && (
-                      <>
-                        <div className="form-group">
-                          <label className="form-label">Fecha de Fiesta</label>
-                          <input
-                            type="date"
-                            className="form-input"
-                            value={formData.partyDate}
-                            onChange={(e) => setFormData({ ...formData, partyDate: e.target.value })}
-                          />
-                        </div>
-                        <div className="form-group">
-                          <label className="form-label">Hora</label>
-                          <input
-                            type="time"
-                            className="form-input"
-                            value={formData.partyTime}
-                            onChange={(e) => setFormData({ ...formData, partyTime: e.target.value })}
-                          />
-                        </div>
-                      </>
-                    )}
-                  </div>
                 </div>
-              )}
-            </div>
+              </>
+            )}
           </div>
-        </form>
+        </div>
 
-        <div className="modal-footer">
-          <button type="button" className="btn-cancel" onClick={onClose}>
+        {/* FOOTER FIJO */}
+        <div className="gam-footer-fixed">
+          <button className="gam-btn-cancel" onClick={onClose} disabled={isSubmitting}>
             Cancelar
           </button>
-          <button 
-            type="submit" 
-            className="btn-save"
-            onClick={handleSubmit}
-            disabled={isSubmitting || !formData.title}
+          <button
+            className="gam-btn-save"
+            onClick={handleSave}
+            disabled={isSubmitting || (!title.trim() && !isBirthday)}
+            style={{ 
+              opacity: (isSubmitting || (!title.trim() && !isBirthday)) ? 0.5 : 1,
+              background: isBirthday ? '#ec4899' :
+                         TYPE_CONFIG[type]?.color === 'pink' ? '#ec4899' : 
+                         TYPE_CONFIG[type]?.color === 'purple' ? '#9333ea' : '#3b82f6'
+            }}
           >
-            {isSubmitting ? 'Guardando...' : 'Guardar'}
+            {isSubmitting ? '⏳ Guardando...' : '✓ Guardar'}
           </button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default GlobalAddModal
+export default GlobalAddModal;
