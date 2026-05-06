@@ -55,19 +55,30 @@ function App() {
           {/* Bienvenida (4x3) */}
           <div className="welcome-card">
             <div className="welcome-content">
-              {/* Bloque Izquierdo - Hora, Fecha, Frase */}
+              
+              {/* Bloque Izquierdo - Reloj y Frase */}
               <div className="welcome-left">
-                <div className="clock-main">
-                  <ClockWidget />
+                <div className="clock-section">
+                  <div className="clock-main">
+                    {/* Aquí dentro tu ClockWidget debería renderizar divs con la clase 'flip-card' */}
+                    <ClockWidget /> 
+                  </div>
+                </div>
+
+                {/* NUEVO: Contenedor de letras (Legible y elegante) */}
+                <div className="lyric-container">
+                  <span className="lyric-text">"We’re all the same, and love is blind"</span>
+                  <span className="lyric-author">Change Your Mind, The Killers</span>
                 </div>
               </div>
               
-              {/* Bloque Derecho - Clima */}
+              {/* Bloque Derecho - Clima con estilo Glassmorphism */}
               <div className="welcome-right">
                 <div className="climate-main">
                   <WeatherWidget />
                 </div>
               </div>
+
             </div>
           </div>
           
