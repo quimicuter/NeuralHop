@@ -21,6 +21,7 @@ function App() {
   const [isDataScienceHubOpen, setIsDataScienceHubOpen] = React.useState(false)
   const [isTaskHistoryOpen, setIsTaskHistoryOpen] = React.useState(false)
   const [isRecipeModalOpen, setIsRecipeModalOpen] = React.useState(false)
+  const [isNotesOpen, setIsNotesOpen] = React.useState(false)
   const [selectedRecipeDay, setSelectedRecipeDay] = React.useState('')
   const [selectedRecipeMealType, setSelectedRecipeMealType] = React.useState('')
   const [modalPreselectedType, setModalPreselectedType] = React.useState('task')
@@ -140,9 +141,9 @@ function App() {
           {/* BLOQUE CENTRAL (Columnas 5-10) */}
           {/* Navegación (6x2) */}
           <div className="nexus-buttons flex justify-center items-center gap-3">
-            <button className="nexus-pill-btn agenda-btn" onClick={() => setIsDataScienceHubOpen(true)}>
-              <span>📅</span>
-              <span>Agenda</span>
+            <button className="nexus-pill-btn notas-btn" onClick={() => setIsNotesOpen(true)}>
+              <span>📌</span>
+              <span>Notas</span>
             </button>
             <button className="nexus-pill-btn biblioteca-btn" onClick={() => setIsDataScienceHubOpen(true)}>
               <span>📚</span>
@@ -161,25 +162,9 @@ function App() {
             </button>
           </div>
           
-          {/* Calendario (6x6) */}
+          {/* Calendario (6x6) Expandido */}
           <div className="calendar-card">
             <NexusCalendar />
-          </div>
-          
-          {/* Notas (3x4) */}
-          <div className="notes-card">
-            <NotesRepository />
-          </div>
-          
-          {/* Rutina (3x4) */}
-          <div className="routine-card">
-            <div className="card-header">
-              <h3>Hábitos Diarios</h3>
-              <button className="task-btn circular" onClick={() => openModalWithType('habit')}>+</button>
-            </div>
-            <div className="card-content">
-              <HabitsTracker />
-            </div>
           </div>
           
           {/* BLOQUE DERECHO (Columnas 11-12) */}
@@ -285,6 +270,16 @@ function App() {
               selectedMealType={selectedRecipeMealType}
               onSelectRecipe={handleSelectRecipe}
             />
+            
+            {/* Modal de Notas */}
+            {isNotesOpen && (
+              <div className="notes-modal-overlay" onClick={() => setIsNotesOpen(false)}>
+                <div className="notes-modal-container" onClick={(e) => e.stopPropagation()}>
+                  <div className="notes-modal-close" onClick={() => setIsNotesOpen(false)}>✕</div>
+                  <NotesRepository />
+                </div>
+              </div>
+            )}
             </div>
           } />
           <Route path="/hub/:scope/:moduleId" element={<HubShell />} />

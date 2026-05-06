@@ -86,7 +86,6 @@ body {
 
   .welcome-card { grid-area: 1 / 1 / 3 / 9; }
   .nexus-buttons { grid-area: 3 / 1 / 4 / 9; }
-  .calendar-card { grid-area: 4 / 1 / 8 / 9; }
   .tasks-card { grid-area: 8 / 1 / 10 / 5; }
   .events-card { grid-area: 8 / 5 / 10 / 9; }
   .notes-card { grid-area: 10 / 1 / 12 / 5; }
@@ -104,7 +103,6 @@ body {
 
   .welcome-card,
   .nexus-buttons,
-  .calendar-card,
   .tasks-card,
   .events-card,
   .notes-card,
@@ -212,19 +210,6 @@ body {
   height: 100%;
   overflow: hidden;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
-}
-
-.calendar-card {
-  grid-area: 2 / 5 / 9 / 11; /* rows 2-8, cols 5-10 (6x7) - Starts at row 2 */
-  background: rgba(255, 255, 255, 0.582); /* Same transparency as weekly-menu-card */
-  backdrop-filter: none; /* Removed blur */
-  -webkit-backdrop-filter: none;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 20px;
-  padding: 12px;
-  overflow: hidden;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
-  margin: 0; /* Remove any margins */
 }
 
 .notes-card {
@@ -657,23 +642,6 @@ body {
   transform: translateY(0);
 }
 
-.calendar-section {
-  grid-row: 2 / 9;
-  overflow: hidden;
-}
-
-.calendar-card {
-  background: rgba(255, 255, 255, 0.582);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 20px;
-  padding: 16px;
-  height: 100%;
-  overflow: hidden;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
-}
-
 .notes-routine-section {
   grid-row: 9 / 13;
   display: flex;
@@ -995,23 +963,6 @@ body {
 .gallery-academic::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #F6D7DC 0%, #DAC0C1 100%);
   opacity: 0.8;
-}
-
-/* Weekend and Holiday Colors - Updated */
-.cal-day.weekend {
-  background: #F5E6E8 !important;
-  border-color: #DAC0C1 !important;
-}
-
-.cal-day.weekend .day-num {
-  color: #4A5568 !important; /* Dark gray for better contrast */
-  font-weight: 600;
-}
-
-/* Weekday Pastel Pink - Updated */
-.cal-day:not(.weekend):not(.empty) {
-  background: #FFF5F7 !important;
-  border-color: #F6D7DC !important;
 }
 
 /* Weather Widget Styles */
@@ -1609,21 +1560,6 @@ body {
   border-radius: 6px;
 }
 
-/* Enhanced Calendar Indicators */
-.cal-indicator {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.7em;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4);
-}
-
-.cal-indicator .task-emoji {
-  font-size: 0.8em;
-}
 .clock-widget {
   display: flex;
   flex-direction: column;
@@ -1645,177 +1581,6 @@ body {
   font-size: 0.7em;
   color: var(--color-p5);
   margin-bottom: 0.5vh;
-}
-
-
-/* Calendar Styles - Fixed Spacing and Layout */
-.nexus-calendar {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  position: relative;
-}
-
-.month-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  position: absolute;
-  top: -2px;
-  right: 12px;
-  z-index: 10;
-}
-
-.calendar-weekdays {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
-  margin-top: 8px;
-  margin-bottom: 2px;
-  padding-bottom: 2px;
-  border-bottom: 1px solid rgba(190, 102, 146, 0.897);
-  flex-shrink: 0;
-}
-
-.weekday-header {
-  font-family: 'Playfair Display', serif;
-  font-size: 0.65em;
-  font-weight: 600;
-  color: var(--color-p4);
-  text-align: center;
-  padding: 1px 0;
-  background: transparent;
-  border-radius: 0;
-}
-
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  grid-template-rows: repeat(6, 1fr);
-  grid-auto-rows: 1fr; /* Dynamic row height */
-  gap: 4px;
-  flex-grow: 1; /* Absorb remaining vertical space */
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-.widget-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.widget-action-btn {
-  background: none;
-  border: none;
-  font-size: 1.2em;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 8px;
-  transition: background-color 0.2s;
-}
-
-.widget-action-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-.month-label {
-  font-family: 'Playfair Display', serif;
-  font-size: 0.65em;
-  font-weight: 600;
-  color: var(--color-p6);
-  text-transform: lowercase;
-  letter-spacing: 0.5px;
-}
-
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 4px;
-  flex: 1;
-  overflow: hidden;
-}
-
-.cal-day {
-  min-height: 3.5vh;
-  border-radius: 8px;
-  background: #FFFFFF;
-  padding: 4px;
-  position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.2s ease;
-  font-size: 0.8em;
-}
-
-.cal-day:hover {
-  transform: translateY(-1px);
-}
-
-.cal-day.today {
-  border-color: rgba(129, 198, 230, 0.6);
-  box-shadow: 0 0 0 2px rgba(218, 192, 193, 0.12);
-}
-
-/* Prioriza el estilo de "today" cuando es fin de semana */
-.cal-day.today.weekend {
-  background: linear-gradient(135deg, #a2cdd3 0%, #cd76f0 100%) !important;
-  border-color: rgba(17, 48, 63, 0.8) !important;
-  box-shadow: 0 0 0 3px rgba(129, 198, 230, 0.432), inset 0 0 8px rgba(129, 198, 230, 0.15) !important;
-}
-
-.cal-day.weekend {
-  background: #fdd7dbd2 !important;
-  border-color: #e78589a4 !important;
-}
-
-.cal-day.weekend .day-num {
-  color: #4A5568 !important; /* Dark gray for better contrast */
-  font-weight: 600;
-}
-
-.cal-day:not(.weekend):not(.empty) {
-  background: #FFF5F7 !important;
-  border-color: #F6D7DC !important;
-}
-
-.cal-day.empty {
-  background: transparent;
-  border: none;
-}
-
-.day-num {
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
-  font-size: 0.85em;
-  color: var(--color-p4);
-}
-
-.indicator-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px;
-  align-items: flex-end;
-}
-
-.cal-indicator {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.6em;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4);
-}
-
-.cal-indicator .task-emoji {
-  font-size: 0.7em;
 }
 
 /* Pillars Styles */
@@ -2205,7 +1970,6 @@ html, body, #root, .app-container {
   /* Reorganización Apilada */
   .welcome-card { grid-column: 1 / -1; }
   .nexus-buttons { grid-column: 1 / -1; justify-content: center; }
-  .calendar-card { grid-column: 1 / -1; min-height: 300px; }
   
   .tasks-card { grid-column: 1 / 2; }
   .events-card { grid-column: 2 / 3; }
@@ -2222,12 +1986,6 @@ html, body, #root, .app-container {
   .card {
     max-height: 400px;
     overflow-y: auto;
-  }
-  
-  /* El calendario no debe tener scroll interno, debe verse completo */
-  .calendar-card { 
-    max-height: none; 
-    overflow: visible; 
   }
 }
 
@@ -2255,7 +2013,6 @@ html, body, #root, .app-container {
   /* Orden lógico de aparición en móvil usando 'order' */
   .welcome-card { max-height: none; order: 1; }
   .nexus-buttons { max-height: none; order: 2; justify-content: center; flex-wrap: wrap; }
-  .calendar-card { max-height: none; overflow: visible; order: 3; min-height: 300px; }
   
   .tasks-card { order: 4; }
   .events-card { order: 5; }
@@ -2277,4 +2034,207 @@ html, body, #root, .app-container {
     padding: 8px 12px;
     font-size: 0.85rem;
   }
+}
+
+/* =========================================
+   NEXUS CALENDAR - ESTÉTICA EDITORIAL
+   ========================================= */
+
+/* 1. Contenedor Principal (Ubicación en el Dashboard - EXPANDIDO VERTICALMENTE) */
+.calendar-card {
+  grid-area: 2 / 5 / -1 / 11;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 20px;
+  padding: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  margin: 0;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 2. Estructura Interna */
+.nexus-calendar {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.month-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* Reducimos la separación entre flechas y texto */
+  margin-bottom: 6px; /* Quitamos espacio sobrante abajo */
+}
+
+.month-label {
+  font-family: 'Playfair Display', 'Lora', serif;
+  font-size: 1.15rem; /* ¡Mucho más delicado! */
+  font-weight: 600;
+  color: #4a3b3b;
+  text-transform: lowercase;
+}
+
+.calendar-nav-btn {
+  background: transparent;
+  border: none;
+  color: #4a3b3b;
+  font-size: 0.9rem; /* Flechas chiquitas */
+  width: 24px; /* Botón más pequeño */
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.calendar-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* 3. Días de la semana */
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem; /* Letritas más finas */
+  font-weight: 600;
+  color: #666;
+  padding-bottom: 4px; /* Menos espacio */
+  margin-bottom: 6px; /* Menos espacio */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* 4. Cuadrícula y Celdas (Ultra compactas - CRECIMIENTO EQUITATIVO) */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 4px; /* Los juntamos más */
+  width: 100%;
+  align-content: start; 
+  flex-grow: 1;
+}
+
+.cal-day {
+  min-height: auto; /* Allow cells to grow */
+  aspect-ratio: 1; /* Keep cells square */
+  border-radius: 8px; /* Curvatura más suave para su nuevo tamaño */
+  background: rgba(255, 255, 255, 0.6);
+  padding: 4px; /* Menos relleno interno */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.cal-day:hover:not(.empty) {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.cal-day.empty {
+  background: transparent;
+  box-shadow: none;
+}
+
+.cal-day.weekend:not(.empty) {
+  background: rgba(255, 192, 203, 0.35); 
+}
+
+.cal-day.today {
+  border: 1.5px solid rgba(0, 0, 0, 0.15);
+  font-weight: bold;
+}
+
+.day-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.8rem; /* Número chiquito y elegante */
+  color: #333;
+  margin-bottom: 2px; /* Pegamos más el número hacia arriba para dejar espacio al emoji */
+}
+
+/* 5. Contenedor de Emojis */
+.indicator-container {
+  display: flex;
+  gap: 2px;
+  margin-top: auto;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cal-indicator {
+  background: transparent !important;
+  font-size: 0.75rem; /* Emojis sutiles */
+}
+
+/* 6. Responsividad (Tablets y Móviles) */
+@media (max-width: 1024px) {
+  .calendar-card {
+    grid-column: 1 / -1;
+    max-height: none;
+  }
+}
+
+/* ========================================= */
+/* MODAL DE NOTAS - OVERLAY STYLING */
+/* ========================================= */
+.notes-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.notes-modal-container {
+  position: relative;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 24px;
+  padding: 24px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.notes-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  cursor: pointer;
+  font-size: 24px;
+  color: #666;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.notes-modal-close:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #000;
 }

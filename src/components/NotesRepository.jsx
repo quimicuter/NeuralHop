@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import ReactDOM from 'react-dom'
+import { createPortal } from 'react-dom'
 import { useApp } from '../context/AppContext'
 import './NotesRepository.css'
 
@@ -218,7 +218,7 @@ const NotesRepository = () => {
       </div>
 
       {/* Modal estético para agregar/editar nota */}
-      {isAddingNote || editingNote ? ReactDOM.createPortal(
+      {isAddingNote || editingNote ? createPortal(
         <div className="note-modal-overlay" onClick={() => {
           setIsAddingNote(false)
           setEditingNote(null)

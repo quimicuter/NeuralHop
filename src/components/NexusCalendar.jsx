@@ -116,13 +116,10 @@ function NexusCalendar() {
 
   return (
     <div className="nexus-calendar">
-      <div className="card-header">
-        <h3>Calendario</h3>
-      </div>
       <div className="month-header">
-        <button className="widget-action-btn" onClick={prevMonth}>❮</button>
+        <button className="calendar-nav-btn" onClick={prevMonth} aria-label="Mes anterior">❮</button>
         <span className="month-label">{getMonthName(currentDate)}</span>
-        <button className="widget-action-btn" onClick={nextMonth}>❯</button>
+        <button className="calendar-nav-btn" onClick={nextMonth} aria-label="Mes siguiente">❯</button>
       </div>
       <div className="calendar-weekdays">
         {['D', 'L', 'M', 'M', 'J', 'V', 'S'].map((day, index) => (
