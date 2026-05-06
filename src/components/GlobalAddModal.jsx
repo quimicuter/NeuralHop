@@ -10,40 +10,37 @@ const SCOPE_MODULES = {
 }
 
 const SCOPE_LABELS = {
-  personal: { label: 'Personal', emoji: '👤' },
-  academico: { label: 'Académico', emoji: '🎓' },
-  general: { label: 'General', emoji: '🌍' }
+  personal: { label: 'Personal', emoji: '👤', color: '#F6D7DC' },
+  academico: { label: 'Académico', emoji: '🎓', color: '#C8A2C8' },
+  general: { label: 'General', emoji: '🌍', color: '#A2D5C8' }
 }
 
 const MODULE_CONFIG = {
-  // Personal
-  'selfcare': { label: 'Selfcare', emoji: '🛀', allowsHabits: true },
+  'selfcare': { label: 'Self Care', emoji: '🛀', allowsHabits: true },
   'mindfulness': { label: 'Mindfulness', emoji: '🧘‍♀️', allowsHabits: true },
   'vida-social': { label: 'Vida Social', emoji: '🥂', allowsHabits: false },
   'fitness': { label: 'Fitness', emoji: '💪', allowsHabits: true },
   'foodie': { label: 'Foodie', emoji: '🍜', allowsHabits: true },
-  // Académico
   'data-science': { label: 'Data Science', emoji: '📊', allowsHabits: false },
   'investigacion': { label: 'Investigación', emoji: '🔬', allowsHabits: true },
   'maestria': { label: 'Maestría', emoji: '🎓', allowsHabits: false },
   'laboratorio': { label: 'Laboratorio', emoji: '🧪', allowsHabits: false },
   'idiomas': { label: 'Idiomas', emoji: '🗣️', allowsHabits: true },
-  // General
   'cumpleanos': { label: 'Cumpleaños', emoji: '🎂', allowsHabits: false, isBirthday: true },
   'finanzas': { label: 'Finanzas', emoji: '💰', allowsHabits: false },
   'tramites': { label: 'Trámites', emoji: '📋', allowsHabits: false }
 }
 
 const TYPE_CONFIG = {
-  task: { label: 'Tarea', emoji: '📝', allowedScopes: ['personal', 'academico', 'general'] },
-  event: { label: 'Evento', emoji: '📅', allowedScopes: ['personal', 'academico', 'general'] },
-  habit: { label: 'Hábito', emoji: '🔄', allowedScopes: ['personal', 'academico', 'general'] }
+  task: { label: 'Tarea', emoji: '📝', color: '#F6D7DC' },
+  event: { label: 'Evento', emoji: '📅', color: '#D8B4FE' },
+  habit: { label: 'Hábito', emoji: '🔄', color: '#93C5FD' }
 }
 
 const PRIORITY_CONFIG = {
-  low: { label: 'Baja', emoji: '🟢', color: '#22c55e' },
-  medium: { label: 'Media', emoji: '🟡', color: '#eab308' },
-  high: { label: 'Alta', emoji: '🔴', color: '#ef4444' }
+  low: { label: 'Baja', emoji: '🟢' },
+  medium: { label: 'Media', emoji: '🟡' },
+  high: { label: 'Alta', emoji: '🔴' }
 }
 
 const WEEK_DAYS = [
@@ -56,23 +53,16 @@ const WEEK_DAYS = [
   { value: 0, label: 'D' }
 ]
 
-// ===== COMPONENTE PRINCIPAL =====
 function GlobalAddModal({ isOpen, onClose, preselectedType = '' }) {
   const { actions } = useApp()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  
-  // Estado del formulario con estructura cascada
+
   const [formData, setFormData] = useState({
-    // Nivel 1: Ámbito (requerido primero)
-    scope: '',
-    // Nivel 2: Módulo (requiere ámbito)
-    module: '',
-    // Nivel 3: Tipo (requiere módulo)
-    type: preselectedType || '',
-    // Datos base
+    scope: 'personal',
+    module: 'selfcare',
+    type: 'task',
     title: '',
     description: '',
-    // Metadata dinámica
     deadline: '',
     deadlineTime: '',
     priority: 'medium',
@@ -83,7 +73,6 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '' }) {
     recurring: false,
     recurrenceType: 'weekly',
     habitDays: [],
-    // Wizard cumpleaños
     birthdayName: '',
     birthDate: '',
     hasParty: false,
@@ -91,13 +80,12 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '' }) {
     partyTime: ''
   })
 
-  // Resetear formulario cuando se abre el modal
   useEffect(() => {
     if (isOpen) {
       setFormData({
-        scope: '',
-        module: '',
-        type: preselectedType || '',
+        scope: 'personal',
+        module: 'selfcare',
+        type: preselectedType || 'task',
         title: '',
         description: '',
         deadline: '',
@@ -120,28 +108,17 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '' }) {
     }
   }, [isOpen, preselectedType])
 
-  // ===== HANDLERS =====
   const updateField = (field, value) => {
     setFormData(prev => {
       const updates = { [field]: value }
       
-      // Lógica de cascada: si cambia un nivel superior, resetear los inferiores
       if (field === 'scope') {
-        updates.module = ''
-        // Mantener el tipo preseleccionado si ya existe
-        if (prev.type) {
-          updates.type = prev.type
-        }
+        updates.module = SCOPE_MODULES[value][0]
       }
       if (field === 'module') {
         const moduleConfig = MODULE_CONFIG[value] || {}
-        // Si el módulo es un cumpleaños, forzar evento
         if (moduleConfig.isBirthday) {
           updates.type = 'event'
-        } else if (prev.type === 'habit' && !moduleConfig.allowsHabits) {
-          updates.type = ''
-        } else {
-          updates.type = prev.type
         }
       }
       
@@ -158,40 +135,18 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '' }) {
     }))
   }
 
-  // ===== VALIDACIONES DEL EMBUDO =====
-  const canSelectModule = formData.scope !== ''
-  const canSelectType = formData.module !== ''
-  const currentModuleConfig = MODULE_CONFIG[formData.module] || {}
-  const canSelectHabit = currentModuleConfig.allowsHabits
-  const isBirthdayModule = currentModuleConfig.isBirthday
-
-  // Tipos disponibles según el módulo
-  const getAvailableTypes = () => {
-    const types = [
-      { value: 'task', label: 'Tarea', emoji: '📝' },
-      { value: 'event', label: 'Evento', emoji: '📅' }
-    ]
-    
-    if (canSelectHabit) {
-      types.push({ value: 'habit', label: 'Hábito', emoji: '🔄' })
-    }
-    
-    return types
-  }
-
-  // ===== SUBMIT CON LOADING STATE =====
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (isSubmitting) return
+    if (isSubmitting || !formData.title) return
 
     setIsSubmitting(true)
 
     try {
+      const currentModuleConfig = MODULE_CONFIG[formData.module] || {}
+      const isBirthdayModule = currentModuleConfig.isBirthday
       let payloads = []
 
-      // ===== WIZARD CUMPLEAÑOS: Crear 2 registros =====
       if (isBirthdayModule && formData.birthdayName && formData.birthDate) {
-        // 1. Recordatorio del cumpleaños (entry general)
         payloads.push({
           type: 'event',
           title: `🎂 Cumpleaños de ${formData.birthdayName}`,
@@ -210,7 +165,6 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '' }) {
           }
         })
 
-        // 2. Evento de fiesta (si aplica)
         if (formData.hasParty && formData.partyDate) {
           payloads.push({
             type: 'event',
@@ -224,14 +178,11 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '' }) {
             metadata: {
               isBirthdayParty: true,
               birthdayPerson: formData.birthdayName,
-              startTime: formData.partyTime,
-              relatedReminder: 'cumpleanos'
+              startTime: formData.partyTime
             }
           })
         }
-      }
-      // ===== FLUJO NORMAL =====
-      else {
+      } else {
         const basePayload = {
           type: formData.type,
           title: formData.title,
@@ -243,15 +194,13 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '' }) {
           metadata: {}
         }
 
-        // Metadata específica por tipo
         if (formData.type === 'task') {
           basePayload.deadline = formData.deadline
           basePayload.metadata = {
             deadlineTime: formData.deadlineTime,
             description: formData.description
           }
-        }
-        else if (formData.type === 'event') {
+        } else if (formData.type === 'event') {
           basePayload.date = formData.eventDate
           basePayload.metadata = {
             startTime: formData.eventTime,
@@ -261,8 +210,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '' }) {
             recurrenceType: formData.recurrenceType,
             description: formData.description
           }
-        }
-        else if (formData.type === 'habit') {
+        } else if (formData.type === 'habit') {
           basePayload.metadata = {
             habitDays: formData.habitDays,
             recurring: true,
@@ -274,12 +222,10 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '' }) {
         payloads.push(basePayload)
       }
 
-      // Enviar todos los payloads a Firebase
       for (const payload of payloads) {
         await actions.addEntry(payload)
       }
 
-      // Cerrar modal solo si todo fue exitoso
       onClose()
     } catch (error) {
       console.error('Error al guardar:', error)
@@ -291,352 +237,296 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '' }) {
 
   if (!isOpen) return null
 
+  const currentModuleConfig = MODULE_CONFIG[formData.module] || {}
+  const isBirthdayModule = currentModuleConfig.isBirthday
+  
+  const getAvailableTypes = () => {
+    const types = ['task', 'event']
+    if (currentModuleConfig.allowsHabits) types.push('habit')
+    return types
+  }
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        
         <div className="modal-header">
-          <h2>Nueva Entrada</h2>
+          <h1 className="modal-title">Centro de Control</h1>
           <button className="modal-close" onClick={onClose}>✕</button>
         </div>
 
-        <form onSubmit={handleSubmit} className="modal-form">
-          {/* ===== COLUMNA IZQUIERDA: Embudo y Título ===== */}
-          <div className="modal-column modal-column-left">
+        <form onSubmit={handleSubmit} className="modal-body">
+          
+          <div className="modal-left">
             
-            {/* NIVEL 1: ÁMBITO */}
-            <div className="form-section">
-              <span className="form-section-title">Paso 1: Selecciona el Ámbito</span>
-              <div className="pill-group">
+            <div className="funnel-section">
+              <h3 className="funnel-title">Ámbito</h3>
+              <div className="scope-pills">
                 {Object.entries(SCOPE_LABELS).map(([key, config]) => (
                   <button
                     key={key}
                     type="button"
-                    className={`pill-btn ${formData.scope === key ? 'active' : ''}`}
+                    className={`scope-pill ${formData.scope === key ? 'active' : ''}`}
                     onClick={() => updateField('scope', key)}
+                    style={formData.scope === key ? { background: config.color, borderColor: config.color } : {}}
                   >
-                    <span className="pill-emoji">{config.emoji}</span>
-                    <span className="pill-label">{config.label}</span>
+                    <span>{config.emoji}</span>
+                    <span>{config.label}</span>
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* NIVEL 2: MÓDULO (bloqueado hasta seleccionar ámbito) */}
-            <div className={`form-section ${!canSelectModule ? 'section-blocked' : ''}`}>
-              <span className="form-section-title">
-                Paso 2: Selecciona el Módulo
-                {!canSelectModule && <span style={{ marginLeft: '0.5rem', opacity: 0.5 }}>🔒</span>}
-              </span>
-              {canSelectModule && (
-                <div className="pill-group">
-                  {SCOPE_MODULES[formData.scope]?.map(moduleKey => {
-                    const config = MODULE_CONFIG[moduleKey]
-                    return (
-                      <button
-                        key={moduleKey}
-                        type="button"
-                        className={`pill-btn ${formData.module === moduleKey ? 'active' : ''}`}
-                        onClick={() => updateField('module', moduleKey)}
-                      >
-                        <span className="pill-emoji">{config.emoji}</span>
-                        <span className="pill-label">{config.label}</span>
-                      </button>
-                    )
-                  })}
-                </div>
-              )}
-              {!canSelectModule && (
-                <div className="empty-hint">Selecciona un ámbito primero</div>
-              )}
-            </div>
-
-            {/* NIVEL 3: TIPO (bloqueado hasta seleccionar módulo) */}
-            <div className={`form-section ${!canSelectType ? 'section-blocked' : ''}`}>
-              <span className="form-section-title">
-                Paso 3: Selecciona el Tipo
-                {!canSelectType && <span style={{ marginLeft: '0.5rem', opacity: 0.5 }}>🔒</span>}
-              </span>
-              {canSelectType && (
-                <div className="pill-group">
-                  {getAvailableTypes().map(type => (
+            <div className="funnel-section">
+              <h3 className="funnel-title">Módulo</h3>
+              <div className="module-circles">
+                {SCOPE_MODULES[formData.scope]?.map(moduleKey => {
+                  const config = MODULE_CONFIG[moduleKey]
+                  return (
                     <button
-                      key={type.value}
+                      key={moduleKey}
                       type="button"
-                      className={`pill-btn ${formData.type === type.value ? 'active' : ''}`}
-                      onClick={() => updateField('type', type.value)}
+                      className={`module-circle ${formData.module === moduleKey ? 'active' : ''}`}
+                      onClick={() => updateField('module', moduleKey)}
+                      title={config.label}
                     >
-                      <span className="pill-emoji">{type.emoji}</span>
-                      <span className="pill-label">{type.label}</span>
+                      <span className="module-emoji">{config.emoji}</span>
+                      <span className="module-label">{config.label.substring(0, 8)}</span>
                     </button>
-                  ))}
-                </div>
-              )}
-              {!canSelectType && (
-                <div className="empty-hint">Selecciona un módulo primero</div>
-              )}
+                  )
+                })}
+              </div>
             </div>
 
-            {/* TÍTULO (visible cuando hay tipo seleccionado) */}
-            {formData.type && (
-              <div className="form-section metadata-section">
+            <div className="form-fields">
+              <div className="form-group">
                 <label className="form-label">
-                  {isBirthdayModule ? 'Nombre del cumpleañero/a' : 'Título'}
+                  {isBirthdayModule ? 'Nombre' : 'Título'}
                 </label>
                 <input
                   type="text"
                   className="form-input"
                   value={isBirthdayModule ? formData.birthdayName : formData.title}
-                  onChange={(e) => updateField(isBirthdayModule ? 'birthdayName' : 'title', e.target.value)}
-                  placeholder={isBirthdayModule ? "Ej: María González" : "Escribe el título..."}
+                  onChange={(e) => setFormData({ ...formData, [isBirthdayModule ? 'birthdayName' : 'title']: e.target.value })}
+                  placeholder="Escribe aquí..."
                   required
                 />
               </div>
-            )}
 
-            {/* DESCRIPCIÓN OPCIONAL */}
-            {formData.type && !isBirthdayModule && (
-              <div className="form-section">
-                <label className="form-label">Descripción (opcional)</label>
-                <textarea
-                  className="form-textarea"
-                  value={formData.description}
-                  onChange={(e) => updateField('description', e.target.value)}
-                  placeholder="Añade detalles adicionales..."
-                  rows={2}
-                />
-              </div>
-            )}
-
+              {!isBirthdayModule && (
+                <div className="form-group">
+                  <label className="form-label">Descripción</label>
+                  <textarea
+                    className="form-textarea"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    placeholder="Notas adicionales..."
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* ===== COLUMNA DERECHA: Metadata Dinámica ===== */}
-          <div className="modal-column modal-column-right">
+          <div className="modal-right">
             
-            {/* METADATA: TAREA */}
-            {formData.type === 'task' && (
-              <div className="metadata-section">
-                <span className="form-section-title">📝 Detalles de la Tarea</span>
-                
-                <div className="form-section">
-                  <label className="form-label">Fecha límite</label>
-                  <div className="date-time-row">
-                    <input
-                      type="date"
-                      className="form-input"
-                      value={formData.deadline}
-                      onChange={(e) => updateField('deadline', e.target.value)}
-                      required
-                    />
-                    <input
-                      type="time"
-                      className="form-input"
-                      value={formData.deadlineTime}
-                      onChange={(e) => updateField('deadlineTime', e.target.value)}
-                      placeholder="Hora (opcional)"
-                    />
-                  </div>
-                </div>
+            <div className="type-tabs">
+              {getAvailableTypes().map(typeKey => {
+                const config = TYPE_CONFIG[typeKey]
+                return (
+                  <button
+                    key={typeKey}
+                    type="button"
+                    className={`type-tab ${formData.type === typeKey ? 'active' : ''}`}
+                    onClick={() => updateField('type', typeKey)}
+                    style={formData.type === typeKey ? { background: config.color } : {}}
+                  >
+                    <span>{config.emoji}</span>
+                    <span>{config.label}</span>
+                  </button>
+                )
+              })}
+            </div>
 
-                <div className="form-section">
-                  <label className="form-label">Prioridad</label>
-                  <div className="pill-group">
-                    {Object.entries(PRIORITY_CONFIG).map(([key, config]) => (
-                      <button
-                        key={key}
-                        type="button"
-                        className={`pill-btn ${formData.priority === key ? 'active' : ''}`}
-                        onClick={() => updateField('priority', key)}
-                      >
-                        <span className="pill-emoji">{config.emoji}</span>
-                        <span className="pill-label">{config.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* METADATA: EVENTO */}
-            {formData.type === 'event' && !isBirthdayModule && (
-              <div className="metadata-section">
-                <span className="form-section-title">📅 Detalles del Evento</span>
-                
-                <div className="form-section">
-                  <label className="form-label">Fecha</label>
-                  <input
-                    type="date"
-                    className="form-input"
-                    value={formData.eventDate}
-                    onChange={(e) => updateField('eventDate', e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="form-section">
-                  <label className="form-label">Horario</label>
-                  <div className="date-time-row">
-                    <input
-                      type="time"
-                      className="form-input"
-                      value={formData.eventTime}
-                      onChange={(e) => updateField('eventTime', e.target.value)}
-                      placeholder="Inicio"
-                    />
-                    <input
-                      type="time"
-                      className="form-input"
-                      value={formData.eventEndTime}
-                      onChange={(e) => updateField('eventEndTime', e.target.value)}
-                      placeholder="Fin"
-                    />
-                  </div>
-                </div>
-
-                <div className="form-section">
-                  <label className="form-label">Ubicación / Link</label>
-                  <input
-                    type="text"
-                    className="form-input"
-                    value={formData.location}
-                    onChange={(e) => updateField('location', e.target.value)}
-                    placeholder="Ej: Salón 302 o https://zoom.com/..."
-                  />
-                </div>
-
-                <div className="form-section">
-                  <label className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={formData.recurring}
-                      onChange={(e) => updateField('recurring', e.target.checked)}
-                    />
-                    Evento recurrente
-                  </label>
-                  {formData.recurring && (
-                    <select
-                      className="form-select"
-                      value={formData.recurrenceType}
-                      onChange={(e) => updateField('recurrenceType', e.target.value)}
-                      style={{ marginTop: '0.5rem' }}
-                    >
-                      <option value="daily">Diario</option>
-                      <option value="weekly">Semanal</option>
-                      <option value="monthly">Mensual</option>
-                      <option value="annual">Anual</option>
-                    </select>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* METADATA: HÁBITO */}
-            {formData.type === 'habit' && (
-              <div className="metadata-section">
-                <span className="form-section-title">🔄 Configuración del Hábito</span>
-                
-                <div className="form-section">
-                  <label className="form-label">Días de la semana</label>
-                  <div className="pill-group">
-                    {WEEK_DAYS.map(day => (
-                      <button
-                        key={day.value}
-                        type="button"
-                        className={`pill-btn day-pill ${formData.habitDays.includes(day.value) ? 'active' : ''}`}
-                        onClick={() => toggleHabitDay(day.value)}
-                      >
-                        <span className="pill-label">{day.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* WIZARD: CUMPLEAÑOS */}
-            {isBirthdayModule && formData.type === 'event' && (
-              <div className="birthday-wizard">
-                <div className="birthday-wizard-title">
-                  <span>🎂</span>
-                  <span>Wizard de Cumpleaños</span>
-                </div>
-
-                <div className="form-section">
-                  <label className="form-label">Fecha de nacimiento</label>
-                  <input
-                    type="date"
-                    className="form-input"
-                    value={formData.birthDate}
-                    onChange={(e) => updateField('birthDate', e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="form-section">
-                  <label className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={formData.hasParty}
-                      onChange={(e) => updateField('hasParty', e.target.checked)}
-                    />
-                    ¿Habrá fiesta?
-                  </label>
-                </div>
-
-                {formData.hasParty && (
-                  <>
-                    <div className="form-divider" />
-                    <div className="form-section">
-                      <label className="form-label">Fecha de la fiesta</label>
+            <div className="metadata-box">
+              
+              {formData.type === 'task' && (
+                <div className="metadata-grid">
+                  <div className="metadata-col">
+                    <div className="form-group">
+                      <label className="form-label">Fecha Límite</label>
                       <input
                         type="date"
                         className="form-input"
-                        value={formData.partyDate}
-                        onChange={(e) => updateField('partyDate', e.target.value)}
-                        required={formData.hasParty}
+                        value={formData.deadline}
+                        onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
                       />
                     </div>
-                    <div className="form-section">
-                      <label className="form-label">Hora de la fiesta</label>
+                    <div className="form-group">
+                      <label className="form-label">Hora</label>
                       <input
                         type="time"
                         className="form-input"
-                        value={formData.partyTime}
-                        onChange={(e) => updateField('partyTime', e.target.value)}
+                        value={formData.deadlineTime}
+                        onChange={(e) => setFormData({ ...formData, deadlineTime: e.target.value })}
                       />
                     </div>
-                  </>
-                )}
-              </div>
-            )}
+                  </div>
 
-          </div>
-
-          {/* ===== ACCIONES ===== */}
-          <div className="form-actions">
-            <button 
-              type="button" 
-              className="btn-cancel" 
-              onClick={onClose}
-              disabled={isSubmitting}
-            >
-              Cancelar
-            </button>
-            <button 
-              type="submit" 
-              className="btn-submit"
-              disabled={isSubmitting || !formData.type || (!isBirthdayModule && !formData.title) || (isBirthdayModule && !formData.birthdayName)}
-            >
-              {isSubmitting ? (
-                <>
-                  <span className="spinner" />
-                  <span>Guardando...</span>
-                </>
-              ) : (
-                <span>Guardar</span>
+                  <div className="metadata-col">
+                    <div className="form-group">
+                      <label className="form-label">Prioridad</label>
+                      <div className="priority-pills">
+                        {Object.entries(PRIORITY_CONFIG).map(([key, config]) => (
+                          <button
+                            key={key}
+                            type="button"
+                            className={`priority-pill ${formData.priority === key ? 'active' : ''}`}
+                            onClick={() => setFormData({ ...formData, priority: key })}
+                          >
+                            {config.emoji}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )}
-            </button>
+
+              {formData.type === 'event' && !isBirthdayModule && (
+                <div className="metadata-grid">
+                  <div className="metadata-col">
+                    <div className="form-group">
+                      <label className="form-label">Fecha</label>
+                      <input
+                        type="date"
+                        className="form-input"
+                        value={formData.eventDate}
+                        onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Inicio</label>
+                      <input
+                        type="time"
+                        className="form-input"
+                        value={formData.eventTime}
+                        onChange={(e) => setFormData({ ...formData, eventTime: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="metadata-col">
+                    <div className="form-group">
+                      <label className="form-label">Fin</label>
+                      <input
+                        type="time"
+                        className="form-input"
+                        value={formData.eventEndTime}
+                        onChange={(e) => setFormData({ ...formData, eventEndTime: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Ubicación</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        value={formData.location}
+                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                        placeholder="📍"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {formData.type === 'habit' && (
+                <div className="metadata-grid">
+                  <div className="metadata-col">
+                    <label className="form-label">Días de la Semana</label>
+                    <div className="week-days">
+                      {WEEK_DAYS.map(day => (
+                        <button
+                          key={day.value}
+                          type="button"
+                          className={`day-btn ${formData.habitDays.includes(day.value) ? 'active' : ''}`}
+                          onClick={() => toggleHabitDay(day.value)}
+                        >
+                          {day.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {isBirthdayModule && (
+                <div className="metadata-grid">
+                  <div className="metadata-col">
+                    <div className="form-group">
+                      <label className="form-label">Fecha de Nacimiento</label>
+                      <input
+                        type="date"
+                        className="form-input"
+                        value={formData.birthDate}
+                        onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="metadata-col">
+                    <label className="form-label">¿Habrá Fiesta?</label>
+                    <label className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={formData.hasParty}
+                        onChange={(e) => setFormData({ ...formData, hasParty: e.target.checked })}
+                      />
+                      <span>Crear evento de fiesta</span>
+                    </label>
+                    
+                    {formData.hasParty && (
+                      <>
+                        <div className="form-group">
+                          <label className="form-label">Fecha de Fiesta</label>
+                          <input
+                            type="date"
+                            className="form-input"
+                            value={formData.partyDate}
+                            onChange={(e) => setFormData({ ...formData, partyDate: e.target.value })}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label className="form-label">Hora</label>
+                          <input
+                            type="time"
+                            className="form-input"
+                            value={formData.partyTime}
+                            onChange={(e) => setFormData({ ...formData, partyTime: e.target.value })}
+                          />
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </form>
+
+        <div className="modal-footer">
+          <button type="button" className="btn-cancel" onClick={onClose}>
+            Cancelar
+          </button>
+          <button 
+            type="submit" 
+            className="btn-save"
+            onClick={handleSubmit}
+            disabled={isSubmitting || !formData.title}
+          >
+            {isSubmitting ? 'Guardando...' : 'Guardar'}
+          </button>
+        </div>
       </div>
     </div>
   )
