@@ -34,39 +34,31 @@ function ClockWidget() {
     setCurrentLyric(randomLyric)
   }, [])
 
-  const formatTime = (date) => {
-    return date.toLocaleTimeString('es-MX', { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false 
-    })
-  }
-
-  const formatDate = (date) => {
-    return date.toLocaleDateString('es-MX', { 
-      weekday: 'long', 
-      day: 'numeric',
-      month: 'long', 
-    })
-  }
+  const formatHM = (date) => date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
+  const formatS = (date) => date.getSeconds().toString().padStart(2, '0')
+  const formatDate = (date) => date.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' })
 
   return (
-    <div className="welcome-left">
-      {/* SECCIÓN RELOJ */}
-      <div className="clock-main">
-        {formatTime(time)}
-      </div>
-      
-      {/* SECCIÓN FECHA */}
-      <div className="date-label">
-        {formatDate(time)} de {time.getFullYear()}
+    <div className="welcome-layout">
+      {/* COLUMNA IZQUIERDA: Reloj Centrado */}
+      <div className="clock-col">
+        <div className="clock-content">
+          <div className="time-display">
+            {formatHM(time)}<span className="sec-pink">:{formatS(time)}</span>
+          </div>
+          <div className="date-display">{formatDate(time)}</div>
+        </div>
       </div>
 
-      {/* SECCIÓN LYRICS (MICRO) */}
-      <div className="lyric-container">
-        <span className="lyric-text">"{currentLyric.texto}"</span>
-        <span className="lyric-author">{currentLyric.autor}</span>
+      {/* LÍNEA DIVISORIA: El ancla morada */}
+      <div className="vertical-divider"></div>
+
+      {/* COLUMNA DERECHA: Lyrics "pegadas" a la línea */}
+      <div className="lyrics-col">
+        <div className="lyric-box">
+          <p className="lyric-text-micro">"{currentLyric.texto}"</p>
+          <span className="lyric-author-micro">{currentLyric.autor}</span>
+        </div>
       </div>
     </div>
   )

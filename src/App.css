@@ -120,77 +120,120 @@ body {
 }
 
 /* =========================================
-   WELCOME CARD - VERSIÓN MINI & LEFT-ALIGNED
+   WELCOME CARD - REDISEÑO SIMÉTRICO
    ========================================= */
 
-.welcome-card {
-  grid-area: 1 / 1 / 4 / 5;
-  background: rgba(255, 255, 255, 0.45); 
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 20px;
-  padding: 12px !important; /* Más apretadito */
+  /* 1. Aseguramos que la tarjeta permita que su contenido se estire */
+  .welcome-card {
+    grid-area: 1 / 1 / 4 / 5;
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 24px;
+    overflow: hidden;
+    padding: 0 !important;
+    
+    /* ESTO ES LO NUEVO: */
+    position: relative;
+    height: 100%;
+  }
+
+
+    /* 2. Forzamos al layout a ocupar todo el alto y centrar */
+    .welcome-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 1px 0.8fr;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      align-items: center; /* CENTRADO VERTICAL REAL */
+    }
+
+    /* Ajuste opcional para la línea divisoria */
+    .vertical-divider {
+      height: 50%; /* Que no sea tan larga para que se vea más 'pro' */
+      background: linear-gradient(to bottom, transparent, #d8b4fe, transparent);
+      width: 1.5px;
+      align-self: center; /* Se asegura de estar al centro */
+    }
+
+/* --- RELOJ CENTRADO --- */
+.clock-col {
   display: flex;
-  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100%;
 }
 
-.welcome-left {
+.time-display {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #1a202c;
+  letter-spacing: -1.5px;
+}
+
+.sec-pink {
+  color: #f78ece; /* El rosa/lila */
+  font-size: 1.6rem;
+  font-weight: 400;
+}
+
+.date-display {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  color: #c444b9;
+  margin-top: 4px;
+}
+
+/* --- LÍNEA DIVISORIA MORADA --- */
+.vertical-divider {
+  height: 60%; /* No toca los bordes, se ve más editorial */
+  background: linear-gradient(to bottom, transparent, #d8b4fe, transparent);
+  width: 1.5px;
+}
+
+/* --- COLUMNA DE LETRAS CON MARGENES --- */
+.lyrics-col {
+  padding-left: 20px;  /* Distancia con la línea morada */
+  padding-right: 25px; /* ¡ESTE ES EL MARGEN QUE FALTABA! */
+  display: flex;
+  align-items: center;
+  height: 100%;
+  justify-content: center; /* Centramos la cajita en el espacio disponible */
+}
+
+.lyric-box {
   display: flex;
   flex-direction: column;
-  align-items: flex-start !important; /* TODO A LA IZQUIERDA */
-  text-align: left !important;
-  width: 100%;
+  width: 100%; 
+  /* Quitamos el max-width para que use el espacio que definen los paddings */
 }
 
-/* RELOJ: Super sutil */
-.clock-main {
+.lyric-text-micro {
+  text-align: left; /* Canción pegada a la línea */
   font-family: 'Playfair Display', serif;
-  font-size: 1.1rem !important; /* ¡Mucho más pequeño! */
+  font-size: 0.8rem;
   color: #2d3748;
-  font-weight: 700;
-  margin: 0 !important;
-  letter-spacing: -0.5px;
-}
-
-/* FECHA: Casi una nota al pie */
-.date-label {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.6rem !important;
-  color: #94a3b8;
-  margin: 0 0 8px 0 !important;
-  text-transform: lowercase;
-}
-
-/* CONTENEDOR DE LETRAS: Compacto y elegante */
-.lyric-container {
-  margin-top: auto !important;
-  padding-top: 8px;
-  border-top: 1px solid rgba(0,0,0,0.05);
-  width: 100%;
-}
-
-.lyric-text {
-  font-family: 'Playfair Display', serif;
-  font-size: 0.75rem !important; /* Diferencia clara con el autor */
-  color: #1e293b !important;
   font-style: italic;
-  line-height: 1.1 !important;
-  display: block;
-  max-width: 90%;
+  line-height: 1.2;
+  margin: 0;
 }
 
-.lyric-author {
+.lyric-author-micro {
+  text-align: right; /* Autor a la derecha, pero respetando los 25px de margen */
   font-family: 'Inter', sans-serif;
-  font-size: 0.50rem !important; /* Aún más pequeño */
-  color: #a855f7 !important; /* Lila/Morado para el toque Quantum */
+  font-size: 0.55rem;
+  color: #a855f7;
   text-transform: uppercase;
   letter-spacing: 1px;
   font-weight: 800;
-  margin-top: 4px;
   display: block;
+  margin-top: 8px;
 }
-
 
 .tasks-card {
   grid-area: 4 / 1 / 9 / 3; /* rows 4-8, cols 1-2 (5x2) */
@@ -826,23 +869,6 @@ body {
   font-weight: 300;
 }
 
-.weather-widget.loading {
-  background: #F5F5F5;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border: 1px solid #EEEEEE;
-  border-radius: 16px;
-  padding: 12px;
-}
-
-.weather-widget.error {
-  background: #FFEEEE;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border: 1px solid #FFCCCC;
-  border-radius: 16px;
-  padding: 12px;
-}
 
 /* Pill-Style Glassmorphism Buttons */
 .nexus-pill-btn {
@@ -970,69 +996,6 @@ body {
 .gallery-academic::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, #F6D7DC 0%, #DAC0C1 100%);
   opacity: 0.8;
-}
-
-/* Weather Widget Styles */
-.weather-widget {
-  background: #FFFFFF;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border: 1px solid #EEEEEE;
-  border-radius: 16px;
-  padding: 12px;
-}
-
-.weather-main {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.weather-icon img {
-  width: 24px; /* Reduced from 40px */
-  height: 24px; /* Reduced from 40px */
-}
-
-.weather-temp {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.2em; /* Reduced from 1.8em */
-  font-weight: 600;
-  color: var(--color-p4);
-}
-
-.weather-city {
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  color: var(--color-p5);
-  font-size: 0.7em; /* Reduced size */
-}
-
-.weather-desc {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.85em;
-  color: var(--color-p5);
-  text-transform: capitalize;
-}
-
-.weather-loading, .weather-error {
-  text-align: center;
-  font-family: 'Inter', sans-serif;
-  color: var(--color-p5);
-  padding: 10px;
-}
-
-/* Weekly Menu Styles - 8x4 Grid Design */
-.weekly-menu {
-  background: rgba(255, 255, 255, 0.582);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 16px;
-  padding: 12px;
-  overflow: hidden;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
 }
 
 .menu-title {
@@ -1227,23 +1190,6 @@ body {
   font-weight: 300;
 }
 
-.weather-widget.loading {
-  background: rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 16px;
-  padding: 12px;
-}
-
-.weather-widget.error {
-  background: rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 16px;
-  padding: 12px;
-}
 
 .gallery-card.enhanced:hover {
   transform: translateY(-4px);
@@ -1300,24 +1246,6 @@ body {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* Weather Widget Minimal Loading Styles */
-.weather-widget.loading {
-  background: #F5F5F5;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border: 1px solid #EEEEEE;
-  border-radius: 16px;
-  padding: 12px;
-}
-
-.weather-widget.error {
-  background: #FFEEEE;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border: 1px solid #FFCCCC;
-  border-radius: 16px;
-  padding: 12px;
-}
 
 /* Pill-Style Glassmorphism Buttons */
 .nexus-pill-btn {
@@ -1391,14 +1319,6 @@ body {
   font-style: italic;
 }
 
-.weather-widget.error {
-  background: rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(25px);
-  -webkit-backdrop-filter: blur(25px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 16px;
-  padding: 12px;
-}
 
 .weather-error-minimal {
   display: flex;
@@ -1943,6 +1863,14 @@ body {
 } */
 
 .empty-tasks {
+  text-align: center;
+  padding: 20px;
+  color: #6b7280;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+}
+
+.empty-events {
   text-align: center;
   padding: 20px;
   color: #6b7280;
