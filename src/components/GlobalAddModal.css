@@ -142,6 +142,8 @@
   margin-bottom: 12px;
   margin-top: 8px;
   overflow-x: auto;
+  overflow-y: visible;
+  min-height: 80px;
   scrollbar-width: thin;
   scrollbar-color: rgba(0,0,0,0.1) transparent;
 }
@@ -403,27 +405,31 @@
   padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.8);
   font-size: 0.88rem;
-  color: #333;
+  color: #6d28d9;
   transition: all 0.2s ease;
   font-family: inherit;
   width: 100%;
   box-sizing: border-box;
+  font-weight: 500;
 }
 
 .gam-input-compact:focus,
 .gam-select-compact:focus,
 .gam-textarea-compact:focus {
   outline: none;
-  background: #fff;
-  border-color: rgba(0, 0, 0, 0.12);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #6d28d9;
+  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.1);
+  color: #6d28d9;
 }
 
 .gam-input-compact::placeholder,
 .gam-textarea-compact::placeholder {
-  color: #999;
+  color: #a78bfa;
+  opacity: 1;
+  font-weight: 400;
 }
 
 /* Input de título */
@@ -431,12 +437,14 @@
   font-size: 1.05rem;
   font-weight: 600;
   padding: 12px 14px;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.9);
+  color: #6d28d9;
 }
 
 .gam-input-title-compact::placeholder {
   font-weight: 500;
-  color: #888;
+  color: #a78bfa;
+  opacity: 1;
 }
 
 /* Datetime */
@@ -542,7 +550,14 @@
   font-size: 0.85rem;
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 0.06);
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.8);
+  color: #6d28d9;
+  font-weight: 500;
+}
+
+.gam-input-subtask-compact::placeholder {
+  color: #a78bfa;
+  opacity: 1;
 }
 
 .gam-btn-add-sub-compact {
@@ -833,28 +848,38 @@
   padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.8);
   font-size: 0.88rem;
-  color: #333;
+  color: #6d28d9;
   transition: all 0.2s ease;
   font-family: inherit;
   width: 100%;
   box-sizing: border-box;
+  font-weight: 500;
 }
 
 .form-input:focus,
 .form-textarea:focus,
 .form-select:focus {
   outline: none;
-  background: #fff;
-  border-color: rgba(0, 0, 0, 0.12);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #6d28d9;
+  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.1);
+  color: #6d28d9;
 }
 
 .form-textarea {
   resize: vertical;
   min-height: 80px;
   line-height: 1.4;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder,
+.form-select::placeholder {
+  color: #a78bfa;
+  opacity: 1;
+  font-weight: 400;
 }
 
 .section-blocked {
