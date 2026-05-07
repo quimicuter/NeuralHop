@@ -34,9 +34,9 @@ const SCOPE_LABELS = {
 };
 
 const TYPE_CONFIG = {
-  tarea: { color: 'pink', icon: '☑️', label: 'Tarea' },
-  evento: { color: 'purple', icon: '📅', label: 'Evento' },
-  habito: { color: 'blue', icon: '🔁', label: 'Hábito' }
+  task: { color: 'pink', icon: '☑️', label: 'Tarea' },
+  event: { color: 'purple', icon: '📅', label: 'Evento' },
+  habit: { color: 'blue', icon: '🔁', label: 'Hábito' }
 };
 
 const PRIORITY_CONFIG = [
@@ -55,11 +55,11 @@ const FREQUENCY_OPTIONS = [
 // ============================================
 // COMPONENTE
 // ============================================
-const GlobalAddModal = ({ isOpen, onClose, onTaskAdded }) => {
+const GlobalAddModal = ({ isOpen, onClose, onTaskAdded, preselectedType }) => {
   // Estados del flujo de embudo
   const [scope, setScope] = useState('personal');
   const [module, setModule] = useState('selfcare');
-  const [type, setType] = useState('tarea');
+  const [type, setType] = useState('task');
   
   // Estados del formulario
   const [title, setTitle] = useState('');
@@ -74,6 +74,9 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded }) => {
   const [birthdayName, setBirthdayName] = useState('');
   const [birthdayDate, setBirthdayDate] = useState('');
   const [hasParty, setHasParty] = useState(false);
+  const [partyDate, setPartyDate] = useState('');
+  const [partyTime, setPartyTime] = useState('');
+  const [partyPlace, setPartyPlace] = useState('');
   
   // Estados UI
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -82,9 +85,12 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded }) => {
   // Resetear al abrir
   useEffect(() => {
     if (isOpen) {
+      // Mapear preselectedType si viene de App.jsx (puede ser 'task' o 'event')
+      const initialType = preselectedType === 'event' ? 'event' : 'task';
       setScope('personal');
       setModule('selfcare');
-      setType('tarea');
+      setType(initialType);
+      updateAccentColor(initialType);
       setTitle('');
       setPriority('medium');
       setFrequency('daily');
@@ -95,19 +101,22 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded }) => {
       setBirthdayName('');
       setBirthdayDate('');
       setHasParty(false);
+      setPartyDate('');
+      setPartyTime('');
+      setPartyPlace('');
       setIsSubmitting(false);
-      updateAccentColor('tarea');
+      updateAccentColor('task');
     }
   }, [isOpen]);
 
   // Actualizar color según tipo
   const updateAccentColor = useCallback((newType) => {
     const colors = {
-      tarea: 'rgba(236, 72, 153, 0.3)',    // Pink
-      evento: 'rgba(147, 51, 234, 0.3)',     // Purple
-      habito: 'rgba(59, 130, 246, 0.3)'      // Blue
+      task: 'rgba(236, 72, 153, 0.3)',    // Pink
+      event: 'rgba(147, 51, 234, 0.3)',     // Purple
+      habit: 'rgba(59, 130, 246, 0.3)'      // Blue
     };
-    setAccentColor(colors[newType] || colors.tarea);
+    setAccentColor(colors[newType] || colors.task);
   }, []);
 
   // Cambiar tipo
@@ -124,9 +133,9 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded }) => {
     
     // Resetear tipo si no permite hábitos
     const modConfig = MODULE_CONFIG[firstModule];
-    if (type === 'habito' && !modConfig.allowsHabits) {
-      setType('tarea');
-      updateAccentColor('tarea');
+    if (type === 'habit' && !modConfig.allowsHabits) {
+      setType('task');
+      updateAccentColor('task');
     }
   };
 
@@ -134,9 +143,9 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded }) => {
   const handleModuleChange = (newModule) => {
     setModule(newModule);
     const modConfig = MODULE_CONFIG[newModule];
-    if (type === 'habito' && !modConfig.allowsHabits) {
-      setType('tarea');
-      updateAccentColor('tarea');
+    if (type === 'habit' && !modConfig.allowsHabits) {
+      setType('task');
+      updateAccentColor('task');
     }
   };
 
@@ -157,10 +166,13 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded }) => {
     try {
       // Wizard de cumpleaños - crea 2 registros
       if (MODULE_CONFIG[module]?.isBirthday && birthdayName && birthdayDate) {
-        // 1. Recordatorio anual
+        // Extraer año de nacimiento para metadata
+        const birthYear = new Date(birthdayDate).getFullYear();
+        
+        // 1. Recordatorio anual del cumpleaños
         await addEntry({
           title: `🎂 Cumpleaños de ${birthdayName}`,
-          type: 'evento',
+          type: 'event',
           scope: 'general',
           module: 'cumpleanos',
           date: birthdayDate,
@@ -168,21 +180,25 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded }) => {
           notes: `Cumpleaños de ${birthdayName}`,
           status: 'active',
           isBirthdayReminder: true,
-          birthdayName
+          birthdayName,
+          birthDate: birthdayDate,
+          birthYear: birthYear
         });
 
         // 2. Evento de fiesta si aplica
-        if (hasParty) {
+        if (hasParty && partyDate) {
           await addEntry({
             title: `🎉 Fiesta de ${birthdayName}`,
-            type: 'evento',
+            type: 'event',
             scope: 'personal',
             module: 'vida-social',
-            date: birthdayDate,
-            time: '20:00',
+            date: partyDate,
+            time: partyTime || '20:00',
             priority: 'medium',
-            notes: `Celebración de cumpleaños de ${birthdayName}`,
-            status: 'active'
+            notes: `Celebración de cumpleaños de ${birthdayName}${partyPlace ? ` en ${partyPlace}` : ''}`,
+            status: 'active',
+            isPartyEvent: true,
+            birthdayName
           });
         }
       } else {
@@ -197,10 +213,10 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded }) => {
           status: 'active'
         };
 
-        if (type === 'habito') {
+        if (type === 'habit') {
           data.frequency = frequency;
         }
-        if (type === 'evento' || date) {
+        if (type === 'event' || date) {
           data.date = date;
           if (time) data.time = time;
         }
@@ -225,7 +241,7 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded }) => {
 
   const currentModules = SCOPE_MODULES[scope] || [];
   const currentModuleConfig = MODULE_CONFIG[module] || {};
-  const availableTypes = ['tarea', 'evento', ...(currentModuleConfig.allowsHabits ? ['habito'] : [])];
+  const availableTypes = ['task', 'event', ...(currentModuleConfig.allowsHabits ? ['habit'] : [])];
   const isBirthday = currentModuleConfig.isBirthday;
 
   return (
@@ -256,18 +272,18 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded }) => {
 
           {/* COLUMNA DERECHA - CONTENIDO */}
           <div className="gam-col-right">
-            {/* MÓDULOS EN GRID 2 COL */}
-            <div className="gam-modules-grid">
+            {/* MÓDULOS - FILA HORIZONTAL DE CÍRCULOS */}
+            <div className="gam-modules-row">
               {currentModules.map((modKey) => {
                 const mod = MODULE_CONFIG[modKey];
                 return (
                   <div
                     key={modKey}
-                    className={`gam-module-card ${module === modKey ? 'selected' : ''}`}
+                    className={`gam-module-item ${module === modKey ? 'selected' : ''}`}
                     onClick={() => handleModuleChange(modKey)}
                   >
-                    <div className="gam-module-emoji">{mod.emoji}</div>
-                    <span className="gam-module-name">{mod.label}</span>
+                    <div className="gam-module-circle">{mod.emoji}</div>
+                    <span className="gam-module-label">{mod.label}</span>
                   </div>
                 );
               })}
@@ -314,6 +330,49 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded }) => {
                       <span className="gam-toggle-label">¿Habrá fiesta? 🎉</span>
                     </label>
                   </div>
+
+                  {/* Campos de fiesta - aparecen cuando hasParty es true */}
+                  {hasParty && (
+                    <div className="gam-party-fields">
+                      <div className="gam-party-divider">
+                        <span>Datos de la fiesta</span>
+                      </div>
+                      
+                      <div className="gam-field-row-compact">
+                        <div className="gam-field-compact">
+                          <label className="gam-label-compact">Fecha de la fiesta</label>
+                          <input
+                            type="date"
+                            className="gam-input-compact"
+                            value={partyDate}
+                            onChange={(e) => setPartyDate(e.target.value)}
+                          />
+                        </div>
+                        
+                        <div className="gam-field-compact">
+                          <label className="gam-label-compact">Hora</label>
+                          <input
+                            type="time"
+                            className="gam-input-compact"
+                            value={partyTime}
+                            onChange={(e) => setPartyTime(e.target.value)}
+                            placeholder="20:00"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="gam-field-compact">
+                        <label className="gam-label-compact">Lugar (opcional)</label>
+                        <input
+                          type="text"
+                          className="gam-input-compact"
+                          value={partyPlace}
+                          onChange={(e) => setPartyPlace(e.target.value)}
+                          placeholder="Ej: Casa de María, Salón..."
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
@@ -348,7 +407,7 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded }) => {
 
                   {/* PRIORIDAD/FRECUENCIA + FECHA/HORA */}
                   <div className="gam-field-row-compact">
-                    {type === 'habito' ? (
+                    {type === 'habit' ? (
                       <div className="gam-field-compact">
                         <label className="gam-label-compact">Frecuencia</label>
                         <select
@@ -380,7 +439,7 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded }) => {
                     
                     <div className="gam-field-compact">
                       <label className="gam-label-compact">
-                        Fecha {type === 'evento' && 'y hora'}
+                        Fecha {type === 'event' && 'y hora'}
                       </label>
                       <div className="gam-datetime-compact">
                         <input
@@ -389,7 +448,7 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded }) => {
                           value={date}
                           onChange={(e) => setDate(e.target.value)}
                         />
-                        {type === 'evento' && (
+                        {type === 'event' && (
                           <input
                             type="time"
                             className="gam-input-compact"

@@ -62,6 +62,25 @@ function NexusCalendar() {
     return category ? category.icon : '📌'
   }
 
+  // Calcular edad del cumpleañero a partir de birthYear
+  const getBirthdayAge = (task) => {
+    if (!task.birthYear) return null
+    const currentYear = new Date().getFullYear()
+    return currentYear - task.birthYear
+  }
+
+  // Tooltip/title para mostrar info al hacer hover
+  const getTaskTooltip = (task) => {
+    const age = getBirthdayAge(task)
+    if (task.isBirthdayReminder && age !== null) {
+      return `🎂 Cumpleaños de ${task.birthdayName} — Cumple ${age} años`
+    }
+    if (task.isPartyEvent) {
+      return `🎉 Fiesta de ${task.birthdayName}${task.time ? ` a las ${task.time}` : ''}`
+    }
+    return task.title || ''
+  }
+
   const prevMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1))
   }
@@ -97,13 +116,18 @@ function NexusCalendar() {
               <div
                 key={index}
                 className="cal-indicator"
+                title={getTaskTooltip(task)}
                 style={{
-                  backgroundColor: task.category === 'personal' ? '#ffb3c6' : 
+                  backgroundColor: task.isBirthdayReminder ? '#ec4899' :
+                                   task.isPartyEvent ? '#9333ea' :
+                                   task.category === 'personal' ? '#ffb3c6' : 
                                    task.category === 'escolar' ? '#c8a2c8' : 
                                    task.category === 'general' ? '#ff9aa2' : '#4A90E2'
                 }}
               >
-                <span className="task-emoji">{getTaskEmoji(task)}</span>
+                <span className="task-emoji">
+                  {task.isBirthdayReminder ? '🎂' : task.isPartyEvent ? '🎉' : getTaskEmoji(task)}
+                </span>
               </div>
             ))}
           </div>

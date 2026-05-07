@@ -63,9 +63,9 @@
   gap: 20px;
 }
 
-/* COLUMNA IZQUIERDA - Navegación (150px) */
+/* COLUMNA IZQUIERDA - Navegación (más delgada) */
 .gam-col-left {
-  width: 140px;
+  width: 100px;
   flex-shrink: 0;
 }
 
@@ -75,14 +75,14 @@
   gap: 10px;
 }
 
-/* Píldoras verticales */
+/* Píldoras verticales - más delgadas */
 .gam-pill-vertical {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 12px 8px;
-  border-radius: 16px;
+  gap: 3px;
+  padding: 10px 6px;
+  border-radius: 14px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   background: rgba(255, 255, 255, 0.5);
   cursor: pointer;
@@ -102,7 +102,7 @@
 }
 
 .gam-pill-emoji {
-  font-size: 1.3rem;
+  font-size: 1.1rem;
   line-height: 1;
 }
 
@@ -111,7 +111,7 @@
 }
 
 .gam-pill-label {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 500;
   color: #555;
   text-align: center;
@@ -132,56 +132,79 @@
   min-width: 0;
 }
 
-/* Grid de Módulos - 2 columnas */
-.gam-modules-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+/* Fila horizontal de Módulos - Círculos minimalistas */
+.gam-modules-row {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-start;
+  padding: 10px 0;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.1) transparent;
 }
 
-/* Cards de módulos */
-.gam-module-card {
+.gam-modules-row::-webkit-scrollbar {
+  height: 4px;
+}
+
+.gam-modules-row::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.1);
+  border-radius: 4px;
+}
+
+/* Item de módulo minimalista */
+.gam-module-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  padding: 14px 10px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  gap: 5px;
   cursor: pointer;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
-.gam-module-card:hover {
-  background: rgba(255, 255, 255, 0.8);
+.gam-module-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
-.gam-module-card.selected {
-  background: #fff;
-  border-color: #1a1a2e;
-  box-shadow: 0 4px 15px rgba(26, 26, 46, 0.15);
-}
-
-.gam-module-emoji {
-  font-size: 1.6rem;
+/* Círculo de 50px */
+.gam-module-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
   line-height: 1;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
 }
 
-.gam-module-name {
-  font-size: 0.72rem;
+.gam-module-item:hover .gam-module-circle {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.gam-module-item.selected .gam-module-circle {
+  border-color: #333;
+  background: #fff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+/* Label sans-serif pequeño */
+.gam-module-label {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.7rem;
   font-weight: 500;
-  color: #444;
+  color: #666;
   text-align: center;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
 }
 
-.gam-module-card.selected .gam-module-name {
+.gam-module-item.selected .gam-module-label {
   color: #1a1a2e;
   font-weight: 600;
 }
@@ -219,19 +242,19 @@
 }
 
 /* Tabs activos */
-.gam-tab-tarea.active {
+.gam-tab-task.active {
   background: rgba(236, 72, 153, 0.9);
   color: #fff;
   font-weight: 600;
 }
 
-.gam-tab-evento.active {
+.gam-tab-event.active {
   background: rgba(147, 51, 234, 0.9);
   color: #fff;
   font-weight: 600;
 }
 
-.gam-tab-habito.active {
+.gam-tab-habit.active {
   background: rgba(59, 130, 246, 0.9);
   color: #fff;
   font-weight: 600;
@@ -291,6 +314,51 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+/* Campos de fiesta desplegables */
+.gam-party-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 8px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Separador visual para datos de fiesta */
+.gam-party-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.gam-party-divider::before,
+.gam-party-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(236, 72, 153, 0.25);
+}
+
+.gam-party-divider span {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #ec4899;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 /* ============================================
@@ -575,37 +643,41 @@
     width: 100%;
   }
 
+  .gam-pill-vertical {
+    flex-direction: row;
+    padding: 6px 12px;
+    gap: 5px;
+  }
+
+  .gam-pill-emoji {
+    font-size: 1rem;
+  }
+
+  .gam-pill-label {
+    font-size: 0.7rem;
+  }
+
   .gam-scope-nav {
     flex-direction: row;
     justify-content: center;
     gap: 8px;
   }
 
-  .gam-pill-vertical {
-    flex-direction: row;
-    padding: 8px 14px;
-    gap: 6px;
+  /* Módulos horizontal en móvil */
+  .gam-modules-row {
+    gap: 12px;
+    padding: 8px 0;
+    margin-bottom: 16px;
   }
 
-  .gam-pill-emoji {
-    font-size: 1.1rem;
+  .gam-module-circle {
+    width: 44px;
+    height: 44px;
+    font-size: 1.3rem;
   }
 
-  .gam-pill-label {
-    font-size: 0.75rem;
-  }
-
-  .gam-modules-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-
-  .gam-module-emoji {
-    font-size: 1.4rem;
-  }
-
-  .gam-module-name {
-    font-size: 0.68rem;
+  .gam-module-label {
+    font-size: 0.65rem;
   }
 
   .gam-field-row-compact,

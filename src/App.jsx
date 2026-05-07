@@ -240,6 +240,10 @@ function App() {
               isOpen={isModalOpen} 
               onClose={() => setIsModalOpen(false)} 
               preselectedType={modalPreselectedType}
+              onTaskAdded={() => {
+                // Force refresh via console confirmation
+                console.log('🎯 Nueva entrada guardada en Firebase - sincronización en tiempo real activa')
+              }}
             />
             <DataScienceHub 
               isOpen={isDataScienceHubOpen} 
