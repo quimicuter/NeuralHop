@@ -1,16 +1,37 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useApp } from '../context/AppContext'
+import DetailModal from './DetailModal'
 
 function SimpleEvents() {
   const { state, actions, getEvents } = useApp()
-
   const events = (getEvents && getEvents()) || []
+  const [selectedEntry, setSelectedEntry] = useState(null)
+  const [isDetailOpen, setIsDetailOpen] = useState(false)
 
   const handleEventToggle = (eventId) => {
     actions.updateEntry(eventId, {
       completed: true,
       status: 'done'
     })
+  }
+
+  const openDetail = (entry) => {
+    setSelectedEntry(entry)
+    setIsDetailOpen(true)
+  }
+
+  const closeDetail = () => {
+    setIsDetailOpen(false)
+    setSelectedEntry(null)
+  }
+
+  const handleSaveEntry = async (entryId, updates) => {
+    await actions.updateEntry(entryId, updates)
+    closeDetail()
+  }
+
+  const handleEditEntry = (entry) => {
+    window.dispatchEvent(new CustomEvent('open-edit-modal', { detail: entry }))
   }
 
   const getCategoryColor = (category) => {
@@ -37,19 +58,31 @@ function SimpleEvents() {
 
   const getModuleEmoji = (event) => {
     const moduleEmojis = {
-      'self-care': '🛀',
+      'selfcare': '🛀',
       'mindfulness': '🧘‍♀️',
-      'recetario': '🍳',
-      'hobbies': '🎨',
-      'maestria': '🎓',
-      'lab': '🧪',
-      'idiomas': '🗣️',
+      'vida-social': '🥂',
+      'fitness': '💪',
+      'foodie': '🍽️',
+      'data-science': '📊',
       'investigacion': '🔬',
-      'social': '🥂',
-      'cumpleaños': '🎂',
-      'otro': '📌'
+      'maestria': '🎓',
+      'laboratorio': '🧪',
+      'idiomas': '🗣️',
+      'cumpleanos': '🎂',
+      'finanzas': '💰',
+      'tramites': '📝'
     }
-    return moduleEmojis[event.subcategory] || '📅'
+    return moduleEmojis[event.module] || '📅'
+  }
+
+  const getPriorityEmoji = (priority) => {
+    switch(priority) {
+      case 'critical': return '🔥'
+      case 'high': return '⚡'
+      case 'medium': return '📌'
+      case 'low': return '🌱'
+      default: return '�'
+    }
   }
 
   const getEventDateTime = (event) => {
@@ -73,7 +106,7 @@ function SimpleEvents() {
       }
     }
     
-    return 'Sin fecha'
+    return null
   }
 
   const isEventOverdue = (event) => {
@@ -91,42 +124,69 @@ function SimpleEvents() {
   ).slice(0, 4) // Limitar a 4 eventos para el dashboard
 
   return (
-    <div className="event-list">
-      {visibleEvents.map(event => (
-        <div key={event.id} className="task-item-new">
-          <div className="task-item-header">
-            <div className="task-item-left">
-              <input 
-                type="checkbox" 
-                className="task-checkbox-new"
-                checked={event.status === 'completed'}
-                onChange={() => handleEventToggle(event.id)}
-              />
-              <span className={`task-title ${isEventOverdue(event) ? 'text-red-500 font-bold' : ''}`}>
-                {event.title}
-              </span>
+    <>
+      <div className="event-list">
+        {visibleEvents.map(event => {
+          const eventDateTime = getEventDateTime(event)
+          return (
+            <div
+              key={event.id}
+              className="task-item-new clickable"
+              onClick={() => openDetail(event)}
+              role="button"
+              tabIndex={0}
+            >
+              {/* Fila 1: Checkbox + Título + Emoji Módulo */}
+              <div className="task-item-header" style={{ justifyContent: 'space-between' }}>
+                <div className="task-item-left" style={{ flex: 1, minWidth: 0 }}>
+                  <input 
+                    type="checkbox" 
+                    className="task-checkbox-new"
+                    checked={event.status === 'completed'}
+                    onChange={() => handleEventToggle(event.id)}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  <span 
+                    className={`task-title ${isEventOverdue(event) ? 'text-red-500' : ''}`}
+                    style={{ fontFamily: "'Playfair Display', 'Georgia', serif", fontWeight: 700 }}
+                  >
+                    {event.title}
+                  </span>
+                </div>
+                <div className="task-item-right">
+                  <span className="task-emoji">{getModuleEmoji(event)}</span>
+                </div>
+              </div>
+              {/* Fila 2: Emoji Prioridad + Fecha/Hora */}
+              <div className="task-item-footer" style={{ marginLeft: 24, gap: 8 }}>
+                <span className="task-priority-emoji">{getPriorityEmoji(event.priority)}</span>
+                {eventDateTime && (
+                  <span className={`task-datetime ${isEventOverdue(event) ? 'text-red-500' : ''}`}>
+                    {eventDateTime}
+                  </span>
+                )}
+                {event.location && (
+                  <span className="task-location">📍 {event.location}</span>
+                )}
+              </div>
             </div>
-            <div className="task-item-right">
-              <span className="task-emoji">{getModuleEmoji(event)}</span>
-            </div>
+          )
+        })}
+        {visibleEvents.length === 0 && (
+          <div className="empty-events">
+            <span>No hay eventos próximos. ✨</span>
           </div>
-          <div className="task-item-footer">
-            <div className="priority-indicator" style={{ backgroundColor: getCategoryColor(event.category) }}></div>
-            <span className={`task-datetime ${isEventOverdue(event) ? 'text-red-500 font-bold' : ''}`}>
-              {getEventDateTime(event)}
-            </span>
-            {event.location && (
-              <span className="task-location">📍 {event.location}</span>
-            )}
-          </div>
-        </div>
-      ))}
-      {visibleEvents.length === 0 && (
-        <div className="empty-events">
-          <span>No hay eventos próximos. ✨</span>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+
+      <DetailModal
+        entry={selectedEntry}
+        isOpen={isDetailOpen}
+        onClose={closeDetail}
+        onSave={handleSaveEntry}
+        onEdit={handleEditEntry}
+      />
+    </>
   )
 }
 

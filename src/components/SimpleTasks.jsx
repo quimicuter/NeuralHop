@@ -1,15 +1,37 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useApp } from '../context/AppContext'
+import DetailModal from './DetailModal'
 
 function SimpleTasks() {
   const { state, actions, getTasks } = useApp()
   const tasks = (getTasks && getTasks()) || []
+  const [selectedEntry, setSelectedEntry] = useState(null)
+  const [isDetailOpen, setIsDetailOpen] = useState(false)
 
   const handleTaskToggle = (taskId) => {
     actions.updateEntry(taskId, {
       completed: true,
       status: 'done'
     })
+  }
+
+  const openDetail = (entry) => {
+    setSelectedEntry(entry)
+    setIsDetailOpen(true)
+  }
+
+  const closeDetail = () => {
+    setIsDetailOpen(false)
+    setSelectedEntry(null)
+  }
+
+  const handleSaveEntry = async (entryId, updates) => {
+    await actions.updateEntry(entryId, updates)
+    closeDetail()
+  }
+
+  const handleEditEntry = (entry) => {
+    window.dispatchEvent(new CustomEvent('open-edit-modal', { detail: entry }))
   }
 
   const getCategoryColor = (category) => {
@@ -44,23 +66,32 @@ function SimpleTasks() {
   }
 
   const getModuleEmoji = (task) => {
-    // Emoji basado en el subcategoría/módulo
     const moduleEmojis = {
-      'self-care': '🛀',
+      'selfcare': '🛀',
       'mindfulness': '🧘‍♀️',
-      'recetario': '🍳',
-      'hobbies': '🎨',
-      'maestria': '🎓',
-      'lab': '🧪',
-      'idiomas': '🗣️',
+      'vida-social': '🥂',
+      'fitness': '💪',
+      'foodie': '🍽️',
+      'data-science': '📊',
       'investigacion': '🔬',
-      'social': '🥂',
-      'cumpleaños': '🎂',
-      'otro': '📌'
+      'maestria': '🎓',
+      'laboratorio': '🧪',
+      'idiomas': '🗣️',
+      'cumpleanos': '🎂',
+      'finanzas': '💰',
+      'tramites': '📋'
     }
-    
-    const module = task.subcategory || task.freeCategory
-    return moduleEmojis[module] || '📌'
+    return moduleEmojis[task.module] || '📌'
+  }
+
+  const getPriorityEmoji = (priority) => {
+    switch(priority) {
+      case 'critical': return '🔥'
+      case 'high': return '⚡'
+      case 'medium': return '📌'
+      case 'low': return '🌱'
+      default: return '�'
+    }
   }
 
   const getPriorityColor = (priority) => {
@@ -86,9 +117,7 @@ function SimpleTasks() {
       } else {
         return date.toLocaleDateString('es-MX', { 
           month: 'short', 
-          day: 'numeric',
-          hour: task.startTime ? '2-digit' : undefined,
-          minute: task.startTime ? '2-digit' : undefined
+          day: 'numeric'
         })
       }
     } else if (task.type === 'task' && task.deadline) {
@@ -109,7 +138,7 @@ function SimpleTasks() {
       }
     }
     
-    return 'Sin fecha'
+    return null
   }
 
   // Mostrar solo tareas no completadas (filtro !completed)
@@ -120,34 +149,63 @@ function SimpleTasks() {
   return (
     <>
       <div className="task-list">
-        {visibleTasks.map(task => (
-          <div key={task.id} className="task-item-new">
-            <div className="task-item-header">
-              <div className="task-item-left">
-                <input 
-                  type="checkbox" 
-                  className="task-checkbox-new"
-                  checked={task.status === 'completed'}
-                  onChange={() => handleTaskToggle(task.id)}
-                />
-                <span className={`task-title ${isTaskOverdue(task) ? 'text-red-500 font-bold' : ''}`}>{task.title}</span>
+        {visibleTasks.map(task => {
+          const taskDateTime = getTaskDateTime(task)
+          return (
+            <div
+              key={task.id}
+              className="task-item-new clickable"
+              onClick={() => openDetail(task)}
+              role="button"
+              tabIndex={0}
+            >
+              {/* Fila 1: Checkbox + Título + Emoji Módulo */}
+              <div className="task-item-header" style={{ justifyContent: 'space-between' }}>
+                <div className="task-item-left" style={{ flex: 1, minWidth: 0 }}>
+                  <input 
+                    type="checkbox" 
+                    className="task-checkbox-new"
+                    checked={task.status === 'completed'}
+                    onChange={() => handleTaskToggle(task.id)}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  <span 
+                    className={`task-title ${isTaskOverdue(task) ? 'text-red-500' : ''}`}
+                    style={{ fontFamily: "'Playfair Display', 'Georgia', serif", fontWeight: 700 }}
+                  >
+                    {task.title}
+                  </span>
+                </div>
+                <div className="task-item-right">
+                  <span className="task-emoji">{getModuleEmoji(task)}</span>
+                </div>
               </div>
-              <div className="task-item-right">
-                <span className="task-emoji">{getModuleEmoji(task)}</span>
+              {/* Fila 2: Emoji Prioridad + Fecha/Hora */}
+              <div className="task-item-footer" style={{ marginLeft: 24, gap: 8 }}>
+                <span className="task-priority-emoji">{getPriorityEmoji(task.priority)}</span>
+                {taskDateTime && (
+                  <span className={`task-datetime ${isTaskOverdue(task) ? 'text-red-500' : ''}`}>
+                    {taskDateTime}
+                  </span>
+                )}
               </div>
             </div>
-            <div className="task-item-footer">
-              <div className="priority-indicator" style={{ backgroundColor: getPriorityColor(task.priority) }}></div>
-              <span className={`task-datetime ${isTaskOverdue(task) ? 'text-red-500 font-bold' : ''}`}>{getTaskDateTime(task)}</span>
-            </div>
-          </div>
-        ))}
+          )
+        })}
         {visibleTasks.length === 0 && (
           <div className="empty-tasks">
             <span>No hay tareas pendientes. ✨</span>
           </div>
         )}
       </div>
+
+      <DetailModal
+        entry={selectedEntry}
+        isOpen={isDetailOpen}
+        onClose={closeDetail}
+        onSave={handleSaveEntry}
+        onEdit={handleEditEntry}
+      />
     </>
   )
 }
