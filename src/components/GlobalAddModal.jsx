@@ -49,7 +49,8 @@ const PRIORITY_CONFIG = [
 const FREQUENCY_OPTIONS = [
   { value: 'daily', label: 'Diario' },
   { value: 'weekly', label: 'Semanal' },
-  { value: 'monthly', label: 'Mensual' }
+  { value: 'monthly', label: 'Mensual' },
+  { value: 'annual', label: 'Anual' }
 ];
 
 // ============================================
@@ -69,7 +70,14 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded, preselectedType, editEnt
   const [subtasks, setSubtasks] = useState(['']);
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
-  
+
+  // Campos exclusivos de Evento
+  const [endDate, setEndDate] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [location, setLocation] = useState('');
+  const [isRecurring, setIsRecurring] = useState(false);
+  const [eventRecurrence, setEventRecurrence] = useState('annual');
+
   // Wizard de cumpleaños
   const [birthdayName, setBirthdayName] = useState('');
   const [birthdayDate, setBirthdayDate] = useState('');
@@ -103,6 +111,11 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded, preselectedType, editEnt
         );
         setDate(editEntry.date || '');
         setTime(editEntry.time || '');
+        setEndDate(editEntry.endDate || '');
+        setEndTime(editEntry.endTime || '');
+        setLocation(editEntry.location || '');
+        setIsRecurring(editEntry.recurrence ? true : false);
+        setEventRecurrence(editEntry.recurrence || 'annual');
         setBirthdayName(editEntry.birthdayName || '');
         setBirthdayDate(editEntry.birthDate || '');
         setHasParty(false);
@@ -124,6 +137,11 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded, preselectedType, editEnt
         setSubtasks(['']);
         setDate('');
         setTime('');
+        setEndDate('');
+        setEndTime('');
+        setLocation('');
+        setIsRecurring(false);
+        setEventRecurrence('annual');
         setBirthdayName('');
         setBirthdayDate('');
         setHasParty(false);
@@ -215,6 +233,12 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded, preselectedType, editEnt
           data.date = null;
           data.time = null;
         }
+        if (type === 'event') {
+          data.endDate = endDate || null;
+          data.endTime = endTime || null;
+          data.location = location.trim() || null;
+          data.recurrence = isRecurring ? eventRecurrence : null;
+        }
         if (subtasks.filter(s => s.trim()).length > 0) {
           data.subtasks = subtasks.filter(s => s.trim()).map(s => ({ text: s, done: false }));
         } else {
@@ -240,6 +264,7 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded, preselectedType, editEnt
             notes: `Cumpleaños de ${birthdayName}`,
             status: 'active',
             isBirthdayReminder: true,
+            recurrence: 'annual',
             birthdayName,
             birthDate: birthdayDate,
             birthYear: birthYear
@@ -279,6 +304,12 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded, preselectedType, editEnt
           if (type === 'event' || date) {
             data.date = date;
             if (time) data.time = time;
+          }
+          if (type === 'event') {
+            if (endDate) data.endDate = endDate;
+            if (endTime) data.endTime = endTime;
+            if (location.trim()) data.location = location.trim();
+            if (isRecurring) data.recurrence = eventRecurrence;
           }
           if (subtasks.filter(s => s.trim()).length > 0) {
             data.subtasks = subtasks.filter(s => s.trim()).map(s => ({ text: s, done: false }));
@@ -466,95 +497,183 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded, preselectedType, editEnt
                     />
                   </div>
 
-                  {/* PRIORIDAD/FRECUENCIA + FECHA/HORA */}
-                  <div className="gam-field-row-compact">
-                    {type === 'habit' ? (
-                      <div className="gam-field-compact">
-                        <label className="gam-label-compact">Frecuencia</label>
-                        <select
-                          className="gam-select-compact"
-                          value={frequency}
-                          onChange={(e) => setFrequency(e.target.value)}
-                        >
-                          {FREQUENCY_OPTIONS.map((f) => (
-                            <option key={f.value} value={f.value}>{f.label}</option>
-                          ))}
-                        </select>
+                  {type === 'event' ? (
+                    /* FORMULARIO EXCLUSIVO PARA EVENTOS */
+                    <>
+                      {/* Fecha Inicio + Fecha Fin */}
+                      <div className="gam-field-row-compact">
+                        <div className="gam-field-compact">
+                          <label className="gam-label-compact">Fecha inicio</label>
+                          <input
+                            type="date"
+                            className="gam-input-compact"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                          />
+                        </div>
+                        <div className="gam-field-compact">
+                          <label className="gam-label-compact">Fecha fin</label>
+                          <input
+                            type="date"
+                            className="gam-input-compact"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                          />
+                        </div>
                       </div>
-                    ) : (
-                      <div className="gam-field-compact">
-                        <label className="gam-label-compact">Prioridad</label>
-                        <select
-                          className="gam-select-compact"
-                          value={priority}
-                          onChange={(e) => setPriority(e.target.value)}
-                        >
-                          {PRIORITY_CONFIG.map((p) => (
-                            <option key={p.value} value={p.value}>
-                              {p.emoji} {p.label}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    )}
-                    
-                    <div className="gam-field-compact">
-                      <label className="gam-label-compact">
-                        Fecha {type === 'event' && 'y hora'}
-                      </label>
-                      <div className="gam-datetime-compact">
-                        <input
-                          type="date"
-                          className="gam-input-compact"
-                          value={date}
-                          onChange={(e) => setDate(e.target.value)}
-                        />
-                        {type === 'event' && (
+
+                      {/* Hora Inicio + Hora Fin */}
+                      <div className="gam-field-row-compact">
+                        <div className="gam-field-compact">
+                          <label className="gam-label-compact">Hora inicio</label>
                           <input
                             type="time"
                             className="gam-input-compact"
                             value={time}
                             onChange={(e) => setTime(e.target.value)}
                           />
+                        </div>
+                        <div className="gam-field-compact">
+                          <label className="gam-label-compact">Hora fin</label>
+                          <input
+                            type="time"
+                            className="gam-input-compact"
+                            value={endTime}
+                            onChange={(e) => setEndTime(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Ubicación / Link */}
+                      <div className="gam-field-compact">
+                        <label className="gam-label-compact">Ubicación o Link</label>
+                        <input
+                          type="text"
+                          className="gam-input-compact"
+                          value={location}
+                          onChange={(e) => setLocation(e.target.value)}
+                          placeholder="Ej: Casa de María, Zoom link..."
+                        />
+                      </div>
+
+                      {/* Recurrencia */}
+                      <div className="gam-field-row-compact">
+                        <label className="gam-toggle-compact">
+                          <input
+                            type="checkbox"
+                            checked={isRecurring}
+                            onChange={(e) => setIsRecurring(e.target.checked)}
+                          />
+                          <span className="gam-toggle-label">Evento recurrente 🔁</span>
+                        </label>
+                        {isRecurring && (
+                          <div className="gam-field-compact">
+                            <select
+                              className="gam-select-compact"
+                              value={eventRecurrence}
+                              onChange={(e) => setEventRecurrence(e.target.value)}
+                            >
+                              {FREQUENCY_OPTIONS.map((f) => (
+                                <option key={f.value} value={f.value}>{f.label}</option>
+                              ))}
+                            </select>
+                          </div>
                         )}
                       </div>
-                    </div>
-                  </div>
 
-                  {/* SUBTAREAS + NOTAS EN 2 COL */}
-                  <div className="gam-two-col-compact">
-                    <div className="gam-col-compact">
-                      <label className="gam-label-compact">Subtareas</label>
-                      <div className="gam-subtasks-compact">
-                        {subtasks.map((st, idx) => (
-                          <div key={idx} className="gam-subtask-item-compact">
-                            <input type="checkbox" disabled className="gam-checkbox-compact" />
-                            <input
-                              type="text"
-                              className="gam-input-subtask-compact"
-                              value={st}
-                              onChange={(e) => updateSubtask(idx, e.target.value)}
-                              placeholder="Subtarea..."
-                            />
-                          </div>
-                        ))}
-                        <button className="gam-btn-add-sub-compact" onClick={addSubtask}>
-                          + Agregar
-                        </button>
+                      {/* Notas */}
+                      <div className="gam-field-compact">
+                        <label className="gam-label-compact">Notas</label>
+                        <textarea
+                          className="gam-textarea-compact"
+                          value={notes}
+                          onChange={(e) => setNotes(e.target.value)}
+                          placeholder="Notas adicionales..."
+                          rows={3}
+                        />
                       </div>
-                    </div>
+                    </>
+                  ) : (
+                    /* FORMULARIO PARA TAREAS Y HÁBITOS */
+                    <>
+                      {/* PRIORIDAD/FRECUENCIA + FECHA */}
+                      <div className="gam-field-row-compact">
+                        {type === 'habit' ? (
+                          <div className="gam-field-compact">
+                            <label className="gam-label-compact">Frecuencia</label>
+                            <select
+                              className="gam-select-compact"
+                              value={frequency}
+                              onChange={(e) => setFrequency(e.target.value)}
+                            >
+                              {FREQUENCY_OPTIONS.map((f) => (
+                                <option key={f.value} value={f.value}>{f.label}</option>
+                              ))}
+                            </select>
+                          </div>
+                        ) : (
+                          <div className="gam-field-compact">
+                            <label className="gam-label-compact">Prioridad</label>
+                            <select
+                              className="gam-select-compact"
+                              value={priority}
+                              onChange={(e) => setPriority(e.target.value)}
+                            >
+                              {PRIORITY_CONFIG.map((p) => (
+                                <option key={p.value} value={p.value}>
+                                  {p.emoji} {p.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        )}
+                        <div className="gam-field-compact">
+                          <label className="gam-label-compact">Fecha</label>
+                          <input
+                            type="date"
+                            className="gam-input-compact"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                          />
+                        </div>
+                      </div>
 
-                    <div className="gam-col-compact">
-                      <label className="gam-label-compact">Notas</label>
-                      <textarea
-                        className="gam-textarea-compact"
-                        value={notes}
-                        onChange={(e) => setNotes(e.target.value)}
-                        placeholder="Notas adicionales..."
-                        rows={4}
-                      />
-                    </div>
-                  </div>
+                      {/* SUBTAREAS + NOTAS EN 2 COL */}
+                      <div className="gam-two-col-compact">
+                        <div className="gam-col-compact">
+                          <label className="gam-label-compact">Subtareas</label>
+                          <div className="gam-subtasks-compact">
+                            {subtasks.map((st, idx) => (
+                              <div key={idx} className="gam-subtask-item-compact">
+                                <input type="checkbox" disabled className="gam-checkbox-compact" />
+                                <input
+                                  type="text"
+                                  className="gam-input-subtask-compact"
+                                  value={st}
+                                  onChange={(e) => updateSubtask(idx, e.target.value)}
+                                  placeholder="Subtarea..."
+                                />
+                              </div>
+                            ))}
+                            <button className="gam-btn-add-sub-compact" onClick={addSubtask}>
+                              + Agregar
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="gam-col-compact">
+                          <label className="gam-label-compact">Notas</label>
+                          <textarea
+                            className="gam-textarea-compact"
+                            value={notes}
+                            onChange={(e) => setNotes(e.target.value)}
+                            placeholder="Notas adicionales..."
+                            rows={4}
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </>
             )}

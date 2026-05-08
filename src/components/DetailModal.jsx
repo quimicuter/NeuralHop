@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './DetailModal.css'
 
-function DetailModal({ entry, isOpen, onClose, onSave, onEdit }) {
+function DetailModal({ entry, isOpen, onClose, onSave, onEdit, onDelete }) {
   const [localSubtasks, setLocalSubtasks] = useState([])
   const [isModified, setIsModified] = useState(false)
 
@@ -27,6 +27,13 @@ function DetailModal({ entry, isOpen, onClose, onSave, onEdit }) {
   const handleSave = () => {
     onSave(entry.id, { subtasks: localSubtasks })
     setIsModified(false)
+  }
+
+  const handleDelete = () => {
+    if (window.confirm('¿Estás seguro de que deseas eliminar esta entrada?')) {
+      onDelete(entry.id)
+      onClose()
+    }
   }
 
   const formatDate = (dateStr) => {
@@ -128,6 +135,9 @@ function DetailModal({ entry, isOpen, onClose, onSave, onEdit }) {
         <div className="detail-actions">
           <button className="detail-btn detail-btn-edit" onClick={() => onEdit(entry)}>
             ✏️ Editar
+          </button>
+          <button className="detail-btn detail-btn-delete" onClick={handleDelete}>
+            🗑️ Eliminar
           </button>
           <button
             className={`detail-btn detail-btn-save ${isModified ? 'active' : ''}`}

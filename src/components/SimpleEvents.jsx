@@ -35,6 +35,11 @@ function SimpleEvents() {
     window.dispatchEvent(new CustomEvent('open-edit-modal', { detail: entry }))
   }
 
+  const handleDeleteEntry = async (entryId) => {
+    await actions.deleteEntry(entryId)
+    closeDetail()
+  }
+
   const getCategoryColor = (category) => {
     switch(category) {
       case 'personal': return '#ffb3c6'
@@ -186,6 +191,7 @@ function SimpleEvents() {
         onClose={closeDetail}
         onSave={handleSaveEntry}
         onEdit={handleEditEntry}
+        onDelete={handleDeleteEntry}
       />
     </>
   )

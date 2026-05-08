@@ -247,6 +247,17 @@
   cursor: not-allowed;
 }
 
+.detail-btn-delete {
+  background: transparent;
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.detail-btn-delete:hover {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
 /* Scrollbar */
 .detail-modal::-webkit-scrollbar {
   width: 6px;
