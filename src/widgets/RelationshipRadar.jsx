@@ -8,7 +8,7 @@ function RelationshipRadar({ entries }) {
   ).map(entry => {
     const lastContact = entry.metadata?.lastContactDate || entry.metadata?.lastContact
     const daysSince = lastContact 
-      ? Math.ceil((new Date() - new Date(lastContact)) / (1000 * 60 * 60 * 24))
+      ? Math.ceil((new Date() - new Date(lastContact + 'T12:00:00')) / (1000 * 60 * 60 * 24))
       : null
     
     return {

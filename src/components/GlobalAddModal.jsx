@@ -251,7 +251,7 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded, preselectedType, editEnt
         // Wizard de cumpleaños - crea 2 registros
         if (MODULE_CONFIG[module]?.isBirthday && birthdayName && birthdayDate) {
           // Extraer año de nacimiento para metadata
-          const birthYear = new Date(birthdayDate).getFullYear();
+          const birthYear = new Date(birthdayDate + 'T12:00:00').getFullYear();
 
           // 1. Recordatorio anual del cumpleaños
           await addEntry({

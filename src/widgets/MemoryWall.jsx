@@ -79,7 +79,7 @@ function MemoryWall({ entries, onItemClick }) {
               <h4 className="memory-event-title">{entry.title}</h4>
               {entry.metadata?.date && (
                 <p className="memory-date">
-                  {new Date(entry.metadata.date).toLocaleDateString('es-MX', {
+                  {new Date(entry.metadata.date + 'T12:00:00').toLocaleDateString('es-MX', {
                     month: 'short',
                     day: 'numeric',
                     year: 'numeric'

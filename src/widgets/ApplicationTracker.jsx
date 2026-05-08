@@ -46,7 +46,7 @@ function ApplicationTracker({ entries, onRowClick }) {
       
       case 'deadline':
         return entry.deadline 
-          ? new Date(entry.deadline).toLocaleDateString('es-MX')
+          ? new Date(entry.deadline + 'T12:00:00').toLocaleDateString('es-MX')
           : 'Sin fecha'
       
       case 'progress':

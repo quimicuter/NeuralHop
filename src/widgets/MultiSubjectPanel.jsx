@@ -85,7 +85,7 @@ function MultiSubjectPanel({ entries, onSubjectChange }) {
                 <span className="subject-entry-title">{entry.title}</span>
                 {entry.metadata?.date && (
                   <span className="subject-entry-date">
-                    {new Date(entry.metadata.date).toLocaleDateString('es-MX')}
+                    {new Date(entry.metadata.date + 'T12:00:00').toLocaleDateString('es-MX')}
                   </span>
                 )}
               </div>

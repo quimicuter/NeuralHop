@@ -71,7 +71,7 @@ function InventoryTable({ entries, onRowClick }) {
       
       case 'lastUpdated':
         return entry.metadata?.lastUpdated
-          ? new Date(entry.metadata.lastUpdated).toLocaleDateString('es-MX')
+          ? new Date(entry.metadata.lastUpdated + 'T12:00:00').toLocaleDateString('es-MX')
           : 'N/A'
       
       default:

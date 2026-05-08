@@ -66,7 +66,7 @@ function SimpleTasks() {
     if (!task.deadline || task.completed) return false
     const today = new Date()
     today.setHours(0, 0, 0, 0) // Inicio del día
-    const deadline = new Date(task.deadline)
+    const deadline = new Date(task.deadline + 'T12:00:00')
     deadline.setHours(0, 0, 0, 0) // Inicio del día
     return deadline < today
   }
@@ -111,7 +111,7 @@ function SimpleTasks() {
 
   const getTaskDateTime = (task) => {
     if (task.type === 'event' && task.date) {
-      const date = new Date(task.date)
+      const date = new Date(task.date + 'T12:00:00')
       const today = new Date()
       const tomorrow = new Date(today)
       tomorrow.setDate(tomorrow.getDate() + 1)
@@ -127,7 +127,7 @@ function SimpleTasks() {
         })
       }
     } else if (task.type === 'task' && task.deadline) {
-      const date = new Date(task.deadline)
+      const date = new Date(task.deadline + 'T12:00:00')
       const today = new Date()
       const tomorrow = new Date(today)
       tomorrow.setDate(tomorrow.getDate() + 1)

@@ -34,7 +34,7 @@ function TaskHistoryModal({ isOpen, onClose }) {
 
   const getTaskDateTime = (task) => {
     if (task.type === 'event' && task.date) {
-      const date = new Date(task.date)
+      const date = new Date(task.date + 'T12:00:00')
       return date.toLocaleDateString('es-MX', { 
         month: 'short', 
         day: 'numeric',
@@ -42,7 +42,7 @@ function TaskHistoryModal({ isOpen, onClose }) {
         minute: task.startTime ? '2-digit' : undefined
       })
     } else if (task.type === 'task' && task.deadline) {
-      const date = new Date(task.deadline)
+      const date = new Date(task.deadline + 'T12:00:00')
       return date.toLocaleDateString('es-MX', { 
         month: 'short', 
         day: 'numeric'

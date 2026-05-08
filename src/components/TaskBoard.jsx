@@ -19,10 +19,10 @@ function TaskBoard() {
     return state.tasks
       .filter(task => 
         task.type === 'event' && 
-        new Date(task.date) >= today &&
+        new Date(task.date + 'T12:00:00') >= today &&
         task.status !== 'completed'
       )
-      .sort((a, b) => new Date(a.date) - new Date(b.date))
+      .sort((a, b) => new Date(a.date + 'T12:00:00') - new Date(b.date + 'T12:00:00'))
       .slice(0, 5)
   }
 
@@ -100,7 +100,7 @@ function TaskBoard() {
         <div className="event-content">
           <div className="event-title">{event.title}</div>
           <div className="event-meta">
-            <span>📅 {new Date(event.date).toLocaleDateString('es-MX')}</span>
+            <span>📅 {new Date(event.date + 'T12:00:00').toLocaleDateString('es-MX')}</span>
             {event.time && <span>🕐 {event.time}</span>}
           </div>
         </div>

@@ -93,7 +93,7 @@ function SimpleEvents() {
 
   const getEventDateTime = (event) => {
     if (event.date) {
-      const date = new Date(event.date)
+      const date = new Date(event.date + 'T12:00:00')
       const today = new Date()
       const tomorrow = new Date(today)
       tomorrow.setDate(tomorrow.getDate() + 1)
@@ -119,14 +119,14 @@ function SimpleEvents() {
     if (!event.date || event.completed) return false
     const today = new Date()
     today.setHours(0, 0, 0, 0)
-    const eventDate = new Date(event.date)
+    const eventDate = new Date(event.date + 'T12:00:00')
     eventDate.setHours(0, 0, 0, 0)
     return eventDate < today
   }
 
   // Mostrar solo eventos no completados
   const visibleEvents = (events || []).filter(event => 
-    !event.completed && event.status !== 'completed'
+    !event.completed && event.status !== 'completed' && event.module !== 'cumpleanos' && !event.isBirthdayReminder
   ).slice(0, 4) // Limitar a 4 eventos para el dashboard
 
   return (

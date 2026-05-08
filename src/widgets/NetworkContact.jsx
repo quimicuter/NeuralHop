@@ -44,7 +44,7 @@ function NetworkContact({ entries, onContactClick }) {
               <p className="network-institution">🏛️ {contact.institution}</p>
               {contact.lastInteraction && (
                 <p className="network-last-contact">
-                  Último contacto: {new Date(contact.lastInteraction).toLocaleDateString('es-MX')}
+                  Último contacto: {new Date(contact.lastInteraction + 'T12:00:00').toLocaleDateString('es-MX')}
                 </p>
               )}
             </div>
