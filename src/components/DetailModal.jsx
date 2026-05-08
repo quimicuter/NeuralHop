@@ -38,7 +38,8 @@ function DetailModal({ entry, isOpen, onClose, onSave, onEdit, onDelete }) {
 
   const formatDate = (dateStr) => {
     if (!dateStr) return null
-    const date = new Date(dateStr + 'T12:00:00')
+    const [year, month, day] = dateStr.split('-').map(Number)
+    const date = new Date(year, month - 1, day)
     return date.toLocaleDateString('es-MX', {
       weekday: 'long',
       year: 'numeric',

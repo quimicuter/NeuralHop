@@ -46,7 +46,10 @@ function ApplicationTracker({ entries, onRowClick }) {
       
       case 'deadline':
         return entry.deadline 
-          ? new Date(entry.deadline + 'T12:00:00').toLocaleDateString('es-MX')
+          ? (() => {
+              const [year, month, day] = entry.deadline.split('-').map(Number)
+              return new Date(year, month - 1, day).toLocaleDateString('es-MX')
+            })()
           : 'Sin fecha'
       
       case 'progress':

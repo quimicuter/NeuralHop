@@ -17,12 +17,17 @@ function TaskBoard() {
   const getUpcomingEvents = () => {
     const today = new Date()
     return state.tasks
-      .filter(task => 
-        task.type === 'event' && 
-        new Date(task.date + 'T12:00:00') >= today &&
-        task.status !== 'completed'
-      )
-      .sort((a, b) => new Date(a.date + 'T12:00:00') - new Date(b.date + 'T12:00:00'))
+      .filter(task => {
+        if (task.type !== 'event' || task.status === 'completed') return false
+        const [year, month, day] = task.date.split('-').map(Number)
+        const eventDate = new Date(year, month - 1, day)
+        return eventDate >= today
+      })
+      .sort((a, b) => {
+        const [yearA, monthA, dayA] = a.date.split('-').map(Number)
+        const [yearB, monthB, dayB] = b.date.split('-').map(Number)
+        return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB)
+      })
       .slice(0, 5)
   }
 
@@ -100,7 +105,10 @@ function TaskBoard() {
         <div className="event-content">
           <div className="event-title">{event.title}</div>
           <div className="event-meta">
-            <span>📅 {new Date(event.date + 'T12:00:00').toLocaleDateString('es-MX')}</span>
+            <span>📅 {(() => {
+              const [year, month, day] = event.date.split('-').map(Number)
+              return new Date(year, month - 1, day).toLocaleDateString('es-MX')
+            })()}</span>
             {event.time && <span>🕐 {event.time}</span>}
           </div>
         </div>

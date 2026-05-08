@@ -111,7 +111,7 @@ const NotesRepository = () => {
   }
 
   const formatDate = (dateString) => {
-    const date = new Date(dateString + 'T12:00:00')
+    const date = new Date(dateString)
     return date.toLocaleDateString('es-ES', {
       day: 'numeric',
       month: 'short',

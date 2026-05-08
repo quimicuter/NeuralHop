@@ -26,7 +26,8 @@ function CyclicTracker({ entries, onCycleComplete }) {
 
   const getDaysSince = (dateString) => {
     if (!dateString) return null
-    const lastDate = new Date(dateString + 'T12:00:00')
+    const [year, month, day] = dateString.split('-').map(Number)
+    const lastDate = new Date(year, month - 1, day)
     const today = new Date()
     const diffTime = Math.abs(today - lastDate)
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24))

@@ -44,7 +44,10 @@ function PaperKanban({ entries, onMoveEntry, onEntryClick }) {
         )}
         {entry.metadata?.deadline && (
           <div className="paper-card-deadline">
-            ⏰ {new Date(entry.metadata.deadline + 'T12:00:00').toLocaleDateString('es-MX')}
+            ⏰ {(() => {
+              const [year, month, day] = entry.metadata.deadline.split('-').map(Number)
+              return new Date(year, month - 1, day).toLocaleDateString('es-MX')
+            })()}
           </div>
         )}
       </div>

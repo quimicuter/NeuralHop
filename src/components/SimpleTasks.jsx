@@ -111,7 +111,8 @@ function SimpleTasks() {
 
   const getTaskDateTime = (task) => {
     if (task.type === 'event' && task.date) {
-      const date = new Date(task.date + 'T12:00:00')
+      const [year, month, day] = task.date.split('-').map(Number)
+      const date = new Date(year, month - 1, day)
       const today = new Date()
       const tomorrow = new Date(today)
       tomorrow.setDate(tomorrow.getDate() + 1)

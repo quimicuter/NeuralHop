@@ -93,7 +93,8 @@ function SimpleEvents() {
 
   const getEventDateTime = (event) => {
     if (event.date) {
-      const date = new Date(event.date + 'T12:00:00')
+      const [year, month, day] = event.date.split('-').map(Number)
+      const date = new Date(year, month - 1, day)
       const today = new Date()
       const tomorrow = new Date(today)
       tomorrow.setDate(tomorrow.getDate() + 1)
@@ -119,7 +120,8 @@ function SimpleEvents() {
     if (!event.date || event.completed) return false
     const today = new Date()
     today.setHours(0, 0, 0, 0)
-    const eventDate = new Date(event.date + 'T12:00:00')
+    const [year, month, day] = event.date.split('-').map(Number)
+    const eventDate = new Date(year, month - 1, day)
     eventDate.setHours(0, 0, 0, 0)
     return eventDate < today
   }
