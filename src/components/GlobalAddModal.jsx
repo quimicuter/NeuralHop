@@ -3,19 +3,19 @@ import { useApp } from '../context/AppContext'
 import './GlobalAddModal.css'
 
 // ===== CONFIGURACIÓN CENTRALIZADA =====
-const SCOPE_MODULES = {
+export const SCOPE_MODULES = {
   personal: ['selfcare', 'mindfulness', 'vida-social', 'fitness', 'foodie'],
   academico: ['data-science', 'investigacion', 'maestria', 'laboratorio', 'idiomas'],
   general: ['cumpleanos', 'finanzas', 'tramites']
 }
 
-const SCOPE_LABELS = {
+export const SCOPE_LABELS = {
   personal: { label: 'Personal', emoji: '👤' },
   academico: { label: 'Académico', emoji: '🎓' },
   general: { label: 'General', emoji: '🌍' }
 }
 
-const MODULE_CONFIG = {
+export const MODULE_CONFIG = {
   // Personal
   'selfcare': { label: 'Selfcare', emoji: '🛀', allowsHabits: true },
   'mindfulness': { label: 'Mindfulness', emoji: '🧘‍♀️', allowsHabits: true },
