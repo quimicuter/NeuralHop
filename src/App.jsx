@@ -25,11 +25,27 @@ function App() {
   const [selectedRecipeDay, setSelectedRecipeDay] = React.useState('')
   const [selectedRecipeMealType, setSelectedRecipeMealType] = React.useState('')
   const [modalPreselectedType, setModalPreselectedType] = React.useState('task')
+  const [editEntryData, setEditEntryData] = React.useState(null)
 
   const openModalWithType = (type) => {
     setModalPreselectedType(type)
+    setEditEntryData(null)
     setIsModalOpen(true)
   }
+
+  React.useEffect(() => {
+    const handleEditEvent = (event) => {
+      const entry = event.detail
+      if (entry) {
+        setEditEntryData(entry)
+        setModalPreselectedType(entry.type || 'task')
+        setIsModalOpen(true)
+      }
+    }
+
+    window.addEventListener('open-edit-modal', handleEditEvent)
+    return () => window.removeEventListener('open-edit-modal', handleEditEvent)
+  }, [])
 
   const openRecipeModal = (day, mealType) => {
     setSelectedRecipeDay(day)
@@ -236,10 +252,14 @@ function App() {
           </div>
         </div>
             
-            <GlobalAddModal 
-              isOpen={isModalOpen} 
-              onClose={() => setIsModalOpen(false)} 
+            <GlobalAddModal
+              isOpen={isModalOpen}
+              onClose={() => {
+                setIsModalOpen(false)
+                setEditEntryData(null)
+              }}
               preselectedType={modalPreselectedType}
+              editEntry={editEntryData}
               onTaskAdded={() => {
                 // Force refresh via console confirmation
                 console.log('🎯 Nueva entrada guardada en Firebase - sincronización en tiempo real activa')

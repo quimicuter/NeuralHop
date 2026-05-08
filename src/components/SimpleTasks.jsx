@@ -31,6 +31,7 @@ function SimpleTasks() {
   }
 
   const handleEditEntry = (entry) => {
+    closeDetail()
     window.dispatchEvent(new CustomEvent('open-edit-modal', { detail: entry }))
   }
 

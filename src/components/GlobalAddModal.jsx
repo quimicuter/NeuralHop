@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { addEntry } from '../engine/EntryEngine';
+import { addEntry, updateEntry } from '../engine/EntryEngine';
 import './GlobalAddModal.css';
 
 // ============================================
@@ -11,7 +11,7 @@ const SCOPE_MODULES = {
   general: ['cumpleanos', 'finanzas', 'tramites']
 };
 
-const MODULE_CONFIG = {
+export const MODULE_CONFIG = {
   'selfcare': { emoji: '🧘', label: 'Selfcare', allowsHabits: true },
   'mindfulness': { emoji: '🫂', label: 'Mindfulness', allowsHabits: true },
   'vida-social': { emoji: '👥', label: 'Vida Social', allowsHabits: false },
@@ -40,10 +40,10 @@ const TYPE_CONFIG = {
 };
 
 const PRIORITY_CONFIG = [
-  { value: 'critical', label: 'Crítica', color: '#ef4444', emoji: '🔥' },
-  { value: 'high', label: 'Alta', color: '#f97316', emoji: '⚡' },
-  { value: 'medium', label: 'Media', color: '#eab308', emoji: '📌' },
-  { value: 'low', label: 'Baja', color: '#22c55e', emoji: '🌱' }
+  { value: 'critical', label: 'Crítica', color: '#ef4444a2', emoji: '🔥' },
+  { value: 'high', label: 'Alta', color: '#f974169c', emoji: '⚡' },
+  { value: 'medium', label: 'Media', color: '#eab20873', emoji: '📌' },
+  { value: 'low', label: 'Baja', color: '#22c55e7c', emoji: '🌱' }
 ];
 
 const FREQUENCY_OPTIONS = [
@@ -55,7 +55,7 @@ const FREQUENCY_OPTIONS = [
 // ============================================
 // COMPONENTE
 // ============================================
-const GlobalAddModal = ({ isOpen, onClose, onTaskAdded, preselectedType }) => {
+const GlobalAddModal = ({ isOpen, onClose, onTaskAdded, preselectedType, editEntry }) => {
   // Estados del flujo de embudo
   const [scope, setScope] = useState('personal');
   const [module, setModule] = useState('selfcare');
@@ -82,32 +82,59 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded, preselectedType }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [accentColor, setAccentColor] = useState('rgba(236, 72, 153, 0.3)');
 
-  // Resetear al abrir
+  // Resetear o poblar al abrir
   useEffect(() => {
     if (isOpen) {
-      // Mapear preselectedType si viene de App.jsx (puede ser 'task' o 'event')
-      const initialType = preselectedType === 'event' ? 'event' : 'task';
-      setScope('personal');
-      setModule('selfcare');
-      setType(initialType);
-      updateAccentColor(initialType);
-      setTitle('');
-      setPriority('medium');
-      setFrequency('daily');
-      setNotes('');
-      setSubtasks(['']);
-      setDate('');
-      setTime('');
-      setBirthdayName('');
-      setBirthdayDate('');
-      setHasParty(false);
-      setPartyDate('');
-      setPartyTime('');
-      setPartyPlace('');
-      setIsSubmitting(false);
-      updateAccentColor('task');
+      if (editEntry) {
+        // Modo edición: poblar campos desde la entrada existente
+        const editType = editEntry.type || 'task';
+        setScope(editEntry.scope || 'personal');
+        setModule(editEntry.module || 'selfcare');
+        setType(editType);
+        updateAccentColor(editType);
+        setTitle(editEntry.title || '');
+        setPriority(editEntry.priority || 'medium');
+        setFrequency(editEntry.frequency || 'daily');
+        setNotes(editEntry.notes || '');
+        setSubtasks(
+          editEntry.subtasks && editEntry.subtasks.length > 0
+            ? editEntry.subtasks.map(s => (typeof s === 'string' ? s : s.text))
+            : ['']
+        );
+        setDate(editEntry.date || '');
+        setTime(editEntry.time || '');
+        setBirthdayName(editEntry.birthdayName || '');
+        setBirthdayDate(editEntry.birthDate || '');
+        setHasParty(false);
+        setPartyDate('');
+        setPartyTime('');
+        setPartyPlace('');
+        setIsSubmitting(false);
+      } else {
+        // Modo creación: resetear
+        const initialType = preselectedType === 'event' ? 'event' : 'task';
+        setScope('personal');
+        setModule('selfcare');
+        setType(initialType);
+        updateAccentColor(initialType);
+        setTitle('');
+        setPriority('medium');
+        setFrequency('daily');
+        setNotes('');
+        setSubtasks(['']);
+        setDate('');
+        setTime('');
+        setBirthdayName('');
+        setBirthdayDate('');
+        setHasParty(false);
+        setPartyDate('');
+        setPartyTime('');
+        setPartyPlace('');
+        setIsSubmitting(false);
+        updateAccentColor('task');
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, editEntry]);
 
   // Actualizar color según tipo
   const updateAccentColor = useCallback((newType) => {
@@ -159,72 +186,106 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded, preselectedType }) => {
 
   // Guardar
   const handleSave = async () => {
-    if (!title.trim() && !MODULE_CONFIG[module]?.isBirthday) return;
-    
-    setIsSubmitting(true);
-    
-    try {
-      // Wizard de cumpleaños - crea 2 registros
-      if (MODULE_CONFIG[module]?.isBirthday && birthdayName && birthdayDate) {
-        // Extraer año de nacimiento para metadata
-        const birthYear = new Date(birthdayDate).getFullYear();
-        
-        // 1. Recordatorio anual del cumpleaños
-        await addEntry({
-          title: `🎂 Cumpleaños de ${birthdayName}`,
-          type: 'event',
-          scope: 'general',
-          module: 'cumpleanos',
-          date: birthdayDate,
-          priority: 'high',
-          notes: `Cumpleaños de ${birthdayName}`,
-          status: 'active',
-          isBirthdayReminder: true,
-          birthdayName,
-          birthDate: birthdayDate,
-          birthYear: birthYear
-        });
+    if (!editEntry && !title.trim() && !MODULE_CONFIG[module]?.isBirthday) return;
+    if (editEntry && !title.trim()) return;
 
-        // 2. Evento de fiesta si aplica
-        if (hasParty && partyDate) {
-          await addEntry({
-            title: `🎉 Fiesta de ${birthdayName}`,
-            type: 'event',
-            scope: 'personal',
-            module: 'vida-social',
-            date: partyDate,
-            time: partyTime || '20:00',
-            priority: 'medium',
-            notes: `Celebración de cumpleaños de ${birthdayName}${partyPlace ? ` en ${partyPlace}` : ''}`,
-            status: 'active',
-            isPartyEvent: true,
-            birthdayName
-          });
-        }
-      } else {
-        // Registro normal
+    setIsSubmitting(true);
+
+    try {
+      if (editEntry) {
+        // Modo edición: actualizar entrada existente
         const data = {
           title: title.trim(),
           type,
           scope,
           module,
           priority,
-          notes: notes.trim(),
-          status: 'active'
+          notes: notes.trim()
         };
 
         if (type === 'habit') {
           data.frequency = frequency;
+        } else {
+          data.frequency = null;
         }
         if (type === 'event' || date) {
           data.date = date;
           if (time) data.time = time;
+        } else {
+          data.date = null;
+          data.time = null;
         }
         if (subtasks.filter(s => s.trim()).length > 0) {
           data.subtasks = subtasks.filter(s => s.trim()).map(s => ({ text: s, done: false }));
+        } else {
+          data.subtasks = [];
         }
 
-        await addEntry(data);
+        await updateEntry(editEntry.id, data);
+      } else {
+        // Modo creación
+        // Wizard de cumpleaños - crea 2 registros
+        if (MODULE_CONFIG[module]?.isBirthday && birthdayName && birthdayDate) {
+          // Extraer año de nacimiento para metadata
+          const birthYear = new Date(birthdayDate).getFullYear();
+
+          // 1. Recordatorio anual del cumpleaños
+          await addEntry({
+            title: `🎂 Cumpleaños de ${birthdayName}`,
+            type: 'event',
+            scope: 'general',
+            module: 'cumpleanos',
+            date: birthdayDate,
+            priority: 'high',
+            notes: `Cumpleaños de ${birthdayName}`,
+            status: 'active',
+            isBirthdayReminder: true,
+            birthdayName,
+            birthDate: birthdayDate,
+            birthYear: birthYear
+          });
+
+          // 2. Evento de fiesta si aplica
+          if (hasParty && partyDate) {
+            await addEntry({
+              title: `🎉 Fiesta de ${birthdayName}`,
+              type: 'event',
+              scope: 'personal',
+              module: 'vida-social',
+              date: partyDate,
+              time: partyTime || '20:00',
+              priority: 'medium',
+              notes: `Celebración de cumpleaños de ${birthdayName}${partyPlace ? ` en ${partyPlace}` : ''}`,
+              status: 'active',
+              isPartyEvent: true,
+              birthdayName
+            });
+          }
+        } else {
+          // Registro normal
+          const data = {
+            title: title.trim(),
+            type,
+            scope,
+            module,
+            priority,
+            notes: notes.trim(),
+            status: 'active'
+          };
+
+          if (type === 'habit') {
+            data.frequency = frequency;
+          }
+          if (type === 'event' || date) {
+            data.date = date;
+            if (time) data.time = time;
+          }
+          if (subtasks.filter(s => s.trim()).length > 0) {
+            data.subtasks = subtasks.filter(s => s.trim()).map(s => ({ text: s, done: false }));
+          }
+
+          await addEntry(data);
+        }
       }
 
       onTaskAdded?.();
@@ -249,7 +310,7 @@ const GlobalAddModal = ({ isOpen, onClose, onTaskAdded, preselectedType }) => {
       <div className="gam-modal">
         {/* HEADER FIJO */}
         <div className="gam-header-fixed">
-          <h2 className="gam-title">Nueva Entrada</h2>
+          <h2 className="gam-title">{editEntry ? 'Editar Entrada' : 'Nueva Entrada'}</h2>
         </div>
 
         {/* CUERPO CON SCROLL */}

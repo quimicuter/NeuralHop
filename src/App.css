@@ -2100,12 +2100,50 @@ html, body, #root, .app-container {
   box-shadow: 0 4px 12px rgba(168, 120, 247, 0.5);
 }
 
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
 .day-num {
   font-family: 'Playfair Display', serif;
   font-size: 0.9rem;
   font-weight: 700;
   color: #4a3b3b;
-  margin-bottom: 5px;
+}
+
+/* Semáforo de tareas */
+.traffic-light {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.traffic-light:hover {
+  transform: scale(1.2);
+}
+
+.traffic-count {
+  font-size: 0.55rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1;
+}
+
+/* Emoji de evento centrado */
+.cal-event-center {
+  margin-top: auto;
+  margin-bottom: auto;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: default;
 }
 
 /* Ajuste para que el indicador de tareas no se vea apretado */
