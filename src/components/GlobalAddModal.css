@@ -32,6 +32,7 @@
     0 20px 50px rgba(0, 0, 0, 0.15),
     0 0 0 1px rgba(255, 255, 255, 0.3) inset;
   overflow: hidden;
+  padding: 16px;
 }
 
 /* ============================================
@@ -98,6 +99,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  align-items: center;
 }
 
 .gam-scope-pill {
@@ -121,9 +123,9 @@
 }
 
 .gam-scope-pill.active {
-  background: #1a1a2e;
-  border-color: #1a1a2e;
-  box-shadow: 0 6px 16px rgba(26, 26, 46, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+  border: 2px solid #6d28d9;
+  box-shadow: 0 0 15px rgba(109, 40, 217, 0.6);
 }
 
 .gam-scope-emoji {
@@ -131,22 +133,60 @@
   line-height: 1;
 }
 
-.gam-scope-pill.active .gam-scope-emoji {
-  filter: grayscale(1) brightness(2);
+.gam-scope-pill.active .gam-scope-label {
+  color: #444;
+  font-weight: 700;
 }
 
+/* --- AMBITOS (SIDEBAR IZQUIERDA) --- */
 .gam-scope-label {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 0.7rem;
-  font-weight: 500;
-  color: #555;
-  text-align: center;
-  line-height: 1.2;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  color: #6d28d9; /* Morado base para que siempre se vea */
+  transition: all 0.2s ease;
+}
+
+.gam-scope-pill.active {
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px solid #6d28d9;
+  box-shadow: 0 0 15px rgba(109, 40, 217, 0.4); /* Tu brillo morado */
 }
 
 .gam-scope-pill.active .gam-scope-label {
-  color: #fff;
-  font-weight: 600;
+  font-weight: 800; /* Negritas para el seleccionado */
+  color: #4c1d95; /* Un morado más oscuro para contraste */
+}
+
+/* --- MÓDULOS (CÍRCULOS) --- */
+.gam-module-label {
+  color: #555; /* Gris oscuro para legibilidad */
+  font-weight: 500;
+}
+
+.gam-module-item.selected .gam-module-circle {
+  border: 2px solid #6d28d9;
+  box-shadow: 0 0 12px rgba(109, 40, 217, 0.4);
+}
+
+.gam-module-item.selected .gam-module-label {
+  color: #6d28d9;
+  font-weight: 700;
+}
+
+/* --- PESTAÑAS (TABS) --- */
+.gam-tab {
+  color: #6d28d9; /* Texto morado para que combine con tu estética */
+  opacity: 0.7;
+}
+
+.gam-tab.active {
+  background: var(--accent);
+  color: #4c1d95; /* Texto más fuerte en la activa */
+  opacity: 1;
+  font-weight: 700;
+  border-bottom: none; /* Fusión con la tarjeta */
+  margin-bottom: -1px; 
+  z-index: 10;
 }
 
 /* COLUMNA DERECHA - Contenido
@@ -166,7 +206,8 @@
   display: flex;
   gap: 16px;
   justify-content: flex-start;
-  padding: 12px 0 12px 5px;
+  align-items: center;
+  padding: 12px 0 12px 15px;
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(0,0,0,0.1) transparent;
@@ -218,9 +259,9 @@
 }
 
 .gam-module-item.selected .gam-module-circle {
-  border-color: #1a1a2e;
-  background: #fff;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  border: 2px solid #6d28d9;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 15px rgba(109, 40, 217, 0.6);
   transform: scale(1.08);
 }
 
@@ -248,21 +289,21 @@
   gap: 0;
   margin-bottom: 0;
   position: relative;
-  z-index: 2;
+  z-index: 6;
 }
 
 .gam-tab {
   padding: 8px 14px;
   border-radius: 12px 12px 0 0;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-bottom: none;
-  background: rgba(255, 255, 255, 0.28);
-  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(25px);
   cursor: pointer;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 0.82rem;
   font-weight: 500;
-  color: #555;
+  color: #5f2d66;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
@@ -270,20 +311,19 @@
 }
 
 .gam-tab:hover {
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(20px);
+  background: rgba(244, 212, 217, 0.65);
 }
 
 .gam-tab.active {
   background: var(--accent);
-  backdrop-filter: blur(20px);
-  color: #fff;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(25px);
+  color: #3f1564;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
   position: relative;
-  z-index: 4;
+  z-index: 10;
   margin-bottom: -1px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-bottom: none;
 }
 
@@ -306,17 +346,15 @@
 
 .gam-form-card {
   background: var(--accent);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(25px);
   padding: 16px;
   margin-top: -1px;
   border-radius: 0 16px 16px 16px;
-  box-shadow:
-    inset 0 0 20px rgba(255, 255, 255, 0.4),
-    0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-top: none;
   position: relative;
-  z-index: 2;
+  z-index: 5;
 }
 
 /* GRID DEL FORMULARIO - 2 Columnas */

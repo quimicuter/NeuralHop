@@ -35,9 +35,9 @@ export const MODULE_CONFIG = {
 }
 
 const TYPE_CONFIG = {
-  task: { label: 'Tarea', emoji: '📝', color: 'rgba(255, 204, 213, 0.65)' },
-  event: { label: 'Evento', emoji: '📅', color: 'rgba(215, 189, 226, 0.65)' },
-  habit: { label: 'Hábito', emoji: '🔄', color: 'rgba(174, 214, 241, 0.65)' }
+  task: { label: 'Tarea', emoji: '📝', color: 'rgba(244, 212, 217, 0.65)' },    // Rosa Bruma
+  event: { label: 'Evento', emoji: '📅', color: 'rgba(215, 189, 226, 0.65)' },   // Lavanda Mate
+  habit: { label: 'Hábito', emoji: '🔄', color: 'rgba(189, 212, 231, 0.65)' }    // Azul Glaciar
 }
 
 const PRIORITY_CONFIG = {
@@ -141,25 +141,24 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
   // ===== HANDLERS =====
   const updateField = (field, value) => {
     setFormData(prev => {
-      const updates = { [field]: value }
+      const updates = { [field]: value };
 
-      // Lógica de cascada: si cambia un nivel superior, resetear los inferiores
+      // LÓGICA DE CASCADA: Si cambia el ámbito (scope), selecciona el primer módulo
       if (field === 'scope') {
-        updates.module = ''
-        updates.type = ''
-      }
-      if (field === 'module') {
-        const moduleConfig = MODULE_CONFIG[value] || {}
-        if (moduleConfig.isBirthday) {
-          updates.type = 'event'
-        } else {
-          updates.type = ''
-        }
+        const firstModuleOfScope = SCOPE_MODULES[value][0];
+        updates.module = firstModuleOfScope;
+        updates.type = 'task'; // Forzamos a que siempre inicie en Tarea
       }
 
-      return { ...prev, ...updates }
-    })
-  }
+      // Si cambia el módulo manualmente, nos aseguramos de que no se pierda el tipo
+      if (field === 'module') {
+        const moduleConfig = MODULE_CONFIG[value] || {};
+        updates.type = moduleConfig.isBirthday ? 'event' : 'task';
+      }
+
+      return { ...prev, ...updates };
+    });
+  };
 
   const toggleHabitDay = (dayValue) => {
     setFormData(prev => ({
@@ -378,49 +377,51 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
           </div>
 
           {/* Columna Derecha - Contenido */}
-          <div className="gam-col-right">
-            {/* Módulos - Fila de círculos */}
-            {canSelectModule && (
-              <div className="gam-modules-row">
-                {SCOPE_MODULES[formData.scope]?.map(moduleKey => {
-                  const config = MODULE_CONFIG[moduleKey]
-                  return (
-                    <div
-                      key={moduleKey}
-                      className={`gam-module-item ${formData.module === moduleKey ? 'selected' : ''}`}
-                      onClick={() => updateField('module', moduleKey)}
-                    >
-                      <div className="gam-module-circle">
-                        {config.emoji}
+          <div className="gam-col-right" style={{ '--accent': selectedTypeConfig.color }}>
+              {/* Módulos - Fila de círculos */}
+                    {canSelectModule && (
+                      <div className="gam-modules-row">
+                        {SCOPE_MODULES[formData.scope]?.map(moduleKey => {
+                          const config = MODULE_CONFIG[moduleKey]
+                          return (
+                            <div
+                              key={moduleKey}
+                              className={`gam-module-item ${formData.module === moduleKey ? 'selected' : ''}`}
+                              onClick={() => updateField('module', moduleKey)}
+                            >
+                              <div className="gam-module-circle">
+                                {config.emoji}
+                              </div>
+                              <span className="gam-module-label">{config.label}</span>
+                            </div>
+                          )
+                        })}
                       </div>
-                      <span className="gam-module-label">{config.label}</span>
-                    </div>
-                  )
-                })}
-              </div>
-            )}
+                    )}
 
-            {/* Pestañas - Solo si no es cumpleaños */}
-            {canSelectType && (
-              <div className="gam-tabs">
-                {getAvailableTypes().map(type => (
-                  <button
-                    key={type.value}
-                    type="button"
-                    className={`gam-tab ${formData.type === type.value ? 'active' : ''}`}
-                    onClick={() => updateField('type', type.value)}
-                  >
-                    <span className="gam-tab-emoji">{type.emoji}</span>
-                    <span className="gam-tab-label">{type.label}</span>
-                  </button>
-                ))}
-              </div>
-            )}
+                    {/* Pestañas - Ahora sí verán el color correcto */}
+          {canSelectType && (
+            <div className="gam-tabs">
+              {getAvailableTypes().map(type => (
+                <button
+                  key={type.value}
+                  type="button"
+                  className={`gam-tab ${formData.type === type.value ? 'active' : ''}`}
+                  onClick={() => updateField('type', type.value)}
+                >
+                  <span className="gam-tab-emoji">{type.emoji}</span>
+                  <span className="gam-tab-label">{type.label}</span>
+                </button>
+              ))}
+            </div>
+          )}
 
-            {/* Formulario dinámico */}
-            <div className="gam-form-container">
-              {formData.type && (
-                <div className="gam-form-card" style={{ '--accent': selectedTypeConfig.color }}>
+    {/* Contenedor del Formulario */}
+    <div className="gam-form-container">
+      {formData.type && (
+        <div className="gam-form-card" style={{ '--accent': selectedTypeConfig.color }}>
+
+          {/* Formulario dinámico */}
                   {/* Campos comunes */}
                   <div className="gam-form-grid">
                     <div className="gam-form-field">
