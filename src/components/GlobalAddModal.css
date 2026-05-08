@@ -1,217 +1,237 @@
 /* ============================================
    GLOBAL ADD MODAL - NeuralHop OS
-   Layout 2 Columnas + Navegación Vertical
+   Glassmorphism + 2 Column Layout
    ============================================ */
 
 /* OVERLAY */
 .gam-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2000;
-  padding: 16px;
+  padding: 12px;
 }
 
-/* MODAL PRINCIPAL - Con scroll interno */
+/* MODAL PRINCIPAL - Glassmorphism */
 .gam-modal {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(24px);
+  position: relative;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 24px;
   width: 100%;
-  max-width: 680px;
-  max-height: 85vh;
+  max-width: 720px;
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 
-    0 20px 50px rgba(0, 0, 0, 0.12),
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.15),
     0 0 0 1px rgba(255, 255, 255, 0.3) inset;
   overflow: hidden;
 }
 
 /* ============================================
-   HEADER FIJO
+   HEADER
    ============================================ */
-.gam-header-fixed {
-  padding: 20px 24px 16px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  flex-shrink: 0;
+.gam-header {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  border-bottom: none;
+  height: 0;
+  display: block;
 }
 
 .gam-title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1.35rem;
-  font-weight: 600;
-  color: #1a1a2e;
-  margin: 0;
-  text-align: center;
-  letter-spacing: -0.3px;
+  display: none;
+}
+
+
+.gam-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: #333;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.gam-close:hover {
+  background: rgba(255, 255, 255, 0.95);
+  color: #111;
 }
 
 /* ============================================
-   CUERPO CON SCROLL - Layout 2 Columnas
+   BODY - 2 Column Layout
    ============================================ */
 .gam-body {
   display: flex;
   flex: 1;
-  overflow-y: auto;
-  padding: 16px 20px;
-  gap: 16px;
+  overflow: hidden;
+  min-height: 400px;
 }
 
-/* COLUMNA IZQUIERDA - Navegación (más delgada) */
+/* COLUMNA IZQUIERDA - Ámbitos (140px) */
 .gam-col-left {
-  width: 100px;
+  width: 140px;
   flex-shrink: 0;
+  padding: 20px 16px;
+  text-align: center;
 }
 
 .gam-scope-nav {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
-/* Píldoras verticales - más delgadas */
-.gam-pill-vertical {
+.gam-scope-pill {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  padding: 10px 6px;
-  border-radius: 14px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  background: rgba(255, 255, 255, 0.5);
+  gap: 6px;
+  padding: 12px 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.6);
   cursor: pointer;
   transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
 }
 
-.gam-pill-vertical:hover {
+.gam-scope-pill:hover {
   background: rgba(255, 255, 255, 0.8);
   transform: translateX(2px);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.gam-pill-vertical.active {
+.gam-scope-pill.active {
   background: #1a1a2e;
   border-color: #1a1a2e;
-  box-shadow: 0 4px 12px rgba(26, 26, 46, 0.25);
+  box-shadow: 0 6px 16px rgba(26, 26, 46, 0.2);
 }
 
-.gam-pill-emoji {
-  font-size: 1.1rem;
+.gam-scope-emoji {
+  font-size: 1.2rem;
   line-height: 1;
 }
 
-.gam-pill-vertical.active .gam-pill-emoji {
+.gam-scope-pill.active .gam-scope-emoji {
   filter: grayscale(1) brightness(2);
 }
 
-.gam-pill-label {
-  font-size: 0.65rem;
+.gam-scope-label {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.7rem;
   font-weight: 500;
   color: #555;
   text-align: center;
+  line-height: 1.2;
 }
 
-.gam-pill-vertical.active .gam-pill-label {
+.gam-scope-pill.active .gam-scope-label {
   color: #fff;
+  font-weight: 600;
 }
 
-/* ============================================
-   COLUMNA DERECHA - Contenido Flexible
+/* COLUMNA DERECHA - Contenido
    ============================================ */
 .gam-col-right {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  padding: 12px;
+  overflow-y: auto;
+  overflow-x: visible;
+  gap: 8px;
+}
+
+/* MÓDULOS - Fila de círculos */
+.gam-modules-row {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-start;
+  padding: 12px 0 12px 5px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.1) transparent;
   min-width: 0;
 }
 
-/* Fila horizontal de Módulos - Círculos minimalistas COMPACTOS */
-.gam-modules-row {
-  display: flex;
-  flex-direction: row;
-  gap: 12px;
-  justify-content: flex-start;
-  padding: 8px 0;
-  margin-bottom: 12px;
-  margin-top: 8px;
-  overflow-x: auto;
-  overflow-y: visible;
-  min-height: 80px;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0,0,0,0.1) transparent;
-}
-
 .gam-modules-row::-webkit-scrollbar {
-  height: 3px;
+  height: 4px;
 }
 
 .gam-modules-row::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,0.08);
+  background: rgba(0,0,0,0.1);
   border-radius: 2px;
 }
 
-/* Item de módulo minimalista - MUY COMPACTO */
 .gam-module-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
   flex-shrink: 0;
 }
 
 .gam-module-item:hover {
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
-/* Círculo de 45px - COMPACTO */
 .gam-module-circle {
-  width: 45px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   line-height: 1;
   transition: all 0.2s ease;
   border: 2px solid transparent;
-  padding: 0;
   cursor: pointer;
 }
 
 .gam-module-item:hover .gam-module-circle {
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-  border-color: rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .gam-module-item.selected .gam-module-circle {
   border-color: #1a1a2e;
   background: #fff;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12), inset 0 0 0 1px rgba(0, 0, 0, 0.03);
-  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  transform: scale(1.08);
 }
 
-/* Label sans-serif MUY PEQUEÑO */
 .gam-module-label {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 0.65rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.7rem;
   font-weight: 500;
-  color: #777;
+  color: #666;
   text-align: center;
   white-space: nowrap;
-  max-width: 50px;
+  max-width: 60px;
   overflow: hidden;
   text-overflow: ellipsis;
   line-height: 1.2;
@@ -222,852 +242,355 @@
   font-weight: 600;
 }
 
-/* ============================================
-   TABS FUSIONADAS AL CONTENIDO
-   ============================================ */
-.gam-tabs-fused {
+/* PESTAÑAS - Tipo (Tarea/Evento/Hábito) */
+.gam-tabs {
   display: flex;
-  gap: 3px;
-  margin-bottom: -8px;
+  gap: 0;
+  margin-bottom: 0;
   position: relative;
   z-index: 2;
-  padding-left: 8px;
-  margin-top: -4px;
 }
 
-.gam-tab-fused {
-  padding: 8px 16px;
+.gam-tab {
+  padding: 8px 14px;
   border-radius: 12px 12px 0 0;
-  border: none;
-  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: none;
+  background: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(20px);
   cursor: pointer;
-  font-size: 0.78rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.82rem;
   font-weight: 500;
   color: #555;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 5px;
-  backdrop-filter: blur(4px);
+  gap: 6px;
 }
 
-.gam-tab-fused:hover {
-  background: rgba(255, 255, 255, 0.6);
+.gam-tab:hover {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(20px);
 }
 
-/* Tabs activos */
-.gam-tab-task.active {
-  background: rgba(236, 72, 153, 0.9);
+.gam-tab.active {
+  background: var(--accent);
+  backdrop-filter: blur(20px);
   color: #fff;
   font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 4;
+  margin-bottom: -1px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: none;
 }
 
-.gam-tab-event.active {
-  background: rgba(147, 51, 234, 0.9);
-  color: #fff;
-  font-weight: 600;
+.gam-tab-emoji {
+  font-size: 1rem;
 }
 
-.gam-tab-habit.active {
-  background: rgba(59, 130, 246, 0.9);
-  color: #fff;
-  font-weight: 600;
+.gam-tab-label {
+  font-size: 0.85rem;
 }
 
-/* ============================================
-   CONTENT CARD FUSIONADO
-   ============================================ */
-.gam-content-fused {
-  background: var(--accent, rgba(236, 72, 153, 0.2));
-  padding: 18px;
-  border-radius: 0 16px 16px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  box-shadow: 
-    inset 0 0 20px rgba(255, 255, 255, 0.5),
-    0 4px 20px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(8px);
-}
-
-/* ============================================
-   TARJETA DE CUMPLEAÑOS (Sin Tabs)
-   ============================================ */
-.gam-birthday-card {
-  background: rgba(236, 72, 153, 0.15);
-  border-radius: 16px;
-  padding: 18px;
-  border: 1px solid rgba(236, 72, 153, 0.2);
-  box-shadow: 
-    inset 0 0 20px rgba(255, 255, 255, 0.5),
-    0 4px 20px rgba(0, 0, 0, 0.05);
-}
-
-.gam-card-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(236, 72, 153, 0.2);
-}
-
-.gam-card-icon {
-  font-size: 1.5rem;
-}
-
-.gam-card-title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #1a1a2e;
-}
-
-.gam-card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-/* Campos de fiesta desplegables */
-.gam-party-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding-top: 8px;
-  animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Separador visual para datos de fiesta */
-.gam-party-divider {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 4px;
-}
-
-.gam-party-divider::before,
-.gam-party-divider::after {
-  content: '';
+/* CONTENEDOR DEL FORMULARIO */
+.gam-form-container {
   flex: 1;
-  height: 1px;
-  background: rgba(236, 72, 153, 0.25);
+  overflow-y: auto;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
-.gam-party-divider span {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: #ec4899;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  white-space: nowrap;
+.gam-form-card {
+  background: var(--accent);
+  backdrop-filter: blur(20px);
+  padding: 16px;
+  margin-top: -1px;
+  border-radius: 0 16px 16px 16px;
+  box-shadow:
+    inset 0 0 20px rgba(255, 255, 255, 0.4),
+    0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-top: none;
+  position: relative;
+  z-index: 2;
 }
 
-/* ============================================
-   FORMULARIOS COMPACTOS
-   ============================================ */
-.gam-field-compact {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.gam-field-row-compact {
+/* GRID DEL FORMULARIO - 2 Columnas */
+.gam-form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 8px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
-.gam-label-compact {
-  font-size: 0.7rem;
+.gam-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.gam-form-field-full {
+  grid-column: 1 / -1;
+}
+
+.gam-form-label {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.65rem;
   font-weight: 600;
   color: #444;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
+  letter-spacing: 0.5px;
 }
 
-/* Inputs compactos */
-.gam-input-compact,
-.gam-select-compact,
-.gam-textarea-compact {
+.gam-form-card h2,
+.gam-form-card h3,
+.gam-form-card h4,
+.gam-card-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: #2c2c3a;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+/* INPUTS */
+.gam-form-input,
+.gam-form-select,
+.gam-form-textarea {
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid rgba(0, 0, 0, 0.08);
   background: rgba(255, 255, 255, 0.8);
-  font-size: 0.88rem;
+  backdrop-filter: blur(8px);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.9rem;
   color: #6d28d9;
   transition: all 0.2s ease;
-  font-family: inherit;
-  width: 100%;
+  min-height: 36px;
   box-sizing: border-box;
-  font-weight: 500;
 }
 
-.gam-input-compact:focus,
-.gam-select-compact:focus,
-.gam-textarea-compact:focus {
+.gam-form-input::placeholder,
+.gam-form-textarea::placeholder {
+  color: rgba(109, 40, 217, 0.6);
+  font-style: italic;
+}
+
+/* Quitar bordes del calendario del navegador */
+.gam-form-input[type="date"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.gam-form-input[type="date"]::-webkit-calendar-picker-indicator {
+  background: none;
+  color: #6d28d9;
+  cursor: pointer;
+}
+
+.gam-form-input[type="date"]::-webkit-inner-spin-button,
+.gam-form-input[type="date"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.gam-form-input:focus,
+.gam-form-select:focus,
+.gam-form-textarea:focus {
   outline: none;
   background: rgba(255, 255, 255, 0.95);
   border-color: #6d28d9;
-  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.1);
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1);
   color: #6d28d9;
 }
 
-.gam-input-compact::placeholder,
-.gam-textarea-compact::placeholder {
+.gam-form-input::placeholder,
+.gam-form-textarea::placeholder {
   color: #a78bfa;
   opacity: 1;
   font-weight: 400;
 }
 
-/* Input de título */
-.gam-input-title-compact {
-  font-size: 1.05rem;
-  font-weight: 600;
-  padding: 12px 14px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #6d28d9;
-}
-
-.gam-input-title-compact::placeholder {
-  font-weight: 500;
-  color: #a78bfa;
-  opacity: 1;
-}
-
-/* Datetime */
-.gam-datetime-compact {
-  display: flex;
-  gap: 8px;
-}
-
-.gam-datetime-compact .gam-input-compact {
-  flex: 1;
-}
-
-/* Select */
-.gam-select-compact {
+.gam-form-select {
   cursor: pointer;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 10px center;
-  padding-right: 28px;
+  background-position: right 12px center;
+  padding-right: 32px;
 }
 
-/* Textarea */
-.gam-textarea-compact {
+.gam-form-textarea {
   resize: vertical;
   min-height: 80px;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
-/* Toggle compacto */
-.gam-toggle-compact {
+/* TOGGLE */
+.gam-form-toggle {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
+  gap: 12px;
+  padding: 12px 16px;
   background: rgba(255, 255, 255, 0.7);
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
-  border: 1px solid transparent;
-  height: fit-content;
-  align-self: flex-end;
-}
-
-.gam-toggle-compact:hover {
-  background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(0, 0, 0, 0.08);
-}
-
-.gam-toggle-compact input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  accent-color: #ec4899;
-  cursor: pointer;
-  margin: 0;
-}
-
-.gam-toggle-label {
-  font-size: 0.85rem;
-  color: #444;
-  font-weight: 500;
-}
-
-/* ============================================
-   SUBTAREAS COMPACTAS
-   ============================================ */
-.gam-two-col-compact {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.gam-col-compact {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.gam-subtasks-compact {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.gam-subtask-item-compact {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.gam-checkbox-compact {
-  width: 14px;
-  height: 14px;
-  cursor: not-allowed;
-  opacity: 0.4;
-  accent-color: #666;
-  flex-shrink: 0;
-}
-
-.gam-input-subtask-compact {
-  flex: 1;
-  padding: 6px 10px;
-  font-size: 0.85rem;
-  border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(4px);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.9rem;
   color: #6d28d9;
   font-weight: 500;
 }
 
-.gam-input-subtask-compact::placeholder {
-  color: #a78bfa;
-  opacity: 1;
+.gam-form-toggle:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(0, 0, 0, 0.08);
 }
 
-.gam-btn-add-sub-compact {
-  align-self: flex-start;
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: 1px dashed rgba(0, 0, 0, 0.15);
-  background: rgba(255, 255, 255, 0.4);
+.gam-form-toggle input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #ec4899;
   cursor: pointer;
-  font-size: 0.8rem;
-  color: #555;
-  transition: all 0.2s ease;
 }
 
-.gam-btn-add-sub-compact:hover {
-  background: rgba(255, 255, 255, 0.7);
-  border-style: solid;
-  border-color: rgba(0, 0, 0, 0.25);
-}
-
-/* ============================================
-   FOOTER FIJO
-   ============================================ */
-.gam-footer-fixed {
+/* DÍAS DEL HÁBITO */
+.gam-habit-days {
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 16px 24px 20px;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-  flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.3);
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-.gam-btn-cancel {
-  padding: 10px 20px;
+.gam-habit-day {
+  padding: 8px 12px;
   border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.7);
   cursor: pointer;
-  font-size: 0.88rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.85rem;
   font-weight: 500;
-  color: #555;
+  color: #666;
   transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
 }
 
-.gam-btn-cancel:hover:not(:disabled) {
+.gam-habit-day:hover {
   background: rgba(255, 255, 255, 0.9);
   border-color: rgba(0, 0, 0, 0.12);
 }
 
-.gam-btn-cancel:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.gam-habit-day.active {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: #fff;
+  font-weight: 600;
 }
 
-.gam-btn-save {
-  padding: 10px 24px;
-  border-radius: 10px;
-  border: none;
-  color: white;
-  font-weight: 600;
+/* ============================================
+   FOOTER - Botones alineados derecha
+   ============================================ */
+.gam-footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.gam-footer-right {
+  display: flex;
+  gap: 10px;
+}
+
+.gam-btn {
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 0.88rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
-  display: flex;
-  align-items: center;
-  gap: 5px;
+  backdrop-filter: blur(8px);
+  min-height: 36px;
 }
 
-.gam-btn-save:hover:not(:disabled) {
+.gam-btn-delete {
+  background: rgba(239, 68, 68, 0.85);
+  color: #fff;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.gam-btn-delete:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.95);
+  border-color: rgba(239, 68, 68, 0.3);
   transform: translateY(-1px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-  filter: brightness(1.05);
 }
 
-.gam-btn-save:disabled {
+.gam-btn-cancel {
+  background: rgba(255, 255, 255, 0.8);
+  color: #666;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.gam-btn-cancel:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+}
+
+.gam-btn-submit {
+  background: var(--btn-color, rgba(236, 72, 153, 0.85));
+  color: #fff;
+  border: 1px solid transparent;
+  font-weight: 600;
+}
+
+.gam-btn-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.gam-btn:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
-  filter: grayscale(0.3);
+  transform: none !important;
 }
 
 /* ============================================
    RESPONSIVE
    ============================================ */
-@media (max-width: 600px) {
-  .gam-overlay {
-    padding: 12px;
-  }
-
+@media (max-width: 768px) {
   .gam-modal {
-    max-height: 90vh;
-    border-radius: 20px;
-  }
-
-  .gam-header-fixed {
-    padding: 16px 18px 12px;
-  }
-
-  .gam-title {
-    font-size: 1.2rem;
-  }
-
-  .gam-body {
-    flex-direction: column;
-    padding: 16px 18px;
-    gap: 16px;
+    max-width: 95vw;
+    max-height: 95vh;
   }
 
   .gam-col-left {
-    width: 100%;
+    width: 120px;
   }
 
-  .gam-pill-vertical {
-    flex-direction: row;
-    padding: 6px 12px;
-    gap: 5px;
-  }
-
-  .gam-pill-emoji {
-    font-size: 1rem;
-  }
-
-  .gam-pill-label {
-    font-size: 0.7rem;
-  }
-
-  .gam-scope-nav {
-    flex-direction: row;
-    justify-content: center;
-    gap: 8px;
-  }
-
-  /* Módulos horizontal en móvil */
-  .gam-modules-row {
-    gap: 12px;
-    padding: 8px 0;
-    margin-bottom: 16px;
-  }
-
-  .gam-module-circle {
-    width: 44px;
-    height: 44px;
-    font-size: 1.3rem;
-  }
-
-  .gam-module-label {
-    font-size: 0.65rem;
-  }
-
-  .gam-field-row-compact,
-  .gam-two-col-compact {
+  .gam-form-grid {
     grid-template-columns: 1fr;
-    gap: 10px;
   }
 
-  .gam-toggle-compact {
-    align-self: flex-start;
+  .gam-footer {
+    flex-direction: column;
+    gap: 12px;
   }
 
-  .gam-footer-fixed {
-    padding: 14px 18px 16px;
+  .gam-footer-right {
+    width: 100%;
+    justify-content: flex-end;
   }
-
-  .gam-btn-save,
-  .gam-btn-cancel {
-    padding: 10px 18px;
-    font-size: 0.85rem;
-  }
-}
-
-/* ============================================
-   COMPATIBILIDAD: Clases antiguas del JSX
-   ============================================ */
-
-/* Alias para modal */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  padding: 16px;
-}
-
-.modal-content {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 24px;
-  width: 100%;
-  max-width: 680px;
-  max-height: 85vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.3) inset;
-  overflow: hidden;
-}
-
-.modal-header {
-  padding: 20px 24px 16px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  flex-shrink: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.modal-header h2 {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1.35rem;
-  font-weight: 600;
-  color: #1a1a2e;
-  margin: 0;
-}
-
-.modal-close {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  font-size: 1.5rem;
-  color: #999;
-  transition: color 0.2s;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-close:hover {
-  color: #333;
-}
-
-.modal-form {
-  display: flex;
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px 20px;
-  gap: 16px;
-}
-
-.modal-column {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-width: 0;
-}
-
-.modal-column-left {
-  width: 100px;
-  flex-shrink: 0;
-}
-
-.modal-column-right {
-  flex: 1;
-}
-
-/* Form sections */
-.form-section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.form-section-title {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #666;
-  letter-spacing: 0.3px;
-}
-
-.form-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: #444;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-
-.form-input,
-.form-textarea,
-.form-select {
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.8);
-  font-size: 0.88rem;
-  color: #6d28d9;
-  transition: all 0.2s ease;
-  font-family: inherit;
-  width: 100%;
-  box-sizing: border-box;
-  font-weight: 500;
-}
-
-.form-input:focus,
-.form-textarea:focus,
-.form-select:focus {
-  outline: none;
-  background: rgba(255, 255, 255, 0.95);
-  border-color: #6d28d9;
-  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.1);
-  color: #6d28d9;
-}
-
-.form-textarea {
-  resize: vertical;
-  min-height: 80px;
-  line-height: 1.4;
-}
-
-.form-input::placeholder,
-.form-textarea::placeholder,
-.form-select::placeholder {
-  color: #a78bfa;
-  opacity: 1;
-  font-weight: 400;
-}
-
-.section-blocked {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-.empty-hint {
-  font-size: 0.8rem;
-  color: #999;
-  font-style: italic;
-  padding: 8px;
-  text-align: center;
-}
-
-/* Pill groups - Vertical scope selector */
-.pill-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.pill-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 8px 6px;
-  border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  background: rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: inherit;
-  font-size: 0.65rem;
-}
-
-.pill-btn:hover {
-  background: rgba(255, 255, 255, 0.8);
-  transform: translateX(2px);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
-}
-
-.pill-btn.active {
-  background: #1a1a2e;
-  border-color: #1a1a2e;
-  box-shadow: 0 4px 12px rgba(26, 26, 46, 0.25);
-}
-
-.pill-emoji {
-  font-size: 1.1rem;
-  line-height: 1;
-}
-
-.pill-btn.active .pill-emoji {
-  filter: grayscale(1) brightness(2);
-}
-
-.pill-label {
-  font-size: 0.65rem;
-  font-weight: 500;
-  color: #555;
-  text-align: center;
-}
-
-.pill-btn.active .pill-label {
-  color: #fff;
-}
-
-.metadata-section {
-  margin-top: 8px;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  color: #444;
-  padding: 8px;
-}
-
-.checkbox-label input[type="checkbox"] {
-  accent-color: #ec4899;
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  margin: 0;
-}
-
-.date-time-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.form-divider {
-  height: 1px;
-  background: rgba(0, 0, 0, 0.08);
-  margin: 4px 0;
-}
-
-.birthday-wizard {
-  background: rgba(236, 72, 153, 0.15);
-  border-radius: 12px;
-  padding: 12px;
-  border: 1px solid rgba(236, 72, 153, 0.2);
-}
-
-.birthday-wizard-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-  color: #1a1a2e;
-  margin-bottom: 10px;
-  font-size: 0.9rem;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 16px 20px 16px;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
-  flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.3);
-}
-
-.btn-cancel,
-.btn-submit {
-  padding: 10px 20px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  font-size: 0.88rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.btn-cancel {
-  background: rgba(255, 255, 255, 0.6);
-  color: #555;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.btn-cancel:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(0, 0, 0, 0.12);
-}
-
-.btn-cancel:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.btn-submit {
-  background: linear-gradient(135deg, #ec4899, #ec4899);
-  color: #fff;
-  box-shadow: 0 3px 12px rgba(236, 72, 153, 0.3);
-}
-
-.btn-submit:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 5px 15px rgba(236, 72, 153, 0.4);
-  filter: brightness(1.05);
-}
-
-.btn-submit:disabled {
-  cursor: not-allowed;
-  filter: grayscale(0.3);
-  opacity: 0.6;
-}
-
-.spinner {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }
