@@ -1,0 +1,147 @@
+/* === SISTEMA DE DISEÑO UNIFICADO === */
+
+:root {
+  /* Gaps */
+  --gap-xs: 4px;
+  --gap-sm: 8px;      /* Grid principal */
+  --gap-md: 12px;     /* Entre cards */
+  --gap-lg: 16px;     /* Secciones */
+
+  /* Padding */
+  --pad-xs: 8px;
+  --pad-sm: 12px;     /* Items internos */
+  --pad-md: 16px;     /* Glass panels */
+  --pad-lg: 20px;     /* Headers de hubs */
+
+  /* Border radius */
+  --radius-sm: 12px;   /* Botones, badges */
+  --radius-md: 16px;   /* Items, inputs */
+  --radius-lg: 20px;   /* Cards, panels */
+
+  /* Colors - Paleta rosa clara coherente con dashboard */
+  --color-p1: #F6D7DC;  /* Rosa claro */
+  --color-p2: #DAC0C1;  /* Rosa medio */
+  --color-p3: #C8A2A1;  /* Rosa oscuro - acento */
+  --color-p4: #394555;  /* Texto */
+  --color-p5: #797A7C;  /* Gris */
+  --color-p6: #3B1723;  /* Oscuro */
+
+  /* Fonts */
+  --font-ui: 'Inter', sans-serif;
+  --font-title: 'Playfair Display', serif;
+
+  /* Text sizes */
+  --text-xs: 0.75rem;    /* 12px - Badges, hints */
+  --text-sm: 0.85rem;    /* 14px - Labels, meta */
+  --text-md: 0.9rem;     /* 15px - Body, items */
+  --text-lg: 1rem;       /* 16px - Subtítulos */
+  --text-xl: 1.2rem;     /* 19px - Títulos h3 */
+  --text-2xl: 1.6rem;    /* 26px - Títulos h2 */
+}
+
+/* === CLASES BASE PARA HUBS === */
+
+/* Overlay modal para hubs */
+.hub-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  z-index: 1000;
+}
+
+/* Contenedor principal de hub con viewport fijo */
+.hub-container {
+  width: calc(100vw - 48px);
+  height: calc(100vh - 48px);
+  max-width: 1400px; /* Límite razonable para pantallas grandes */
+  max-height: calc(100vh - 48px);
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(25px);
+  display: flex;
+  flex-direction: column;
+  padding: var(--pad-md);
+  margin: 0 auto; /* Centrar horizontalmente */
+}
+
+/* Contenido interno con grid y scroll */
+.hub-content {
+  flex: 1;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gap-md);
+}
+
+/* Panel individual con scroll interno */
+.hub-panel {
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: var(--radius-md);
+  padding: var(--pad-sm);
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Grid base para layouts */
+.nexus-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(12, 1fr);
+  gap: var(--gap-sm);
+  padding: var(--pad-xs);
+}
+
+/* Glass panel estándar */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.582);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-lg);
+  padding: var(--pad-md);
+  backdrop-filter: blur(25px);
+}
+
+/* Items de lista compactos */
+.list-item {
+  padding: var(--pad-sm);
+  gap: var(--gap-sm);
+  margin-bottom: var(--gap-xs);
+  border-radius: var(--radius-md);
+}
+
+.list-item-compact {
+  padding: var(--pad-xs);
+  gap: var(--gap-xs);
+}
+
+/* Tipografía unificada */
+.hub-title {
+  font-family: var(--font-title);
+  font-size: var(--text-2xl);
+  color: var(--color-p4);
+  margin-bottom: var(--gap-md);
+}
+
+.hub-subtitle {
+  font-family: var(--font-ui);
+  font-size: var(--text-xl);
+  color: var(--color-p4);
+}
+
+.text-body {
+  font-family: var(--font-ui);
+  font-size: var(--text-md);
+  color: var(--color-p4);
+}
+
+.text-label {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--color-p5);
+}

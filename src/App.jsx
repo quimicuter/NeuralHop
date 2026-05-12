@@ -1,6 +1,7 @@
 import React from 'react'
 import { HashRouter, Routes, Route, Link } from 'react-router-dom'
 import { AppProvider } from './context/AppContext'
+import { GamificationProvider } from './gamification'
 import ClockWidget from './components/ClockWidget'
 import NexusCalendar from './components/NexusCalendar'
 import SimpleTasks from './components/SimpleTasks'
@@ -10,18 +11,28 @@ import WeatherWidget from './components/WeatherWidget'
 import ModuleDashboard from './components/ModuleDashboard'
 import HubShell from './hubs/HubShell'
 import GlobalAddModal from './components/GlobalAddModal'
-import DataScienceHub from './components/DataScienceHub'
+import TecnoGirlHub from './modules/TecnoGirl/TecnoGirlHub'
+import LibraryHub from './modules/Library/LibraryHub'
+import GrimoireHub from './modules/Grimoire/GrimoireHub'
+import ShoplistHub from './modules/Shoplist/ShoplistHub'
 import NotesRepository from './components/NotesRepository'
 import TaskHistoryModal from './components/TaskHistoryModal'
 import RecipeModal from './components/RecipeModal'
+import UserStats from './components/UserStats'
+import GamificationWidget from './components/GamificationWidget'
+import WellnessHub from './modules/Wellness/WellnessHub'
 import './App.css'
 
 function App() {
   const [isModalOpen, setIsModalOpen] = React.useState(false)
-  const [isDataScienceHubOpen, setIsDataScienceHubOpen] = React.useState(false)
+  const [isTecnoGirlHubOpen, setIsTecnoGirlHubOpen] = React.useState(false)
+  const [isLibraryOpen, setIsLibraryOpen] = React.useState(false)
+  const [isGrimoireOpen, setIsGrimoireOpen] = React.useState(false)
+  const [isShoplistOpen, setIsShoplistOpen] = React.useState(false)
   const [isTaskHistoryOpen, setIsTaskHistoryOpen] = React.useState(false)
   const [isRecipeModalOpen, setIsRecipeModalOpen] = React.useState(false)
   const [isNotesOpen, setIsNotesOpen] = React.useState(false)
+  const [isUserStatsOpen, setIsUserStatsOpen] = React.useState(false)
   const [selectedRecipeDay, setSelectedRecipeDay] = React.useState('')
   const [selectedRecipeMealType, setSelectedRecipeMealType] = React.useState('')
   const [modalPreselectedType, setModalPreselectedType] = React.useState('task')
@@ -54,7 +65,7 @@ function App() {
   }
 
   const handleSelectRecipe = (day, mealType, recipe) => {
-    console.log(`Receta seleccionada: ${recipe.name} para ${day} - ${mealType}`)
+    // Receta seleccionada: ${recipe.name} para ${day} - ${mealType}
     // Aquí se puede guardar en el estado o Firebase
   }
   return (
@@ -106,8 +117,8 @@ function App() {
             <div className="menu-grid-6x4">
               {/* Fila 1 - Cabecera */}
               <div className="menu-cell empty-header"></div>
-              {['L', 'M', 'M', 'J', 'V'].map(day => (
-                <div key={day} className="menu-cell day-header">
+              {['L', 'M', 'M', 'J', 'V'].map((day, index) => (
+                <div key={`${day}-${index}`} className="menu-cell day-header">
                   {day}
                 </div>
               ))}
@@ -143,21 +154,20 @@ function App() {
           {/* BLOQUE CENTRAL (Columnas 5-10) */}
           {/* Navegación (6x2) */}
           <div className="nexus-buttons flex justify-center items-center gap-3">
-            <button className="nexus-pill-btn notas-btn" onClick={() => setIsNotesOpen(true)}>
+            <button className="nexus-pill-btn profile-btn" onClick={() => setIsUserStatsOpen(true)} title="Tu perfil">
+              <span>👤</span>
+            </button>
+            <button className="nexus-pill-btn notas-btn" onClick={() => setIsNotesOpen(true)} title="Notas">
               <span>📌</span>
-              <span>Notas</span>
             </button>
-            <button className="nexus-pill-btn biblioteca-btn" onClick={() => setIsDataScienceHubOpen(true)}>
+            <button className="nexus-pill-btn biblioteca-btn" onClick={() => setIsLibraryOpen(true)} title="Biblioteca">
               <span>📚</span>
-              <span>Biblioteca</span>
             </button>
-            <button className="nexus-pill-btn grimorio-btn" onClick={() => setIsDataScienceHubOpen(true)}>
+            <button className="nexus-pill-btn grimorio-btn" onClick={() => setIsGrimoireOpen(true)} title="Grimorio">
               <span>🔮</span>
-              <span>Grimorio</span>
             </button>
-            <button className="nexus-pill-btn shoplist-btn" onClick={() => setIsDataScienceHubOpen(true)}>
+            <button className="nexus-pill-btn shoplist-btn" onClick={() => setIsShoplistOpen(true)} title="Shoplist">
               <span>🛒</span>
-              <span>Shoplist</span>
             </button>
             <button className="floating-add-btn flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full" onClick={() => setIsModalOpen(true)}>
               <span>+</span>
@@ -176,17 +186,10 @@ function App() {
               <h3>Personal</h3>
             </div>
             <div className="gallery-grid">
-              <Link to="/hub/personal/selfcare" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
+              <Link to="/hub/personal/wellness" className="gallery-card notion-card" style={{backgroundImage: 'url(https://plus.unsplash.com/premium_vector-1719926260353-327dd4909f42?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)'}}>
                 <div className="notion-overlay">
                   <div className="notion-content">
-                    <span className="notion-title">🛀 Self Care</span>
-                  </div>
-                </div>
-              </Link>
-              <Link to="/hub/personal/mindfulness" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1508672019048-805c876b67e2?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
-                <div className="notion-overlay">
-                  <div className="notion-content">
-                    <span className="notion-title">🧘‍♀️ Mindfulness</span>
+                    <span className="notion-title">🌿 Wellness Hub</span>
                   </div>
                 </div>
               </Link>
@@ -197,10 +200,10 @@ function App() {
                   </div>
                 </div>
               </Link>
-              <Link to="/hub/personal/fitness" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
+              <Link to="/hub/personal/foodie" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
                 <div className="notion-overlay">
                   <div className="notion-content">
-                    <span className="notion-title">💪 Fitness</span>
+                    <span className="notion-title">🍴 Foodie</span>
                   </div>
                 </div>
               </Link>
@@ -213,10 +216,10 @@ function App() {
               <h3>Académico</h3>
             </div>
             <div className="gallery-grid">
-              <Link to="/hub/academic/data-science" className="gallery-card notion-card" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=400&q=60&fm=webp)'}}>
+              <Link to="/hub/academic/tecno-girl" className="gallery-card notion-card" style={{backgroundImage: 'url(https://i.pinimg.com/736x/af/d8/43/afd8439c5df2f580f3b57fc7142ff3c0.jpg)'}}>
                 <div className="notion-overlay">
                   <div className="notion-content">
-                    <span className="notion-title">📊 Data Science</span>
+                    <span className="notion-title">💻 Tecno Girl</span>
                   </div>
                 </div>
               </Link>
@@ -262,16 +265,37 @@ function App() {
               editEntry={editEntryData}
               onTaskAdded={() => {
                 // Force refresh via console confirmation
-                console.log('🎯 Nueva entrada guardada en Firebase - sincronización en tiempo real activa')
+                // 🎯 Nueva entrada guardada en Firebase - sincronización en tiempo real activa
               }}
             />
-            <DataScienceHub 
-              isOpen={isDataScienceHubOpen} 
-              onClose={() => setIsDataScienceHubOpen(false)} 
+            <TecnoGirlHub 
+              isOpen={isTecnoGirlHubOpen} 
+              onClose={() => setIsTecnoGirlHubOpen(false)} 
+            />
+            <LibraryHub 
+              isOpen={isLibraryOpen} 
+              onClose={() => setIsLibraryOpen(false)} 
+            />
+            <GrimoireHub 
+              isOpen={isGrimoireOpen} 
+              onClose={() => setIsGrimoireOpen(false)} 
+            />
+            <ShoplistHub 
+              isOpen={isShoplistOpen} 
+              onClose={() => setIsShoplistOpen(false)} 
             />
             <TaskHistoryModal 
               isOpen={isTaskHistoryOpen} 
               onClose={() => setIsTaskHistoryOpen(false)} 
+            />
+            <UserStats
+              isOpen={isUserStatsOpen}
+              onClose={() => setIsUserStatsOpen(false)}
+            />
+            
+            {/* Gamification Widget - Visible en dashboard principal */}
+            <GamificationWidget 
+              onOpenProfile={() => setIsUserStatsOpen(true)}
             />
             <RecipeModal 
               isOpen={isRecipeModalOpen}
@@ -292,6 +316,7 @@ function App() {
             )}
             </div>
           } />
+          <Route path="/hub/personal/wellness" element={<HubShell><WellnessHub /></HubShell>} />
           <Route path="/hub/:scope/:moduleId" element={<HubShell />} />
         </Routes>
       </HashRouter>
@@ -299,4 +324,12 @@ function App() {
   )
 }
 
-export default App
+function WrappedApp() {
+  return (
+    <GamificationProvider>
+      <App />
+    </GamificationProvider>
+  )
+}
+
+export default WrappedApp

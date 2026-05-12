@@ -1,0 +1,1053 @@
+/* Wellness Hub - Optimized Glassmorphism Design */
+
+:root {
+  /* Glassmorphism Variables */
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-hover: rgba(255, 255, 255, 0.15);
+  --shadow-soft: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
+  --text-primary: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.7);
+  --text-light: rgba(255, 255, 255, 0.5);
+  --accent-primary: rgba(147, 197, 253, 0.9);
+  --accent-secondary: rgba(196, 181, 253, 0.9);
+  --surface: rgba(255, 255, 255, 0.05);
+  --border-light: rgba(255, 255, 255, 0.1);
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(180deg, #e0eafc 0%, #f7fbff 100%);
+}
+
+/* Main Container */
+.wellness-shell {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0.6rem;
+  background: transparent;
+}
+
+.wellness-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  justify-content: space-between;
+  min-height: 52px;
+  max-height: 56px;
+  padding: 0.45rem 0.65rem;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 1.1rem;
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.wellness-header-back,
+.wellness-header-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.82);
+  color: rgba(15, 23, 42, 0.9);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.wellness-header-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: rgba(15, 23, 42, 0.95);
+  white-space: nowrap;
+}
+
+.wellness-header-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+
+.wellness-tab-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.55);
+  color: rgba(15, 23, 42, 0.75);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wellness-tab-button.active {
+  background: rgba(255, 255, 255, 0.95);
+  color: rgba(15, 23, 42, 0.95);
+  border-color: rgba(15, 23, 42, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.04);
+}
+
+.wellness-tab-icon {
+  font-size: 0.85rem;
+}
+
+.wellness-tab-label {
+  display: inline-block;
+}
+
+.wellness-content {
+  flex: 1;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(12, 1fr);
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Glass Card Base */
+.glass-card {
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 2rem;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  position: relative;
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1px;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.1) 0%, 
+    rgba(255, 255, 255, 0.05) 50%, 
+    rgba(255, 255, 255, 0.1) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: exclude;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.55);
+  border-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Wellness Cards */
+.wellness-card {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  min-height: 0;
+}
+
+.wellness-aura-card {
+  grid-column: span 4;
+  grid-row: span 4;
+}
+
+.wellness-routine-card {
+  grid-column: span 4;
+  grid-row: span 8;
+}
+
+.wellness-telemetry-card {
+  grid-column: span 4;
+  grid-row: span 6;
+}
+
+.wellness-radar-card {
+  grid-column: span 4;
+  grid-row: span 6;
+}
+
+.wellness-projects-card {
+  grid-column: span 4;
+  grid-row: span 6;
+}
+
+.wellness-carousel-card {
+  grid-column: span 4;
+  grid-row: span 6;
+}
+
+/* Headers */
+.wellness-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-bottom: 0.4rem;
+}
+
+.wellness-card-label {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(15, 23, 42, 0.8);
+  margin: 0;
+}
+
+.wellness-action-header {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+/* Small Add Button */
+.wellness-small-add {
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border-radius: 12px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.wellness-small-add:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+/* Aura Heatmap */
+.wellness-aura-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.wellness-aura-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: rgba(15, 23, 42, 0.8);
+  margin: 0;
+}
+
+.wellness-aura-caption {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.wellness-heatmap-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.25rem;
+  padding: 0 0.25rem 0.5rem;
+}
+
+.wellness-heatmap-day-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.wellness-heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.25rem;
+  padding: 0 0.25rem;
+}
+
+.wellness-heatmap-cell {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.wellness-heatmap-cell:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.wellness-heatmap-cell.today {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px rgba(147, 197, 253, 0.3);
+}
+
+.wellness-heatmap-indicator {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 0.7rem;
+  opacity: 0.9;
+}
+
+.wellness-heatmap-popover {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.35rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px);
+  z-index: 100;
+}
+
+.wellness-heatmap-popover-button {
+  border: none;
+  background: rgba(248, 250, 252, 0.95);
+  color: #0f172a;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.wellness-heatmap-popover-button:hover {
+  background: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Routine Flow */
+.wellness-routine-body {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+  min-height: 0;
+}
+
+.wellness-routine-track {
+  position: relative;
+  width: 28px;
+  min-width: 28px;
+  display: flex;
+  justify-content: center;
+}
+
+.wellness-routine-line {
+  width: 3px;
+  background: rgba(15, 23, 42, 0.12);
+  border-radius: 999px;
+  min-height: 100%;
+}
+
+.wellness-routine-dot {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  box-shadow: 0 0 22px rgba(147, 197, 253, 0.55);
+}
+
+.wellness-routine-list {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.wellness-routine-item {
+  list-style: none;
+}
+
+.wellness-routine-task {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wellness-routine-task:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(2px);
+}
+
+.wellness-routine-task input {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wellness-routine-task input:checked {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 10px rgba(147, 197, 253, 0.4);
+}
+
+.wellness-routine-task span {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  transition: all 0.2s ease;
+}
+
+.wellness-routine-task input:checked + span {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+/* Telemetry */
+.wellness-telemetry-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+}
+
+.wellness-telemetry-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.wellness-telemetry-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.wellness-telemetry-label {
+  color: rgba(15, 23, 42, 0.8);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.wellness-telemetry-value {
+  color: rgba(15, 23, 42, 0.95);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.wellness-telemetry-input {
+  width: 4rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.wellness-telemetry-input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.wellness-sparkline {
+  width: 120px;
+  height: 56px;
+}
+
+.wellness-sparkline path {
+  stroke: var(--accent-primary);
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Radar */
+.wellness-radar-meters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.wellness-radar-meter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 80px;
+}
+
+.wellness-radar-svg {
+  width: 100%;
+  max-width: 90px;
+  height: auto;
+}
+
+.wellness-radar-center-text {
+  fill: var(--text-primary);
+  font-size: 0.8rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+}
+
+.wellness-radar-item-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* Projects */
+.wellness-projects-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+}
+
+.wellness-project-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.wellness-project-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+.wellness-project-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.wellness-project-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.wellness-progress-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.wellness-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.wellness-progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wellness-progress-bar:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.wellness-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  transition: all 0.3s ease;
+}
+
+/* Carousel */
+.wellness-toggle-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pill-button {
+  flex: 1;
+  min-width: 0;
+  padding: 0.45rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  color: rgba(15, 23, 42, 0.85);
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  line-height: 1.1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pill-button:hover,
+.pill-button.active {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.9);
+  color: rgba(15, 23, 42, 0.95);
+  transform: translateY(-1px);
+}
+
+.pill-button.outline {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.pill-button.outline:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.wellness-flip-container {
+  position: relative;
+  flex: 1;
+  min-height: 200px;
+  perspective: 1000px;
+}
+
+.wellness-flip-card {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 16px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.wellness-carousel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow-y: auto;
+  max-height: calc(100% - 1rem);
+  padding-right: 0.25rem;
+}
+
+.wellness-carousel-item {
+  list-style: none;
+}
+
+.wellness-carousel-task {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wellness-carousel-task:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(2px);
+}
+
+.wellness-carousel-task input {
+  appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.wellness-carousel-task input:checked {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+
+.wellness-carousel-task span {
+  color: var(--text-primary);
+  font-size: 0.85rem;
+}
+
+.wellness-carousel-event {
+  color: var(--text-primary);
+  padding: 0.75rem 0.85rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.85rem;
+}
+
+/* Modal */
+.wellness-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+}
+
+.wellness-modal-shell {
+  width: 100%;
+  max-width: 900px;
+  max-height: 85vh;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-hover);
+  backdrop-filter: blur(20px);
+}
+
+.wellness-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.wellness-modal-title {
+  font-size: 1.25rem;
+  margin: 0.15rem 0 0;
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.wellness-modal-close {
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  font-size: 1.125rem;
+  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.wellness-modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--accent-primary);
+  transform: scale(1.05);
+}
+
+.wellness-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.wellness-modal-panel {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 0;
+}
+
+.wellness-modal-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.wellness-modal-panel-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.5rem;
+}
+
+.wellness-modal-add-button {
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.wellness-modal-add-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.wellness-modal-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.wellness-modal-item {
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+}
+
+.wellness-modal-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.wellness-modal-task label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.wellness-modal-task label:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.wellness-modal-task input {
+  accent-color: var(--accent-primary);
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Toast Notification */
+.toast-notification {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-hover);
+  backdrop-filter: blur(20px);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 2000;
+}
+
+.toast-notification.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .wellness-content {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(12, 1fr);
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+  
+  .wellness-aura-card {
+    grid-column: span 3;
+    grid-row: span 4;
+  }
+  
+  .wellness-routine-card {
+    grid-column: span 3;
+    grid-row: span 6;
+  }
+  
+  .wellness-telemetry-card,
+  .wellness-radar-card,
+  .wellness-projects-card,
+  .wellness-carousel-card {
+    grid-column: span 3;
+    grid-row: span 4;
+  }
+}
+
+@media (max-width: 768px) {
+  .wellness-content {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 0.75rem;
+    padding: 0.5rem;
+  }
+  
+  .wellness-card {
+    grid-column: span 1 !important;
+    grid-row: span auto !important;
+    min-height: 200px;
+  }
+  
+  .wellness-modal-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .wellness-radar-meters {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
+/* Smooth Scrolling */
+.wellness-routine-list,
+.wellness-carousel-list,
+.wellness-modal-list {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.wellness-routine-list::-webkit-scrollbar,
+.wellness-carousel-list::-webkit-scrollbar,
+.wellness-modal-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.wellness-routine-list::-webkit-scrollbar-track,
+.wellness-carousel-list::-webkit-scrollbar-track,
+.wellness-modal-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.wellness-routine-list::-webkit-scrollbar-thumb,
+.wellness-carousel-list::-webkit-scrollbar-thumb,
+.wellness-modal-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
+.wellness-routine-list::-webkit-scrollbar-thumb:hover,
+.wellness-carousel-list::-webkit-scrollbar-thumb:hover,
+.wellness-modal-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Loading States */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.loading {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Focus States */
+.wellness-routine-task:focus,
+.wellness-carousel-task:focus,
+.pill-button:focus,
+.wellness-small-add:focus {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --glass-bg: rgba(0, 0, 0, 0.3);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-hover: rgba(0, 0, 0, 0.4);
+  }
+}

@@ -4,8 +4,8 @@ import './GlobalAddModal.css'
 
 // ===== CONFIGURACIÓN CENTRALIZADA =====
 export const SCOPE_MODULES = {
-  personal: ['selfcare', 'mindfulness', 'vida-social', 'fitness', 'foodie'],
-  academico: ['data-science', 'investigacion', 'maestria', 'laboratorio', 'idiomas'],
+  personal: ['wellness', 'vida-social', 'foodie'],
+  academico: ['tecno-girl', 'investigacion', 'maestria', 'laboratorio', 'idiomas'],
   general: ['cumpleanos', 'finanzas', 'tramites']
 }
 
@@ -17,13 +17,22 @@ export const SCOPE_LABELS = {
 
 export const MODULE_CONFIG = {
   // Personal
-  'selfcare': { label: 'Selfcare', emoji: '🛀', allowsHabits: true },
-  'mindfulness': { label: 'Mindfulness', emoji: '🧘‍♀️', allowsHabits: true },
+  'wellness': {
+    label: 'Wellness Hub',
+    emoji: '🌿',
+    allowsHabits: true,
+    submodules: ['glow', 'vitality', 'innerBalance', 'zenRest'],
+    themeVars: {
+      glow: '--color-glow-peach',
+      vitality: '--color-vitality-coral',
+      innerBalance: '--color-inner-mint',
+      zenRest: '--color-zen-indigo'
+    }
+  },
   'vida-social': { label: 'Vida Social', emoji: '🥂', allowsHabits: false },
-  'fitness': { label: 'Fitness', emoji: '💪', allowsHabits: true },
   'foodie': { label: 'Foodie', emoji: '🍴', allowsHabits: true },
   // Académico
-  'data-science': { label: 'Data Science', emoji: '📊', allowsHabits: false },
+  'tecno-girl': { label: 'Tecno Girl', emoji: '💻', allowsHabits: false },
   'investigacion': { label: 'Investigación', emoji: '🔬', allowsHabits: true },
   'maestria': { label: 'Maestría', emoji: '🎓', allowsHabits: false },
   'laboratorio': { label: 'Laboratorio', emoji: '🧪', allowsHabits: false },
@@ -64,7 +73,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
 
   const emptyFormData = {
     scope: 'personal',
-    module: 'selfcare',
+    module: 'wellness',
     type: 'task',
     title: '',
     description: '',

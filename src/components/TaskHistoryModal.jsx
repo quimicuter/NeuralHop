@@ -13,7 +13,7 @@ function TaskHistoryModal({ isOpen, onClose }) {
       'mindfulness': '🧘‍♀️',
       'vida-social': '🥂',
       'fitness': '💪',
-      'data-science': '📊',
+      'tecno-girl': '💻',
       'investigacion': '🔬',
       'maestria': '🎓',
       'laboratorio': '🧪',

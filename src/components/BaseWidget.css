@@ -1,0 +1,223 @@
+/* BaseWidget - Widget base con sistema de vistas */
+
+.base-widget {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Header */
+.base-widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 16px 16px 0 0;
+}
+
+.base-widget-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.base-widget-header-emoji {
+  font-size: 1.3rem;
+}
+
+.base-widget-header-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.base-widget-count {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  min-width: 24px;
+  text-align: center;
+}
+
+/* View Switcher */
+.base-widget-view-switcher {
+  display: flex;
+  gap: 4px;
+}
+
+.view-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.view-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.view-btn.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.95);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Content */
+.base-widget-content {
+  flex: 1;
+  overflow: hidden;
+  padding: 12px;
+}
+
+/* List View */
+.base-widget-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.base-widget-list-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.base-widget-list-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateX(4px);
+}
+
+.base-widget-list-item.completed {
+  opacity: 0.6;
+}
+
+.base-widget-list-item.completed .base-widget-title {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.base-widget-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: transparent;
+  cursor: pointer;
+  appearance: none;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.base-widget-checkbox:checked {
+  background: #4ade80;
+  border-color: #4ade80;
+}
+
+.base-widget-checkbox:checked::after {
+  content: '✓';
+  color: #fff;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+.base-widget-emoji {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.base-widget-title {
+  flex: 1;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.base-widget-priority {
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.base-widget-deadline {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 4px 10px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+/* Empty state */
+.base-widget-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+/* Scrollbar */
+.base-widget-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.base-widget-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.base-widget-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .base-widget-header {
+    padding: 10px 12px;
+  }
+  
+  .base-widget-header-title {
+    font-size: 0.9rem;
+  }
+  
+  .view-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
+  
+  .base-widget-list-item {
+    padding: 10px 12px;
+  }
+}

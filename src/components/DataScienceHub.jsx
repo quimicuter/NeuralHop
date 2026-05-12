@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import './DataScienceHub.css'
+import './TecnoGirlHubLegacy.css'
 
-const DataScienceHub = ({ isOpen, onClose }) => {
+const TecnoGirlHubLegacy = ({ isOpen, onClose }) => {
   const [viewMode, setViewMode] = useState('kanban') // 'kanban' or 'list'
   const [tasks, setTasks] = useState([
     { id: 1, title: 'Setup Python environment', status: 'todo', priority: 'high' },
@@ -91,10 +91,10 @@ const DataScienceHub = ({ isOpen, onClose }) => {
   if (!isOpen) return null
 
   return (
-    <div className="data-science-hub-overlay">
-      <div className="data-science-hub">
+    <div className="tecno-girl-legacy-overlay">
+      <div className="tecno-girl-legacy-hub">
         <div className="hub-header">
-          <h2>📊 Data Science Hub</h2>
+          <h2>💻 Tecno Girl Hub</h2>
           <button className="close-btn" onClick={onClose}>×</button>
         </div>
         
@@ -123,7 +123,7 @@ const DataScienceHub = ({ isOpen, onClose }) => {
                 <span className="progress">75%</span>
               </div>
               <div className="project-item">
-                <span>🤖 ML Model</span>
+                <span>� ML Model</span>
                 <span className="progress">30%</span>
               </div>
             </div>
@@ -219,4 +219,4 @@ const DataScienceHub = ({ isOpen, onClose }) => {
   )
 }
 
-export default DataScienceHub
+export default TecnoGirlHubLegacy

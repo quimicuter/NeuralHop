@@ -897,7 +897,20 @@ body {
 }
 
 .nexus-pill-btn span:first-child {
-  font-size: 1.1em;
+  font-size: 1.3em;
+}
+
+/* Emoji-only buttons (no text) */
+.nexus-pill-btn:not(:has(span:nth-child(2))) {
+  padding: 10px 14px;
+  border-radius: 50%;
+  min-width: 44px;
+  min-height: 44px;
+  justify-content: center;
+}
+
+.nexus-pill-btn:not(:has(span:nth-child(2))) span:first-child {
+  font-size: 1.4em;
 }
 
 /* Card Headers with Add Buttons - Estandarizados con fuente elegante */
@@ -1271,6 +1284,28 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   background: rgba(255, 255, 255, 0.5);
+}
+
+/* Profile Button - Distinctive style */
+.profile-btn {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(168, 85, 247, 0.4) 100%);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  color: #fff;
+  font-weight: 600;
+  padding: 10px;
+  border-radius: 50%;
+  min-width: 44px;
+  min-height: 44px;
+  justify-content: center;
+}
+
+.profile-btn span {
+  font-size: 1.4em;
+}
+
+.profile-btn:hover {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.4) 0%, rgba(168, 85, 247, 0.5) 100%);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
 }
 
 /* Add Button */

@@ -1,114 +1,177 @@
 .hub-shell {
-  min-height: 100vh;
-  padding: 1.5rem;
+  height: 100vh;
+  overflow: hidden;
+  padding: 1rem;
   position: relative;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+}
+
+.hub-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url('https://images.unsplash.com/photo-1498928435665-5d6d88dccd97?auto=format&fit=crop&w=1800&q=80');
+  background-size: cover;
+  background-position: center;
+  filter: blur(10px) saturate(1.1);
+  transform: scale(1.05);
+}
+
+.hub-shell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: rgba(10, 18, 38, 0.35);
+}
+
+.hub-shell > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* ─── Header ─── */
-.hub-header {
-  margin-bottom: 1.5rem;
-}
-
-.hub-back-btn {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.2);
-  color: #333;
-  text-decoration: none;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  margin-bottom: 1rem;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
-.hub-back-btn:hover {
-  background: rgba(255, 255, 255, 0.35);
-  transform: translateY(-1px);
-}
-
-.hub-title-group {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.hub-emoji {
-  font-size: 2.5rem;
-}
-
-.hub-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1a1a2e;
-  margin: 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.hub-description {
-  font-size: 0.85rem;
-  color: #555;
-  margin: 0;
-  font-style: italic;
-}
-
-/* ─── Botón Agregar ─── */
-.hub-add-btn {
-  margin-left: auto;
-  padding: 0.75rem 1.5rem;
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #333;
-  backdrop-filter: blur(10px);
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.hub-add-btn:hover {
-  background: rgba(255, 255, 255, 0.85);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-}
-
 .hub-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding: 0.35rem 0;
+  max-height: 64px;
+  min-height: 48px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 1rem;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
-/* ─── Bento Grid ─── */
-.hub-bento {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
-}
-
-/* ─── Widget Card ─── */
-.hub-widget {
-  background: rgba(255, 255, 255, 0.45);
-  border-radius: 16px;
-  padding: 1rem;
+/* ─── Header Elements (Light Glassmorphism) ─── */
+.hub-back-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 0.95rem;
+  background: rgba(255, 255, 255, 0.15);
+  color: #1a1a2e;
+  text-decoration: none;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-size: 0.78rem;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(31, 38, 135, 0.1);
+}
+
+.hub-back-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(31, 38, 135, 0.15);
+}
+
+.hub-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hub-emoji {
+  font-size: 1.8rem;
+}
+
+.hub-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+  line-height: 1.1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.hub-description {
+  font-size: 0.75rem;
+  color: #555;
+  margin: 0;
+  font-style: italic;
+}
+
+/* ─── Botón Agregar (Light Glassmorphism) ─── */
+.hub-add-btn {
+  margin-left: auto;
+  padding: 0.6rem 1.2rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6px 20px rgba(31, 38, 135, 0.12);
+}
+
+.hub-add-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(31, 38, 135, 0.2);
+}
+
+
+/* ─── Bento Grid (12-column master grid) ─── */
+.hub-bento {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1rem;
+  flex: 1;
+  overflow: hidden;
+  padding-right: 0.5rem;
+}
+
+.hub-module-content {
+  flex: 1;
+  height: 100%;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ─── Widget Card (Light Glassmorphism) ─── */
+.hub-widget {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  padding: 1.5rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.hub-widget::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
 }
 
 .hub-widget:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(31, 38, 135, 0.25);
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .hub-widget-header {
@@ -185,23 +248,23 @@
   margin: 0;
 }
 
-/* ─── Widget Variants (size) ─── */
+/* ─── Widget Variants (12-column grid positioning) ─── */
 .hub-widget-tasks {
-  grid-column: span 1;
+  grid-column: span 4;
 }
 
 .hub-widget-habits {
-  grid-column: span 1;
+  grid-column: span 3;
 }
 
 .hub-widget-events {
-  grid-column: span 1;
+  grid-column: span 6;
 }
 
-/* Widgets anchos (ocupan 2 columnas) */
+/* Widgets anchos (ocupan más columnas) */
 .hub-widget-wide {
-  grid-column: span 2;
-  min-height: 300px;
+  grid-column: span 6;
+  min-height: 320px;
 }
 
 /* Widgets altos (ocupan más filas) */
@@ -209,23 +272,33 @@
   grid-row: span 2;
 }
 
-/* Widgets grandes (2x2) */
+/* Widgets grandes (2x2 en grid de 12) */
 .hub-widget-large {
-  grid-column: span 2;
+  grid-column: span 6;
   grid-row: span 2;
 }
 
 @media (max-width: 768px) {
-  .hub-bento {
-    grid-template-columns: 1fr;
+  .hub-shell {
+    padding: 1rem;
   }
   
+  .hub-bento {
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.75rem;
+  }
+  
+  .hub-widget,
   .hub-widget-wide,
   .hub-widget-large {
-    grid-column: span 1;
+    grid-column: span 6;
   }
   
   .hub-widget-tall {
     grid-row: span 1;
+  }
+  
+  .hub-widget-habits {
+    grid-column: span 3;
   }
 }

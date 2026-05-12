@@ -25,7 +25,7 @@ const defaultCategories = {
     label: 'Personal', 
     color: '#ffb3c6', 
     cover: 'https://images.unsplash.com/photo-1490730141103-6cac27aaab94?auto=format&fit=crop&w=600&q=80', 
-    subcats: ['Selfcare', 'Mindfulness', 'Vida Social', 'Fitness', 'Skincare', 'Haircare'], 
+    subcats: ['Wellness Hub', 'Vida Social', 'Foodie', 'Skincare', 'Haircare'], 
     customFields: [],
     dataRoot: 'personal'
   },
@@ -34,7 +34,7 @@ const defaultCategories = {
     label: 'Académico', 
     color: '#c8a2c8', 
     cover: 'https://images.unsplash.com/photo-1532153975070-2e9ab71f1b14?auto=format&fit=crop&w=600&q=80', 
-    subcats: ['Data Science', 'Investigación', 'Maestría', 'Laboratorio', 'Química', 'Análisis de Datos'], 
+    subcats: ['Tecno Girl', 'Investigación', 'Maestría', 'Laboratorio', 'Química', 'Análisis de Datos'], 
     customFields: ['materia', 'profesor', 'grupo', 'plataforma'],
     dataRoot: 'academic'
   },

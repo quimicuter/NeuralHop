@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import GlobalAddModal from '../components/GlobalAddModal'
+import BaseWidget from '../components/BaseWidget'
 import './HubShell.css'
 
 // ─── Widgets Especializados Fase B (Personal Hubs) ───
@@ -32,20 +33,12 @@ const hubConfig = {
   // ║  PERSONAL HUBS                                        ║
   // ═══════════════════════════════════════════════════════
   
-  // ─── SELFCARE: VirtualShelf + CyclicTracker ───
-  selfcare: {
-    emoji: '🛀', title: 'Self Care',
-    gradient: 'linear-gradient(135deg, #fce4ec 0%, #f8bbd0 50%, #f48fb1 100%)',
-    accent: '#f48fb1', description: 'Cuidado personal y mantenimiento',
-    widgets: ['virtualShelf', 'cyclicTracker', 'tasks', 'habits']
-  },
-  
-  // ─── MINDFULNESS: JournalTable + RelationshipRadar ───
-  mindfulness: {
-    emoji: '🧘‍♀️', title: 'Mindfulness',
-    gradient: 'linear-gradient(135deg, #e8eaf6 0%, #c5cae9 50%, #9fa8da 100%)',
-    accent: '#9fa8da', description: 'Espiritualidad y conexión interior',
-    widgets: ['journalTable', 'relationshipRadar', 'tasks', 'habits']
+  // ─── WELLNESS HUB: Centro integral de bienestar ───
+  wellness: {
+    emoji: '🌿', title: 'Wellness Hub',
+    gradient: 'linear-gradient(135deg, #fff0f3 0%, #ffcbce 45%, #d8f0e8 100%)',
+    accent: '#ff8b94', description: 'Bienestar integral y self-care consolidado',
+    widgets: ['virtualShelf', 'cyclicTracker', 'tasks', 'events']
   },
   
   // ─── VIDA SOCIAL: MemoryWall + WishlistKanban ───
@@ -56,23 +49,15 @@ const hubConfig = {
     widgets: ['memoryWall', 'wishlistKanban', 'events', 'tasks']
   },
   
-  // ─── FITNESS: ProgressBars + MultimediaRepo ───
-  fitness: {
-    emoji: '💪', title: 'Fitness',
-    gradient: 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 50%, #a5d6a7 100%)',
-    accent: '#a5d6a7', description: 'Cuerpo y movimiento',
-    widgets: ['progressBars', 'multimediaRepo', 'habits', 'tasks']
-  },
-
   // ═══════════════════════════════════════════════════════
   // ║  ACADEMIC HUBS (Fase C)                               ║
   // ═══════════════════════════════════════════════════════
   
-  // ─── DATA SCIENCE: CourseProgress + CodeSnippet ───
-  'data-science': {
-    emoji: '📊', title: 'Data Science',
-    gradient: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%)',
-    accent: '#90caf9', description: 'Ciencia de datos y análisis',
+  // ─── TECNO GIRL: CourseProgress + CodeSnippet ───
+  'tecno-girl': {
+    emoji: '💻', title: 'Tecno Girl',
+    gradient: 'linear-gradient(135deg, #d8f8ff 0%, #c4e4ff 50%, #8ec1ff 100%)',
+    accent: '#4f8fe6', description: 'Innovación tecnológica y proyectos creativos',
     widgets: ['courseProgress', 'codeSnippet', 'tasks', 'habits']
   },
   
@@ -109,7 +94,7 @@ const hubConfig = {
   }
 }
 
-function HubShell() {
+function HubShell({ children }) {
   const { scope, moduleId } = useParams()
   const { state, actions, getEntries } = useApp()
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -252,7 +237,7 @@ function HubShell() {
       // ║  ACADEMIC HUBS WIDGETS (Fase C)                    ║
       // ═══════════════════════════════════════════════════════
 
-      // ─── DATA SCIENCE WIDGETS ───
+      // ─── TECNO GIRL WIDGETS ───
       case 'courseProgress':
         return (
           <div key="courseProgress" className="hub-widget">
@@ -372,76 +357,55 @@ function HubShell() {
       // ─── WIDGETS BASE (todos los hubs) ───
       case 'tasks':
         return (
-          <div key="tasks" className="hub-widget hub-widget-tasks">
-            <div className="hub-widget-header">
-              <h3>📋 Tareas</h3>
-              <span className="hub-badge">{moduleTasks.length}</span>
-            </div>
-            <div className="hub-widget-content">
-              {moduleTasks.length === 0 ? (
-                <p className="hub-empty">Sin tareas pendientes ✨</p>
-              ) : (
-                moduleTasks.slice(0, 5).map(task => (
-                  <div key={task.id} className="hub-entry-item">
-                    <input
-                      type="checkbox"
-                      checked={task.completed}
-                      onChange={() => actions.updateEntry(task.id, { completed: true, status: 'done' })}
-                    />
-                    <span>{task.title}</span>
-                  </div>
-                ))
-              )}
-            </div>
+          <div key="tasks" className="hub-widget hub-widget-wide">
+            <BaseWidget
+              title="Tareas"
+              emoji="📋"
+              entries={moduleTasks}
+              view="list"
+              availableViews={['list', 'kanban', 'table', 'calendar']}
+              onEntryClick={(entry) => console.log('Task clicked:', entry)}
+              onToggleComplete={(id) => actions.updateEntry(id, { completed: true, status: 'done' })}
+              onMoveEntry={(id, status) => actions.updateEntry(id, { status })}
+              kanbanColumns={[
+                { id: 'todo', title: 'Por Hacer', emoji: '⏳', color: '#94a3b8' },
+                { id: 'in-progress', title: 'En Progreso', emoji: '🔄', color: '#60a5fa' },
+                { id: 'done', title: 'Completado', emoji: '✅', color: '#4ade80' }
+              ]}
+              emptyMessage="Sin tareas pendientes ✨"
+            />
           </div>
         )
       
       case 'habits':
         return (
-          <div key="habits" className="hub-widget hub-widget-habits">
-            <div className="hub-widget-header">
-              <h3>🔄 Hábitos</h3>
-              <span className="hub-badge">{moduleHabits.length}</span>
-            </div>
-            <div className="hub-widget-content">
-              {moduleHabits.length === 0 ? (
-                <p className="hub-empty">Sin hábitos registrados 🌱</p>
-              ) : (
-                moduleHabits.slice(0, 5).map(habit => (
-                  <div key={habit.id} className="hub-entry-item">
-                    <input
-                      type="checkbox"
-                      checked={habit.completed}
-                      onChange={() => actions.updateEntry(habit.id, { completed: !habit.completed })}
-                    />
-                    <span>{habit.title}</span>
-                  </div>
-                ))
-              )}
-            </div>
+          <div key="habits" className="hub-widget">
+            <BaseWidget
+              title="Hábitos"
+              emoji="🔄"
+              entries={moduleHabits}
+              view="list"
+              availableViews={['list', 'table']}
+              onEntryClick={(entry) => console.log('Habit clicked:', entry)}
+              onToggleComplete={(id) => actions.updateEntry(id, { completed: !moduleHabits.find(h => h.id === id)?.completed })}
+              emptyMessage="Sin hábitos registrados 🌱"
+            />
           </div>
         )
       
       case 'events':
         return (
-          <div key="events" className="hub-widget hub-widget-events">
-            <div className="hub-widget-header">
-              <h3>📅 Eventos</h3>
-              <span className="hub-badge">{moduleEvents.length}</span>
-            </div>
-            <div className="hub-widget-content">
-              {moduleEvents.length === 0 ? (
-                <p className="hub-empty">Sin eventos próximos 🎯</p>
-              ) : (
-                moduleEvents.slice(0, 5).map(event => (
-                  <div key={event.id} className="hub-entry-item">
-                    <span className="hub-event-dot" style={{ background: config.accent }}></span>
-                    <span>{event.title}</span>
-                    {event.metadata?.startTime && <span className="hub-event-time">{event.metadata.startTime}</span>}
-                  </div>
-                ))
-              )}
-            </div>
+          <div key="events" className="hub-widget hub-widget-wide">
+            <BaseWidget
+              title="Eventos"
+              emoji="📅"
+              entries={moduleEvents}
+              view="calendar"
+              availableViews={['list', 'calendar', 'table']}
+              onEntryClick={(entry) => console.log('Event clicked:', entry)}
+              onToggleComplete={(id) => actions.updateEntry(id, { completed: true })}
+              emptyMessage="Sin eventos próximos 🎯"
+            />
           </div>
         )
       
@@ -463,33 +427,42 @@ function HubShell() {
     }
   }
 
+  const showShellHeader = !children
+
   return (
-    <div className="hub-shell" style={{ background: config.gradient }}>
-      {/* Header */}
-      <div className="hub-header">
-        <Link to="/" className="hub-back-btn">
-          ← Dashboard
-        </Link>
-        <div className="hub-title-group">
-          <span className="hub-emoji">{config.emoji}</span>
-          <h1 className="hub-title">{config.title}</h1>
-          <p className="hub-description">{config.description}</p>
+    <div className="hub-shell" style={showShellHeader ? { background: config.gradient } : undefined}>
+      {showShellHeader && (
+        <div className="hub-header">
+          <Link to="/" className="hub-back-btn">
+            ← Dashboard
+          </Link>
+          <div className="hub-title-group">
+            <span className="hub-emoji">{config.emoji}</span>
+            <h1 className="hub-title">{config.title}</h1>
+            <p className="hub-description">{config.description}</p>
+          </div>
+          <button 
+            className="hub-add-btn"
+            onClick={() => {
+              setModalType('task')
+              setIsModalOpen(true)
+            }}
+          >
+            + Agregar
+          </button>
         </div>
-        <button 
-          className="hub-add-btn"
-          onClick={() => {
-            setModalType('task')
-            setIsModalOpen(true)
-          }}
-        >
-          + Agregar
-        </button>
-      </div>
+      )}
 
       {/* Bento Grid con Widgets Especializados */}
-      <div className="hub-bento">
-        {config.widgets?.map(widgetType => renderWidget(widgetType))}
-      </div>
+      {children ? (
+        <div className="hub-module-content">
+          {children}
+        </div>
+      ) : (
+        <div className="hub-bento">
+          {config.widgets?.map(widgetType => renderWidget(widgetType))}
+        </div>
+      )}
 
       {/* Modal Global para Agregar Entradas */}
       <GlobalAddModal

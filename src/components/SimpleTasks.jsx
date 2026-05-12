@@ -78,7 +78,7 @@ function SimpleTasks() {
       'vida-social': '🥂',
       'fitness': '💪',
       'foodie': '🍽️',
-      'data-science': '📊',
+      'tecno-girl': '💻',
       'investigacion': '🔬',
       'maestria': '🎓',
       'laboratorio': '🧪',

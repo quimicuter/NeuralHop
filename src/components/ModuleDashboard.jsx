@@ -8,7 +8,7 @@ const moduleTitles = {
   'vida-social': '🥂 Vida Social',
   'fitness': '💪 Fitness',
   'maestria': '🎓 Maestría',
-  'data-science': '📊 Data Science',
+  'tecno-girl': '💻 Tecno Girl',
   'lab': '🧪 Lab',
   'idiomas': '🗣️ Idiomas',
   'investigacion': '🔬 Investigación'

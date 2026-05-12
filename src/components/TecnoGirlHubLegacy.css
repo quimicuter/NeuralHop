@@ -1,0 +1,384 @@
+/* Tecno Girl Hub - Refactorizado con Design System */
+
+.hub-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--gap-md);
+}
+
+.close-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: var(--color-p4);
+  font-size: var(--text-lg);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+/* Bento Grid Layout dentro de hub-content */
+.hub-content {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto auto;
+  gap: var(--gap-sm);
+}
+
+/* Cards específicas - heredan de .hub-panel */
+.classes-card,
+.projects-card,
+.platforms-card,
+.progress-card,
+.tasks-summary-card,
+.activities-card {
+  /* Estilos específicos por card */
+}
+
+.classes-card {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+.projects-card {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+.platforms-card {
+  grid-column: span 1;
+  grid-row: span 2;
+}
+
+.progress-card {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.tasks-summary-card {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.activities-card {
+  grid-column: span 3;
+  grid-row: span 1;
+}
+
+.class-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.class-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--pad-sm);
+  background: rgba(246, 215, 220, 0.3); /* Rosa claro */
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(246, 215, 220, 0.5);
+}
+
+.class-item .day {
+  color: var(--color-p3);
+  font-weight: 600;
+  font-size: var(--text-sm);
+}
+
+.class-item .time {
+  color: var(--color-p5);
+  font-size: var(--text-sm);
+}
+
+/* Projects Card - 2x1 */
+.projects-card {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+.project-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.project-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--pad-sm);
+  background: rgba(218, 192, 193, 0.3); /* Rosa medio */
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(218, 192, 193, 0.5);
+}
+
+.project-item .progress {
+  color: var(--color-p3);
+  font-weight: 600;
+  font-size: var(--text-sm);
+}
+
+/* Platforms Card - 1x2 */
+.platforms-card {
+  grid-column: span 1;
+  grid-row: span 2;
+}
+
+.platform-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gap-sm);
+}
+
+.platform-btn {
+  background: linear-gradient(135deg, rgba(246, 215, 220, 0.3) 0%, rgba(218, 192, 193, 0.3) 100%);
+  border: 1px solid rgba(246, 215, 220, 0.5);
+  color: var(--color-p4);
+  padding: var(--pad-sm);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-align: center;
+}
+
+.platform-btn:hover {
+  background: linear-gradient(135deg, rgba(246, 215, 220, 0.5) 0%, rgba(218, 192, 193, 0.5) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(246, 215, 220, 0.4);
+}
+
+/* Progress Card - 1x1 */
+.progress-card {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.progress-stats {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat .number {
+  display: block;
+  color: var(--color-p3);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  margin-bottom: var(--gap-xs);
+}
+
+.stat .label {
+  color: var(--color-p5);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Tasks Summary Card - 1x1 */
+.tasks-summary-card {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.tasks-summary {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.summary-item {
+  text-align: center;
+}
+
+.summary-item .count {
+  display: block;
+  color: var(--color-p3);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  margin-bottom: var(--gap-xs);
+}
+
+.summary-item .label {
+  color: var(--color-p5);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Activities Card - 3x1 */
+.activities-card {
+  grid-column: span 3;
+  grid-row: span 1;
+}
+
+.activities-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--gap-md);
+}
+
+.view-toggle {
+  display: flex;
+  gap: var(--gap-xs);
+}
+
+.toggle-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--color-p5);
+  padding: var(--pad-xs);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: var(--text-xs);
+}
+
+.toggle-btn.active {
+  background: rgba(246, 215, 220, 0.3);
+  border-color: var(--color-p2);
+  color: var(--color-p3);
+}
+
+/* Kanban Board */
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap-sm);
+  min-height: 200px;
+}
+
+.kanban-column {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  padding: var(--pad-sm);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.kanban-column h3 {
+  color: var(--color-p4);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  margin: 0 0 var(--gap-sm) 0;
+  text-align: center;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.kanban-task {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-sm);
+  padding: var(--pad-sm);
+  cursor: move;
+  transition: all 0.3s ease;
+}
+
+.kanban-task:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.kanban-task.completed {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+.task-title {
+  color: var(--color-p4);
+  font-size: var(--text-sm);
+  display: block;
+  margin-bottom: var(--gap-xs);
+}
+
+.priority {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.priority-high { background: #ef4444; }
+.priority-medium { background: #f59e0b; }
+.priority-low { background: #10b981; }
+
+/* List View */
+.task-list-view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.list-task {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-sm);
+  padding: var(--pad-sm);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+.status {
+  font-size: var(--text-xs);
+  padding: var(--gap-xs);
+  border-radius: var(--radius-xs);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.status-todo { color: var(--color-p3); }
+.status-in-progress { color: var(--color-p2); }
+.status-completed { color: var(--color-p1); }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hub-content {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .classes-card,
+  .projects-card,
+  .activities-card {
+    grid-column: span 2;
+  }
+  
+  .platforms-card {
+    grid-column: span 2;
+    grid-row: span 1;
+  }
+  
+  .platform-buttons {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .kanban-board {
+    grid-template-columns: 1fr;
+  }
+}

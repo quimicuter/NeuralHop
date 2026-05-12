@@ -1,7 +1,7 @@
 import React from 'react'
 import './CourseProgress.css'
 
-// Timeline de 3 meses para Data Science Hub
+// Timeline de 3 meses para Tecno Girl Hub
 const MONTHS = [
   { id: 'month-1', label: 'Mes 1', status: 'Fundamentos', week: 'Sem 1-4' },
   { id: 'month-2', label: 'Mes 2', status: 'Análisis', week: 'Sem 5-8' },
@@ -19,7 +19,7 @@ function CourseProgress({ entries, currentMonth = 1 }) {
     <div className="course-progress-widget">
       <div className="course-header">
         <h3 className="course-title">📚 Course Progress</h3>
-        <p className="course-subtitle">Timeline de 3 meses - Data Science</p>
+        <p className="course-subtitle">Timeline de 3 meses - Tecno Girl</p>
       </div>
 
       <div className="timeline-container">

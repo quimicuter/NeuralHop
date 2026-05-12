@@ -1,4 +1,21 @@
 :root {
+  /* Typography Pro */
+  --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Playfair Display', serif;
+  
+  /* Spacing Pro */
+  --space-micro: 4px;
+  --space-tight: 8px;
+  --space-md: 12px;
+  --space-base: 16px;
+  --radius-pro: 10px;
+  
+  /* Glassmorphism Premium */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-blur: blur(24px);
+
+  /* Legacy Variables */
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;
@@ -7,6 +24,10 @@
   --accent: #aa3bff;
   --accent-bg: rgba(170, 59, 255, 0.1);
   --accent-border: rgba(170, 59, 255, 0.5);
+  --color-glow-peach: #fce1da;
+  --color-vitality-coral: #fed2b9;
+  --color-inner-mint: #ccf6db;
+  --color-zen-indigo: #e1e9ff;
   --social-bg: rgba(244, 243, 236, 0.5);
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;

@@ -13,7 +13,9 @@
   },
   "homepage": "https://quimicuter.github.io/NeuralHop/",
   "dependencies": {
+    "date-fns": "^4.1.0",
     "firebase": "^12.12.1",
+    "framer-motion": "^12.38.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-router-dom": "^7.14.2"

@@ -1,0 +1,338 @@
+/* Confetti and Celebration Effects */
+
+/* Confetti Container */
+.confetti-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+/* Confetti Pieces */
+.confetti-piece {
+  position: absolute;
+  top: -20px;
+  width: 10px;
+  height: 10px;
+  animation: confetti-fall linear forwards;
+}
+
+.confetti-piece.square {
+  border-radius: 2px;
+}
+
+.confetti-piece.circle {
+  border-radius: 50%;
+}
+
+.confetti-piece.triangle {
+  width: 0;
+  height: 0;
+  background: transparent;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 10px solid currentColor;
+}
+
+.confetti-piece.ribbon {
+  width: 6px;
+  height: 16px;
+  border-radius: 3px;
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Sparkles */
+.confetti-sparkle {
+  position: absolute;
+  top: 50%;
+  font-size: 2rem;
+  animation: sparkle-float ease-out forwards;
+}
+
+@keyframes sparkle-float {
+  0% {
+    transform: translateY(0) scale(0) rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-100px) scale(1.5) rotate(180deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-200px) scale(0) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Achievement Toast */
+.achievement-toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  animation: toast-slide-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes toast-slide-in {
+  from {
+    transform: translateX(-50%) translateY(-100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+.achievement-toast-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(88, 28, 135, 0.98) 0%, rgba(139, 92, 246, 0.98) 100%);
+  border: 2px solid rgba(168, 85, 247, 0.5);
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  min-width: 320px;
+}
+
+.toast-icon {
+  font-size: 3rem;
+  flex-shrink: 0;
+}
+
+.toast-info {
+  flex: 1;
+}
+
+.toast-label {
+  display: block;
+  font-size: 0.8rem;
+  color: #fbbf24;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.toast-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 1.1rem;
+  color: #fff;
+}
+
+.toast-info p {
+  margin: 0 0 8px 0;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.toast-xp {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(251, 191, 36, 0.2);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: #fbbf24;
+  font-weight: 600;
+}
+
+.toast-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Level Up Toast */
+.levelup-toast {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  animation: levelup-fade-in 0.3s ease;
+}
+
+@keyframes levelup-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.levelup-toast-content {
+  text-align: center;
+  padding: 40px;
+  background: linear-gradient(135deg, rgba(88, 28, 135, 0.98) 0%, rgba(139, 92, 246, 0.98) 100%);
+  border: 3px solid rgba(168, 85, 247, 0.5);
+  border-radius: 24px;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5);
+  animation: levelup-bounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes levelup-bounce {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.levelup-badge {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+  border: 6px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 0 0 10px rgba(251, 191, 36, 0.3),
+    0 20px 40px rgba(251, 191, 36, 0.4);
+  animation: levelup-pulse 1s ease-in-out infinite;
+}
+
+@keyframes levelup-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.levelup-number {
+  font-size: 4rem;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.levelup-info {
+  color: #fff;
+}
+
+.levelup-label {
+  display: block;
+  font-size: 1.2rem;
+  color: #fbbf24;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.levelup-info h4 {
+  margin: 0 0 12px 0;
+  font-size: 1.8rem;
+  color: #fff;
+}
+
+.levelup-info p {
+  margin: 0;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* XP Gain Animation */
+.xp-gain-container {
+  position: fixed;
+  bottom: 100px;
+  right: 24px;
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  animation: xp-float-up 2s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes xp-float-up {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  20% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+}
+
+.xp-amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fbbf24;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.xp-multiplier {
+  font-size: 0.9rem;
+  color: #a78bfa;
+  font-weight: 600;
+  background: rgba(168, 85, 247, 0.2);
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-top: 4px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .achievement-toast {
+    left: 16px;
+    right: 16px;
+    transform: none;
+  }
+  
+  .achievement-toast-content {
+    min-width: auto;
+    padding: 12px 16px;
+  }
+  
+  .toast-icon {
+    font-size: 2.5rem;
+  }
+  
+  .levelup-toast-content {
+    margin: 16px;
+    padding: 24px;
+  }
+  
+  .levelup-badge {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .levelup-number {
+    font-size: 3rem;
+  }
+}
