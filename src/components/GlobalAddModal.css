@@ -336,6 +336,8 @@
 .gam-pill-emoji {
   font-size: 0.92rem;
   line-height: 1;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 'EmojiOne Color', 'Twemoji Mozilla', sans-serif;
+  font-variant-emoji: emoji;
 }
 
 .gam-pill-label {
@@ -363,6 +365,7 @@
   margin-top: 0;
   border-radius: 2.5rem;
   box-shadow:
+    0 0 60px var(--scope-glow, rgba(139, 92, 246, 0.25)),
     0 8px 32px rgba(76, 29, 149, 0.08),
     0 2px 6px rgba(0, 0, 0, 0.04),
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
@@ -374,6 +377,7 @@
   flex-direction: column;
   min-height: 0;
   overflow: hidden;
+  transition: box-shadow 0.5s ease;
 }
 
 /* GRID DEL FORMULARIO - flujo único para que cada sección llene el cristal */
@@ -1537,6 +1541,47 @@
 
 .gam-task-col-frequency {
   display: flex;
+}
+
+.gam-monthly-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(8px);
+  flex: 1;
+  align-self: stretch;
+  box-sizing: border-box;
+}
+
+.gam-monthly-input {
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.75);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.gam-monthly-input:focus {
+  background: #ffffff;
+  border-color: #6d28d9;
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1);
+}
+
+.gam-monthly-input::placeholder {
+  color: rgba(60, 60, 90, 0.45);
+  font-style: italic;
+  font-weight: 400;
 }
 
 /* ============================================

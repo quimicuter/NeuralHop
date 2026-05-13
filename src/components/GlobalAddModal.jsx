@@ -10,9 +10,9 @@ export const SCOPE_MODULES = {
 }
 
 export const SCOPE_LABELS = {
-  personal: { label: 'Personal', emoji: '👤' },
-  academico: { label: 'Académico', emoji: '🎓' },
-  general: { label: 'General', emoji: '🌍' }
+  personal: { label: 'Personal', emoji: '👤', glow: 'rgba(244, 114, 182, 0.35)' },   // rosa
+  academico: { label: 'Académico', emoji: '🎓', glow: 'rgba(139, 92, 246, 0.35)' }, // morado
+  general: { label: 'General', emoji: '🌍', glow: 'rgba(56, 189, 248, 0.35)' }       // azul
 }
 
 export const MODULE_CONFIG = {
@@ -803,7 +803,13 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
     {/* Contenedor del Formulario */}
     <div className="gam-form-container">
       {formData.type && (
-        <div className="gam-form-card" style={{ '--accent': selectedTypeConfig.color }}>
+        <div
+          className="gam-form-card"
+          style={{
+            '--accent': selectedTypeConfig.color,
+            '--scope-glow': SCOPE_LABELS[formData.scope]?.glow || 'rgba(139, 92, 246, 0.25)'
+          }}
+        >
 
           {/* Formulario dinámico */}
                   {/* Campos comunes */}
@@ -1103,7 +1109,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
                     {/* ===== SECCIÓN HÁBITO - Frecuencia dinámica ===== */}
                     {formData.type === 'habit' && !isBirthdayModule && (
                       <div className="gam-task-section gam-form-field-full" onClick={closeDropdowns}>
-                        {/* Cabecera: Título + Categoría + Prioridad */}
+                        {/* Cabecera Esbelta: Título + Categoría */}
                         <div className="gam-task-header-row">
                           <input
                             type="text"
@@ -1114,7 +1120,6 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
                             required
                           />
                           {renderCategoryDropdown()}
-                          {renderPriorityDropdown()}
                         </div>
 
                         {/* Fila de Frecuencia */}
@@ -1122,17 +1127,6 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
                           <div className="gam-task-time-field gam-frequency-cell">
                             {renderFrequencyDropdown()}
                           </div>
-                          {formData.frequency === 'monthly' && (
-                            <div className="gam-task-time-field gam-monthly-cell">
-                              <input
-                                type="text"
-                                className="gam-task-time-input"
-                                value={formData.monthlyDays}
-                                onChange={(e) => updateField('monthlyDays', e.target.value)}
-                                placeholder="Días del mes (Ej: 1, 15, 28)"
-                              />
-                            </div>
-                          )}
                         </div>
 
                         {/* Split View: Descripción | Selector de días */}
@@ -1148,8 +1142,8 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
                           <div className="gam-task-col gam-task-col-frequency">
                             {formData.frequency === 'daily' && (
                               <div className="gam-frequency-info">
-                                <span className="gam-freq-icon">○</span>
-                                <span>Todos los días</span>
+                                <span className="gam-freq-icon">✦</span>
+                                <span>Se repite cada día</span>
                               </div>
                             )}
                             {(formData.frequency === 'weekly' || formData.frequency === 'multiple') && (
@@ -1178,9 +1172,15 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
                               </div>
                             )}
                             {formData.frequency === 'monthly' && (
-                              <div className="gam-frequency-info">
-                                <span className="gam-freq-icon">◑</span>
-                                <span>Día(s) del mes: <strong>{formData.monthlyDays || '—'}</strong></span>
+                              <div className="gam-monthly-panel">
+                                <div className="gam-weekdays-hint">¿Qué día(s) del mes?</div>
+                                <input
+                                  type="text"
+                                  className="gam-monthly-input"
+                                  value={formData.monthlyDays}
+                                  onChange={(e) => updateField('monthlyDays', e.target.value)}
+                                  placeholder="Ej: 1, 15, 28"
+                                />
                               </div>
                             )}
                           </div>
