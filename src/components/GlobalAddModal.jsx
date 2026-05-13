@@ -160,6 +160,33 @@ const WEEK_DAYS = [
   { value: 0, label: 'D' }
 ]
 
+// ===== HELPERS DE HÁBITO =====
+// Parsea "1, 15, 28" → [1, 15, 28] filtrando rangos válidos 1-31
+export const parseMonthlyDays = (raw) => {
+  if (Array.isArray(raw)) return raw.filter(n => Number.isInteger(n) && n >= 1 && n <= 31)
+  if (typeof raw !== 'string') return []
+  return raw
+    .split(/[,\s]+/)
+    .map(s => parseInt(s.trim(), 10))
+    .filter(n => Number.isInteger(n) && n >= 1 && n <= 31)
+}
+
+// Determina si un hábito debe aparecer "hoy" según su metadata
+export const isHabitDueToday = (habit, refDate = new Date()) => {
+  const meta = habit?.metadata || {}
+  const freq = meta.frequency || meta.recurrenceType || 'daily'
+  if (freq === 'daily') return true
+  if (freq === 'weekly' || freq === 'multiple') {
+    const days = Array.isArray(meta.habitDays) ? meta.habitDays : []
+    return days.includes(refDate.getDay())
+  }
+  if (freq === 'monthly') {
+    const days = parseMonthlyDays(meta.monthlyDays)
+    return days.includes(refDate.getDate())
+  }
+  return false
+}
+
 // ===== COMPONENTE PRINCIPAL =====
 function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = null }) {
   const { actions } = useApp()
@@ -293,7 +320,9 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
       recurrenceType: entry.metadata?.recurrenceType || 'weekly',
       habitDays: entry.metadata?.habitDays || [],
       frequency: entry.metadata?.frequency || 'daily',
-      monthlyDays: entry.metadata?.monthlyDays || '',
+      monthlyDays: Array.isArray(entry.metadata?.monthlyDays)
+        ? entry.metadata.monthlyDays.join(', ')
+        : (entry.metadata?.monthlyDays || ''),
       projectStatus: entry.metadata?.projectStatus || 'not_started',
       roadmapSteps: entry.metadata?.roadmapSteps || [],
       birthdayName: entry.metadata?.birthdayPerson || '',
@@ -374,10 +403,10 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
     ]
 
     if (canSelectHabit) {
-      types.push({ value: 'habit', label: 'Hábito', emoji: '�' })
+      types.push({ value: 'habit', label: 'Hábito', emoji: '🔄' })
     }
 
-    types.push({ value: 'project', label: 'Proyecto', emoji: '�' })
+    types.push({ value: 'project', label: 'Proyecto', emoji: '🚀' })
 
     return types
   }
@@ -438,7 +467,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
             ...updates.metadata,
             frequency: formData.frequency,
             habitDays: (formData.frequency === 'weekly' || formData.frequency === 'multiple') ? formData.habitDays : [],
-            monthlyDays: formData.frequency === 'monthly' ? formData.monthlyDays : '',
+            monthlyDays: formData.frequency === 'monthly' ? parseMonthlyDays(formData.monthlyDays) : [],
             recurring: true,
             recurrenceType: formData.frequency
           }
@@ -533,7 +562,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
               ...basePayload.metadata,
               frequency: formData.frequency,
               habitDays: (formData.frequency === 'weekly' || formData.frequency === 'multiple') ? formData.habitDays : [],
-              monthlyDays: formData.frequency === 'monthly' ? formData.monthlyDays : '',
+              monthlyDays: formData.frequency === 'monthly' ? parseMonthlyDays(formData.monthlyDays) : [],
               recurring: true,
               recurrenceType: formData.frequency,
               description: formData.description
@@ -703,16 +732,17 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
     )
   }
 
-  const renderFrequencyDropdown = () => (
-    <div className="gam-dropdown-wrapper gam-dropdown-wrapper-wide">
+  const renderFrequencyDropdown = ({ iconOnly = false } = {}) => (
+    <div className={`gam-dropdown-wrapper ${iconOnly ? '' : 'gam-dropdown-wrapper-wide'}`}>
       <button
         type="button"
-        className="gam-dropdown-trigger gam-dropdown-frequency"
+        className={`gam-dropdown-trigger gam-dropdown-frequency ${iconOnly ? 'gam-dropdown-icon-only' : ''}`}
         onClick={(e) => { e.stopPropagation(); toggleDropdown('frequency') }}
+        title={iconOnly ? `Frecuencia: ${FREQUENCY_CONFIG[formData.frequency]?.label}` : undefined}
       >
         <span className="gam-dropdown-icon">{FREQUENCY_CONFIG[formData.frequency]?.emoji}</span>
-        <span className="gam-dropdown-text">{FREQUENCY_CONFIG[formData.frequency]?.label}</span>
-        <span className="gam-dropdown-arrow">▾</span>
+        {!iconOnly && <span className="gam-dropdown-text">{FREQUENCY_CONFIG[formData.frequency]?.label}</span>}
+        {!iconOnly && <span className="gam-dropdown-arrow">▾</span>}
       </button>
       {openDropdowns.frequency && (
         <div className="gam-dropdown-menu" onClick={(e) => e.stopPropagation()}>
@@ -1106,10 +1136,10 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
                       </div>
                     )}
 
-                    {/* ===== SECCIÓN HÁBITO - Frecuencia dinámica ===== */}
+                    {/* ===== SECCIÓN HÁBITO - 3 filas: header / dynamic / textarea ===== */}
                     {formData.type === 'habit' && !isBirthdayModule && (
                       <div className="gam-task-section gam-form-field-full" onClick={closeDropdowns}>
-                        {/* Cabecera Esbelta: Título + Categoría */}
+                        {/* Fila 1: Título + Categoría + Frecuencia (icon-only) */}
                         <div className="gam-task-header-row">
                           <input
                             type="text"
@@ -1120,70 +1150,56 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
                             required
                           />
                           {renderCategoryDropdown()}
+                          {renderFrequencyDropdown({ iconOnly: true })}
                         </div>
 
-                        {/* Fila de Frecuencia */}
-                        <div className="gam-task-times-row">
-                          <div className="gam-task-time-field gam-frequency-cell">
-                            {renderFrequencyDropdown()}
-                          </div>
-                        </div>
-
-                        {/* Split View: Descripción | Selector de días */}
-                        <div className="gam-task-body">
-                          <div className="gam-task-col gam-task-col-notes">
-                            <textarea
-                              className="gam-task-notes-textarea"
-                              value={formData.description}
-                              onChange={(e) => updateField('description', e.target.value)}
-                              placeholder="Descripción / meta del hábito..."
+                        {/* Fila 2: Selector dinámico full-width */}
+                        <div className="gam-habit-dynamic-row">
+                          {formData.frequency === 'daily' && (
+                            <div className="gam-frequency-info gam-frequency-info-wide">
+                              <span className="gam-freq-icon">✦</span>
+                              <span>Se repite cada día</span>
+                            </div>
+                          )}
+                          {(formData.frequency === 'weekly' || formData.frequency === 'multiple') && (
+                            <div className="gam-habit-days gam-habit-days-wide">
+                              {WEEK_DAYS.map(day => (
+                                <button
+                                  key={day.value}
+                                  type="button"
+                                  className={`gam-habit-day ${formData.habitDays.includes(day.value) ? 'active' : ''}`}
+                                  onClick={() => {
+                                    if (formData.frequency === 'weekly') {
+                                      setFormData(prev => ({ ...prev, habitDays: [day.value] }))
+                                    } else {
+                                      toggleHabitDay(day.value)
+                                    }
+                                  }}
+                                >
+                                  {day.label}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                          {formData.frequency === 'monthly' && (
+                            <input
+                              type="text"
+                              className="gam-monthly-input gam-monthly-input-wide"
+                              value={formData.monthlyDays}
+                              onChange={(e) => updateField('monthlyDays', e.target.value)}
+                              placeholder="¿Qué día(s) del mes? Ej: 1, 15, 28"
                             />
-                          </div>
-                          <div className="gam-task-col gam-task-col-frequency">
-                            {formData.frequency === 'daily' && (
-                              <div className="gam-frequency-info">
-                                <span className="gam-freq-icon">✦</span>
-                                <span>Se repite cada día</span>
-                              </div>
-                            )}
-                            {(formData.frequency === 'weekly' || formData.frequency === 'multiple') && (
-                              <div className="gam-weekdays-panel">
-                                <div className="gam-weekdays-hint">
-                                  {formData.frequency === 'weekly' ? 'Elige 1 día' : 'Elige varios días'}
-                                </div>
-                                <div className="gam-habit-days">
-                                  {WEEK_DAYS.map(day => (
-                                    <button
-                                      key={day.value}
-                                      type="button"
-                                      className={`gam-habit-day ${formData.habitDays.includes(day.value) ? 'active' : ''}`}
-                                      onClick={() => {
-                                        if (formData.frequency === 'weekly') {
-                                          setFormData(prev => ({ ...prev, habitDays: [day.value] }))
-                                        } else {
-                                          toggleHabitDay(day.value)
-                                        }
-                                      }}
-                                    >
-                                      {day.label}
-                                    </button>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                            {formData.frequency === 'monthly' && (
-                              <div className="gam-monthly-panel">
-                                <div className="gam-weekdays-hint">¿Qué día(s) del mes?</div>
-                                <input
-                                  type="text"
-                                  className="gam-monthly-input"
-                                  value={formData.monthlyDays}
-                                  onChange={(e) => updateField('monthlyDays', e.target.value)}
-                                  placeholder="Ej: 1, 15, 28"
-                                />
-                              </div>
-                            )}
-                          </div>
+                          )}
+                        </div>
+
+                        {/* Fila 3: Descripción / meta */}
+                        <div className="gam-task-body gam-habit-body">
+                          <textarea
+                            className="gam-task-notes-textarea gam-habit-notes"
+                            value={formData.description}
+                            onChange={(e) => updateField('description', e.target.value)}
+                            placeholder="Descripción o meta del hábito..."
+                          />
                         </div>
                       </div>
                     )}
