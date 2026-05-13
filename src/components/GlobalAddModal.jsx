@@ -188,7 +188,7 @@ export const isHabitDueToday = (habit, refDate = new Date()) => {
 }
 
 // ===== COMPONENTE PRINCIPAL =====
-function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = null }) {
+function GlobalAddModal({ isOpen, onClose, preselectedType = '', editEntry = null }) {
   const { actions } = useApp()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -335,8 +335,8 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
 
   useEffect(() => {
     if (isOpen) {
-      if (editingEntry) {
-        setFormData(buildFormDataFromEntry(editingEntry))
+      if (editEntry) {
+        setFormData(buildFormDataFromEntry(editEntry))
       } else {
         setFormData({
           ...emptyFormData,
@@ -345,7 +345,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
       }
       setIsSubmitting(false)
     }
-  }, [isOpen, preselectedType, editingEntry])
+  }, [isOpen, preselectedType, editEntry])
 
   // Reset type to 'task' when module changes
   useEffect(() => {
@@ -429,7 +429,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
         ? Math.round((formData.roadmapSteps.filter(s => s.completed).length / formData.roadmapSteps.length) * 100)
         : 0
 
-      if (editingEntry) {
+      if (editEntry) {
         const updates = {
           type: formData.type,
           title: formData.title,
@@ -438,7 +438,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
           priority: formData.priority,
           completed: (formData.type === 'task' && allSubtasksCompleted) || (formData.type === 'project' && projectCompletion === 100),
           metadata: {
-            ...editingEntry.metadata,
+            ...editEntry.metadata,
             description: formData.description,
             category: formData.category,
             subtasks: formData.type === 'task' ? formData.subtasks : undefined,
@@ -481,7 +481,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
           }
         }
 
-        await actions.updateEntry(editingEntry.id, updates)
+        await actions.updateEntry(editEntry.id, updates)
       } else {
         let payloads = []
 
@@ -597,11 +597,11 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
   }
 
   const handleDelete = async () => {
-    if (!editingEntry) return
+    if (!editEntry) return
     if (!confirm('¿Estás seguro de que quieres eliminar esta entrada?')) return
 
     try {
-      await actions.deleteEntry(editingEntry.id)
+      await actions.deleteEntry(editEntry.id)
       onClose()
     } catch (error) {
       console.error('Error al eliminar:', error)
@@ -1357,7 +1357,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
 
         {/* Footer */}
         <div className="gam-footer">
-          {editingEntry && (
+          {editEntry && (
             <button
               type="button"
               className="gam-btn gam-btn-delete"
@@ -1383,7 +1383,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
               disabled={isSubmitting || !formData.type || (!isBirthdayModule && !formData.title) || (isBirthdayModule && !formData.birthdayName)}
               style={{ '--btn-color': selectedTypeConfig.color }}
             >
-              {isSubmitting ? 'Guardando...' : (editingEntry ? 'Guardar' : 'Crear')}
+              {isSubmitting ? 'Guardando...' : (editEntry ? 'Guardar Cambios' : 'Crear')}
             </button>
           </div>
         </div>
