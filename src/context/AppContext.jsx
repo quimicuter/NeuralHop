@@ -113,7 +113,9 @@ export function AppProvider({ children }) {
 
   // Suscripción global a entries en tiempo real
   useEffect(() => {
+    console.log('[AppContext] Suscribiéndose a entries...')
     const unsubscribe = subscribeToAllEntries((entries) => {
+      console.log('[AppContext] Snapshot recibido — total entries:', entries.length, entries)
       dispatch({ type: 'SET_ENTRIES', payload: entries })
     })
     return () => unsubscribe()

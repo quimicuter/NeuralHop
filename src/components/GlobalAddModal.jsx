@@ -582,15 +582,20 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editEntry = nul
           payloads.push(basePayload)
         }
 
+        console.log('[GlobalAddModal] Payloads to save:', payloads)
         for (const payload of payloads) {
-          await actions.addEntry(payload)
+          const id = await actions.addEntry(payload)
+          console.log('[GlobalAddModal] addEntry returned id:', id, 'for payload:', payload)
+          if (!id) {
+            throw new Error('addEntry returned null — Firebase rejected the write. Revisa las reglas de Firestore o la consola.')
+          }
         }
       }
 
       onClose()
     } catch (error) {
-      console.error('Error al guardar:', error)
-      alert('Error al guardar. Por favor intenta de nuevo.')
+      console.error('[GlobalAddModal] Error al guardar:', error)
+      alert('Error al guardar: ' + (error?.message || error))
     } finally {
       setIsSubmitting(false)
     }
