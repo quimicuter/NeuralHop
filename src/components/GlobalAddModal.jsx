@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useApp } from '../context/AppContext'
 import './GlobalAddModal.css'
 
@@ -21,39 +21,133 @@ export const MODULE_CONFIG = {
     label: 'Wellness Hub',
     emoji: '🌿',
     allowsHabits: true,
-    submodules: ['glow', 'vitality', 'innerBalance', 'zenRest'],
-    themeVars: {
-      glow: '--color-glow-peach',
-      vitality: '--color-vitality-coral',
-      innerBalance: '--color-inner-mint',
-      zenRest: '--color-zen-indigo'
-    }
+    submodules: [
+      { id: 'glow', label: 'Glow', emoji: '✧', color: '#fbbf24' },
+      { id: 'vitality', label: 'Vitality', emoji: '🗲', color: '#f87171' },
+      { id: 'innerBalance', label: 'Inner Balance', emoji: '⸙', color: '#34d399' },
+      { id: 'zenRest', label: 'Zen Rest', emoji: '☾', color: '#60a5fa' }
+    ]
   },
-  'vida-social': { label: 'Vida Social', emoji: '🥂', allowsHabits: false },
-  'foodie': { label: 'Foodie', emoji: '🍴', allowsHabits: true },
+  'vida-social': {
+    label: 'Vida Social',
+    emoji: '🥂',
+    allowsHabits: false,
+    submodules: [
+      { id: 'amigos', label: 'Amigos', emoji: '👯', color: '#ec4899' },
+      { id: 'familia', label: 'Familia', emoji: '👨‍👩‍👧‍👦', color: '#f97316' },
+      { id: 'eventos', label: 'Eventos', emoji: '🎉', color: '#8b5cf6' }
+    ]
+  },
+  'foodie': {
+    label: 'Foodie',
+    emoji: '🍴',
+    allowsHabits: true,
+    submodules: [
+      { id: 'cocina', label: 'Cocina', emoji: '👨‍🍳', color: '#ef4444' },
+      { id: 'recetas', label: 'Recetas', emoji: '📖', color: '#06b6d4' },
+      { id: 'dieta', label: 'Dieta', emoji: '🥗', color: '#10b981' }
+    ]
+  },
   // Académico
-  'tecno-girl': { label: 'Tecno Girl', emoji: '💻', allowsHabits: false },
-  'investigacion': { label: 'Investigación', emoji: '🔬', allowsHabits: true },
-  'maestria': { label: 'Maestría', emoji: '🎓', allowsHabits: false },
-  'laboratorio': { label: 'Laboratorio', emoji: '🧪', allowsHabits: false },
-  'idiomas': { label: 'Idiomas', emoji: '🗣️', allowsHabits: true },
+  'tecno-girl': {
+    label: 'Tecno Girl',
+    emoji: '💻',
+    allowsHabits: false,
+    submodules: [
+      { id: 'dev', label: 'Development', emoji: '⚙️', color: '#6366f1' },
+      { id: 'design', label: 'Design', emoji: '🎨', color: '#ec4899' },
+      { id: 'marketing', label: 'Marketing', emoji: '📢', color: '#f59e0b' }
+    ]
+  },
+  'investigacion': {
+    label: 'Investigación',
+    emoji: '🔬',
+    allowsHabits: true,
+    submodules: [
+      { id: 'literatura', label: 'Literatura', emoji: '📚', color: '#6d28d9' },
+      { id: 'experimento', label: 'Experimento', emoji: '🧬', color: '#06b6d4' },
+      { id: 'analisis', label: 'Análisis', emoji: '📊', color: '#8b5cf6' }
+    ]
+  },
+  'maestria': {
+    label: 'Maestría',
+    emoji: '🎓',
+    allowsHabits: false,
+    submodules: [
+      { id: 'clases', label: 'Clases', emoji: '🎓', color: '#3b82f6' },
+      { id: 'tesis', label: 'Tesis', emoji: '📝', color: '#8b5cf6' },
+      { id: 'proyectos', label: 'Proyectos', emoji: '🚀', color: '#f59e0b' }
+    ]
+  },
+  'laboratorio': {
+    label: 'Laboratorio',
+    emoji: '🧪',
+    allowsHabits: false,
+    submodules: [
+      { id: 'practicas', label: 'Prácticas', emoji: '🧪', color: '#06b6d4' },
+      { id: 'reportes', label: 'Reportes', emoji: '📋', color: '#10b981' },
+      { id: 'equipo', label: 'Equipo', emoji: '⚗️', color: '#ec4899' }
+    ]
+  },
+  'idiomas': {
+    label: 'Idiomas',
+    emoji: '🗣️',
+    allowsHabits: true,
+    submodules: [
+      { id: 'ingles', label: 'Inglés', emoji: '🇬🇧', color: '#3b82f6' },
+      { id: 'aleman', label: 'Alemán', emoji: '🇩🇪', color: '#f97316' },
+      { id: 'japones', label: 'Japonés', emoji: '🇯🇵', color: '#ef4444' }
+    ]
+  },
   // General
   'cumpleanos': { label: 'Cumpleaños', emoji: '🎂', allowsHabits: false, isBirthday: true },
-  'finanzas': { label: 'Finanzas', emoji: '💰', allowsHabits: false },
-  'tramites': { label: 'Trámites', emoji: '📝', allowsHabits: false }
+  'finanzas': {
+    label: 'Finanzas',
+    emoji: '💰',
+    allowsHabits: false,
+    submodules: [
+      { id: 'ingresos', label: 'Ingresos', emoji: '📈', color: '#10b981' },
+      { id: 'gastos', label: 'Gastos', emoji: '📉', color: '#ef4444' },
+      { id: 'ahorros', label: 'Ahorros', emoji: '🏦', color: '#3b82f6' }
+    ]
+  },
+  'tramites': {
+    label: 'Trámites',
+    emoji: '📝',
+    allowsHabits: false,
+    submodules: [
+      { id: 'documentos', label: 'Documentos', emoji: '📄', color: '#6b7280' },
+      { id: 'solicitudes', label: 'Solicitudes', emoji: '📋', color: '#8b5cf6' },
+      { id: 'pagos', label: 'Pagos', emoji: '💳', color: '#f59e0b' }
+    ]
+  }
 }
 
 const TYPE_CONFIG = {
   task: { label: 'Tarea', emoji: '📝', color: 'rgba(244, 212, 217, 0.65)' },    // Rosa Bruma
   event: { label: 'Evento', emoji: '📅', color: 'rgba(215, 189, 226, 0.65)' },   // Lavanda Mate
-  habit: { label: 'Hábito', emoji: '🔄', color: 'rgba(189, 212, 231, 0.65)' }    // Azul Glaciar
+  habit: { label: 'Hábito', emoji: '🔄', color: 'rgba(189, 212, 231, 0.65)' },   // Azul Glaciar
+  project: { label: 'Proyecto', emoji: '🚧', color: 'rgba(201, 222, 197, 0.65)' } // Verde Salvia
+}
+
+const FREQUENCY_CONFIG = {
+  daily: { label: 'Diario', emoji: '○' },
+  weekly: { label: 'Semanal', emoji: '◐' },
+  multiple: { label: 'Múltiple', emoji: '◓' },
+  monthly: { label: 'Mensual', emoji: '◑' }
+}
+
+const PROJECT_STATUS = {
+  not_started: { label: 'No empezado', color: '#9ca3af' },
+  active: { label: 'Activo', color: '#22c55e' },
+  paused: { label: 'Pausa', color: '#eab308' },
+  archived: { label: 'Archivado', color: '#6b7280' }
 }
 
 const PRIORITY_CONFIG = {
   low: { label: 'Baja', emoji: '🟢', color: '#22c55e' },
   medium: { label: 'Media', emoji: '🟡', color: '#eab308' },
-  high: { label: 'Alta', emoji: '🔴', color: '#ef4444' },
-  critical: { label: 'Crítica', emoji: '🔥', color: '#dc2626' }
+  high: { label: 'Alta', emoji: '🔴', color: '#ef4444' }
 }
 
 const WEEK_DAYS = [
@@ -80,6 +174,9 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
     deadline: '',
     deadlineTime: '',
     priority: 'medium',
+    category: null,
+    subtasks: [],
+    subtaskInput: '',
     eventDate: '',
     eventTime: '',
     eventEndTime: '',
@@ -87,6 +184,11 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
     recurring: false,
     recurrenceType: 'weekly',
     habitDays: [],
+    frequency: 'daily',
+    monthlyDays: '',
+    projectStatus: 'not_started',
+    roadmapSteps: [],
+    roadmapInput: '',
     birthdayName: '',
     birthDate: '',
     hasParty: false,
@@ -94,12 +196,85 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
     partyTime: ''
   }
 
+  const addSubtask = () => {
+    if (!formData.subtaskInput.trim()) return
+    setFormData(prev => ({
+      ...prev,
+      subtasks: [...prev.subtasks, { id: Date.now(), text: formData.subtaskInput, completed: false }],
+      subtaskInput: ''
+    }))
+  }
+
+  const toggleSubtask = (id) => {
+    setFormData(prev => {
+      const updated = prev.subtasks.map(st => 
+        st.id === id ? { ...st, completed: !st.completed } : st
+      )
+      return { ...prev, subtasks: updated }
+    })
+  }
+
+  const removeSubtask = (id) => {
+    setFormData(prev => ({
+      ...prev,
+      subtasks: prev.subtasks.filter(st => st.id !== id)
+    }))
+  }
+
+  const handleSubtaskKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      addSubtask()
+    }
+  }
+
   const [formData, setFormData] = useState(emptyFormData)
+  const [openDropdowns, setOpenDropdowns] = useState({ category: false, priority: false, frequency: false })
+
+  const toggleDropdown = (name) => {
+    setOpenDropdowns(prev => ({ ...prev, [name]: !prev[name] }))
+  }
+
+  const closeDropdowns = () => {
+    setOpenDropdowns({ category: false, priority: false, frequency: false })
+  }
+
+  // ===== ROADMAP STEPS (proyecto) =====
+  const addRoadmapStep = () => {
+    if (!formData.roadmapInput?.trim()) return
+    setFormData(prev => ({
+      ...prev,
+      roadmapSteps: [...prev.roadmapSteps, { id: Date.now(), text: prev.roadmapInput, completed: false }],
+      roadmapInput: ''
+    }))
+  }
+
+  const toggleRoadmapStep = (id) => {
+    setFormData(prev => ({
+      ...prev,
+      roadmapSteps: prev.roadmapSteps.map(s => s.id === id ? { ...s, completed: !s.completed } : s)
+    }))
+  }
+
+  const removeRoadmapStep = (id) => {
+    setFormData(prev => ({
+      ...prev,
+      roadmapSteps: prev.roadmapSteps.filter(s => s.id !== id)
+    }))
+  }
+
+  const handleRoadmapKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      addRoadmapStep()
+    }
+  }
 
   const buildFormDataFromEntry = (entry) => {
     if (!entry) return emptyFormData
 
     return {
+      ...emptyFormData,
       scope: entry.scope || '',
       module: entry.module || '',
       type: entry.type || preselectedType || '',
@@ -108,6 +283,8 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
       deadline: entry.deadline || '',
       deadlineTime: entry.metadata?.deadlineTime || '',
       priority: entry.priority || 'medium',
+      category: entry.metadata?.category || null,
+      subtasks: entry.metadata?.subtasks || [],
       eventDate: entry.date || '',
       eventTime: entry.metadata?.startTime || '',
       eventEndTime: entry.metadata?.endTime || '',
@@ -115,6 +292,10 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
       recurring: !!entry.metadata?.recurring,
       recurrenceType: entry.metadata?.recurrenceType || 'weekly',
       habitDays: entry.metadata?.habitDays || [],
+      frequency: entry.metadata?.frequency || 'daily',
+      monthlyDays: entry.metadata?.monthlyDays || '',
+      projectStatus: entry.metadata?.projectStatus || 'not_started',
+      roadmapSteps: entry.metadata?.roadmapSteps || [],
       birthdayName: entry.metadata?.birthdayPerson || '',
       birthDate: entry.metadata?.birthDate || '',
       hasParty: !!entry.metadata?.isBirthdayParty,
@@ -189,7 +370,8 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
   const getAvailableTypes = () => {
     const types = [
       { value: 'task', label: 'Tarea', emoji: '📝' },
-      { value: 'event', label: 'Evento', emoji: '📅' }
+      { value: 'event', label: 'Evento', emoji: '📅' },
+      { value: 'project', label: 'Proyecto', emoji: '🚧' }
     ]
 
     if (canSelectHabit) {
@@ -207,6 +389,16 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
     setIsSubmitting(true)
 
     try {
+      // Determina si hay subtareas y si están todas completadas
+      const hasSubtasks = formData.subtasks && formData.subtasks.length > 0
+      const allSubtasksCompleted = hasSubtasks && formData.subtasks.every(st => st.completed)
+
+      // Roadmap del proyecto
+      const hasRoadmap = formData.roadmapSteps && formData.roadmapSteps.length > 0
+      const projectCompletion = hasRoadmap
+        ? Math.round((formData.roadmapSteps.filter(s => s.completed).length / formData.roadmapSteps.length) * 100)
+        : 0
+
       if (editingEntry) {
         const updates = {
           type: formData.type,
@@ -214,9 +406,13 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
           scope: formData.scope,
           module: formData.module,
           priority: formData.priority,
+          completed: (formData.type === 'task' && allSubtasksCompleted) || (formData.type === 'project' && projectCompletion === 100),
           metadata: {
             ...editingEntry.metadata,
-            description: formData.description
+            description: formData.description,
+            category: formData.category,
+            subtasks: formData.type === 'task' ? formData.subtasks : undefined,
+            hasSubtaskSync: hasSubtasks
           }
         }
 
@@ -239,9 +435,19 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
         } else if (formData.type === 'habit') {
           updates.metadata = {
             ...updates.metadata,
-            habitDays: formData.habitDays,
+            frequency: formData.frequency,
+            habitDays: (formData.frequency === 'weekly' || formData.frequency === 'multiple') ? formData.habitDays : [],
+            monthlyDays: formData.frequency === 'monthly' ? formData.monthlyDays : '',
             recurring: true,
-            recurrenceType: 'weekly'
+            recurrenceType: formData.frequency
+          }
+        } else if (formData.type === 'project') {
+          updates.deadline = formData.deadline ? new Date(formData.deadline + 'T12:00:00').toISOString().split('T')[0] : ''
+          updates.metadata = {
+            ...updates.metadata,
+            projectStatus: formData.projectStatus,
+            roadmapSteps: formData.roadmapSteps,
+            completionPercentage: projectCompletion
           }
         }
 
@@ -295,19 +501,25 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
             module: formData.module,
             status: 'todo',
             priority: formData.priority,
-            completed: false,
-            metadata: {}
+            completed: (formData.type === 'task' && allSubtasksCompleted) || (formData.type === 'project' && projectCompletion === 100),
+            metadata: {
+              category: formData.category
+            }
           }
 
           if (formData.type === 'task') {
             basePayload.deadline = formData.deadline ? new Date(formData.deadline + 'T12:00:00').toISOString().split('T')[0] : ''
             basePayload.metadata = {
+              ...basePayload.metadata,
               deadlineTime: formData.deadlineTime,
-              description: formData.description
+              description: formData.description,
+              subtasks: formData.subtasks.length > 0 ? formData.subtasks : undefined,
+              hasSubtaskSync: hasSubtasks
             }
           } else if (formData.type === 'event') {
             basePayload.date = formData.eventDate ? new Date(formData.eventDate + 'T12:00:00').toISOString().split('T')[0] : ''
             basePayload.metadata = {
+              ...basePayload.metadata,
               startTime: formData.eventTime,
               endTime: formData.eventEndTime,
               location: formData.location,
@@ -317,9 +529,22 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
             }
           } else if (formData.type === 'habit') {
             basePayload.metadata = {
-              habitDays: formData.habitDays,
+              ...basePayload.metadata,
+              frequency: formData.frequency,
+              habitDays: (formData.frequency === 'weekly' || formData.frequency === 'multiple') ? formData.habitDays : [],
+              monthlyDays: formData.frequency === 'monthly' ? formData.monthlyDays : '',
               recurring: true,
-              recurrenceType: 'weekly',
+              recurrenceType: formData.frequency,
+              description: formData.description
+            }
+          } else if (formData.type === 'project') {
+            basePayload.deadline = formData.deadline ? new Date(formData.deadline + 'T12:00:00').toISOString().split('T')[0] : ''
+            basePayload.status = formData.projectStatus
+            basePayload.metadata = {
+              ...basePayload.metadata,
+              projectStatus: formData.projectStatus,
+              roadmapSteps: formData.roadmapSteps,
+              completionPercentage: projectCompletion,
               description: formData.description
             }
           }
@@ -357,6 +582,119 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
   if (!isOpen) return null
 
   const selectedTypeConfig = TYPE_CONFIG[formData.type] || {}
+
+  // ===== % completado del proyecto (basado en roadmap) =====
+  const completionPercentage = formData.roadmapSteps?.length > 0
+    ? Math.round((formData.roadmapSteps.filter(s => s.completed).length / formData.roadmapSteps.length) * 100)
+    : 0
+
+  // ===== HELPERS DE DROPDOWN (reutilizables en task/event/habit/project) =====
+  const renderCategoryDropdown = () => (
+    <div className="gam-dropdown-wrapper">
+      <button
+        type="button"
+        className="gam-dropdown-trigger gam-dropdown-category gam-dropdown-icon-only"
+        onClick={(e) => { e.stopPropagation(); toggleDropdown('category') }}
+        title={formData.category
+          ? currentModuleConfig.submodules?.find(s => s.id === formData.category)?.label
+          : 'Categoría'}
+      >
+        <span className="gam-dropdown-icon">
+          {formData.category ? (
+            currentModuleConfig.submodules?.find(s => s.id === formData.category)?.emoji
+          ) : (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+              <line x1="7" y1="7" x2="7.01" y2="7"/>
+            </svg>
+          )}
+        </span>
+      </button>
+      {openDropdowns.category && (
+        <div className="gam-dropdown-menu gam-dropdown-menu-category" onClick={(e) => e.stopPropagation()}>
+          <button type="button" className="gam-dropdown-item" onClick={() => { updateField('category', null); closeDropdowns() }}>
+            Sin categoría
+          </button>
+          {currentModuleConfig.submodules?.map(submodule => (
+            <button
+              key={submodule.id}
+              type="button"
+              className={`gam-dropdown-item ${formData.category === submodule.id ? 'active' : ''}`}
+              onClick={() => { updateField('category', submodule.id); closeDropdowns() }}
+            >
+              <span className="gam-dropdown-item-icon">{submodule.emoji}</span>
+              <span className="gam-dropdown-item-text">{submodule.label}</span>
+              {formData.category === submodule.id && <span className="gam-dropdown-check">✓</span>}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+
+  const renderPriorityDropdown = () => (
+    <div className="gam-dropdown-wrapper">
+      <button
+        type="button"
+        className="gam-dropdown-trigger gam-dropdown-priority gam-dropdown-icon-only"
+        onClick={(e) => { e.stopPropagation(); toggleDropdown('priority') }}
+        style={{ '--priority-color': PRIORITY_CONFIG[formData.priority]?.color }}
+        title={`Prioridad: ${PRIORITY_CONFIG[formData.priority]?.label}`}
+      >
+        <span className="gam-dropdown-icon gam-priority-icon">
+          <span className="gam-priority-ring" style={{ borderColor: PRIORITY_CONFIG[formData.priority]?.color }}></span>
+        </span>
+      </button>
+      {openDropdowns.priority && (
+        <div className="gam-dropdown-menu gam-dropdown-menu-priority" onClick={(e) => e.stopPropagation()}>
+          {Object.entries(PRIORITY_CONFIG).map(([key, config]) => (
+            <button
+              key={key}
+              type="button"
+              className={`gam-dropdown-item ${formData.priority === key ? 'active' : ''}`}
+              onClick={() => { updateField('priority', key); closeDropdowns() }}
+            >
+              <span className="gam-dropdown-item-icon">
+                <span className="gam-priority-ring" style={{ borderColor: config.color }}></span>
+              </span>
+              <span className="gam-dropdown-item-text">{config.label}</span>
+              {formData.priority === key && <span className="gam-dropdown-check">✓</span>}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+
+  const renderFrequencyDropdown = () => (
+    <div className="gam-dropdown-wrapper gam-dropdown-wrapper-wide">
+      <button
+        type="button"
+        className="gam-dropdown-trigger gam-dropdown-frequency"
+        onClick={(e) => { e.stopPropagation(); toggleDropdown('frequency') }}
+      >
+        <span className="gam-dropdown-icon">{FREQUENCY_CONFIG[formData.frequency]?.emoji}</span>
+        <span className="gam-dropdown-text">{FREQUENCY_CONFIG[formData.frequency]?.label}</span>
+        <span className="gam-dropdown-arrow">▾</span>
+      </button>
+      {openDropdowns.frequency && (
+        <div className="gam-dropdown-menu" onClick={(e) => e.stopPropagation()}>
+          {Object.entries(FREQUENCY_CONFIG).map(([key, config]) => (
+            <button
+              key={key}
+              type="button"
+              className={`gam-dropdown-item ${formData.frequency === key ? 'active' : ''}`}
+              onClick={() => { updateField('frequency', key); closeDropdowns() }}
+            >
+              <span className="gam-dropdown-item-icon">{config.emoji}</span>
+              <span className="gam-dropdown-item-text">{config.label}</span>
+              {formData.frequency === key && <span className="gam-dropdown-check">✓</span>}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )
 
   return (
     <div className="gam-overlay" onClick={onClose}>
@@ -408,18 +746,18 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
                       </div>
                     )}
 
-                    {/* Pestañas - Ahora sí verán el color correcto */}
+                    {/* Pestañas - Pill buttons flotantes */}
           {canSelectType && (
-            <div className="gam-tabs">
+            <div className="gam-type-pills">
               {getAvailableTypes().map(type => (
                 <button
                   key={type.value}
                   type="button"
-                  className={`gam-tab ${formData.type === type.value ? 'active' : ''}`}
+                  className={`gam-type-pill ${formData.type === type.value ? 'active' : ''}`}
                   onClick={() => updateField('type', type.value)}
                 >
-                  <span className="gam-tab-emoji">{type.emoji}</span>
-                  <span className="gam-tab-label">{type.label}</span>
+                  <span className="gam-pill-emoji">{type.emoji}</span>
+                  <span className="gam-pill-label">{type.label}</span>
                 </button>
               ))}
             </div>
@@ -433,117 +771,491 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
           {/* Formulario dinámico */}
                   {/* Campos comunes */}
                   <div className="gam-form-grid">
-                    <div className="gam-form-field">
-                      <label className="gam-form-label">
-                        {isBirthdayModule ? 'Nombre' : 'Título'}
-                      </label>
-                      <input
-                        type="text"
-                        className="gam-form-input"
-                        value={isBirthdayModule ? formData.birthdayName : formData.title}
-                        onChange={(e) => updateField(isBirthdayModule ? 'birthdayName' : 'title', e.target.value)}
-                        placeholder={isBirthdayModule ? "Ej: María González" : "Escribe el título..."}
-                        required
-                      />
-                    </div>
-
-                    {!isBirthdayModule && (
-                      <div className="gam-form-field">
-                        <label className="gam-form-label">Prioridad</label>
-                        <select
-                          className="gam-form-select"
-                          value={formData.priority}
-                          onChange={(e) => updateField('priority', e.target.value)}
-                        >
-                          {Object.entries(PRIORITY_CONFIG).map(([key, config]) => (
-                            <option key={key} value={key}>{config.emoji} {config.label}</option>
-                          ))}
-                        </select>
+                    {isBirthdayModule && (
+                      <div className="gam-form-field gam-form-field-full">
+                        <input
+                          type="text"
+                          className="gam-form-input"
+                          value={formData.birthdayName}
+                          onChange={(e) => updateField('birthdayName', e.target.value)}
+                          placeholder="Nombre de la persona..."
+                          required
+                        />
                       </div>
                     )}
 
-                    {/* Campos específicos por tipo */}
-                    {formData.type === 'task' && (
-                      <>
-                        <div className="gam-form-field">
-                          <label className="gam-form-label">Fecha límite</label>
-                          <input
-                            type="date"
-                            className="gam-form-input"
-                            value={formData.deadline}
-                            onChange={(e) => updateField('deadline', e.target.value)}
-                            required
-                          />
-                        </div>
-                        <div className="gam-form-field">
-                          <label className="gam-form-label">Hora (opcional)</label>
-                          <input
-                            type="time"
-                            className="gam-form-input"
-                            value={formData.deadlineTime}
-                            onChange={(e) => updateField('deadlineTime', e.target.value)}
-                          />
-                        </div>
-                      </>
-                    )}
-
-                    {formData.type === 'event' && !isBirthdayModule && (
-                      <>
-                        <div className="gam-form-field">
-                          <label className="gam-form-label">Fecha</label>
-                          <input
-                            type="date"
-                            className="gam-form-input"
-                            value={formData.eventDate}
-                            onChange={(e) => updateField('eventDate', e.target.value)}
-                            required
-                          />
-                        </div>
-                        <div className="gam-form-field">
-                          <label className="gam-form-label">Hora inicio</label>
-                          <input
-                            type="time"
-                            className="gam-form-input"
-                            value={formData.eventTime}
-                            onChange={(e) => updateField('eventTime', e.target.value)}
-                          />
-                        </div>
-                        <div className="gam-form-field">
-                          <label className="gam-form-label">Hora fin</label>
-                          <input
-                            type="time"
-                            className="gam-form-input"
-                            value={formData.eventEndTime}
-                            onChange={(e) => updateField('eventEndTime', e.target.value)}
-                          />
-                        </div>
-                        <div className="gam-form-field">
-                          <label className="gam-form-label">Ubicación</label>
+                    {/* SECCIÓN TAREA - Alta Densidad */}
+                    {formData.type === 'task' && !isBirthdayModule && (
+                      <div className="gam-task-section" onClick={closeDropdowns}>
+                        {/* Fila de Cabecera Triple (Ultra-Compacta) */}
+                        <div className="gam-task-header-row">
+                          {/* Título - Principal */}
                           <input
                             type="text"
-                            className="gam-form-input"
-                            value={formData.location}
-                            onChange={(e) => updateField('location', e.target.value)}
-                            placeholder="Ej: Salón 302 o https://zoom.com/..."
+                            className="gam-task-title-input"
+                            value={formData.title}
+                            onChange={(e) => updateField('title', e.target.value)}
+                            placeholder="Título de la tarea..."
+                            required
                           />
+
+                          {/* Categoría - Dropdown (solo icono) */}
+                          <div className="gam-dropdown-wrapper">
+                            <button
+                              type="button"
+                              className="gam-dropdown-trigger gam-dropdown-category gam-dropdown-icon-only"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                toggleDropdown('category')
+                              }}
+                              title={
+                                formData.category
+                                  ? currentModuleConfig.submodules?.find(s => s.id === formData.category)?.label
+                                  : 'Categoría'
+                              }
+                            >
+                              <span className="gam-dropdown-icon">
+                                {formData.category ? (
+                                  currentModuleConfig.submodules?.find(s => s.id === formData.category)?.emoji
+                                ) : (
+                                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                                    <line x1="7" y1="7" x2="7.01" y2="7"/>
+                                  </svg>
+                                )}
+                              </span>
+                            </button>
+
+                            {openDropdowns.category && (
+                              <div className="gam-dropdown-menu gam-dropdown-menu-category" onClick={(e) => e.stopPropagation()}>
+                                <button
+                                  type="button"
+                                  className="gam-dropdown-item"
+                                  onClick={() => {
+                                    updateField('category', null)
+                                    closeDropdowns()
+                                  }}
+                                >
+                                  Sin categoría
+                                </button>
+                                {currentModuleConfig.submodules?.map(submodule => (
+                                  <button
+                                    key={submodule.id}
+                                    type="button"
+                                    className={`gam-dropdown-item ${formData.category === submodule.id ? 'active' : ''}`}
+                                    onClick={() => {
+                                      updateField('category', submodule.id)
+                                      closeDropdowns()
+                                    }}
+                                  >
+                                    <span className="gam-dropdown-item-icon">{submodule.emoji}</span>
+                                    <span className="gam-dropdown-item-text">{submodule.label}</span>
+                                    {formData.category === submodule.id && <span className="gam-dropdown-check">✓</span>}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Prioridad - Dropdown (solo icono) */}
+                          <div className="gam-dropdown-wrapper">
+                            <button
+                              type="button"
+                              className="gam-dropdown-trigger gam-dropdown-priority gam-dropdown-icon-only"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                toggleDropdown('priority')
+                              }}
+                              style={{ '--priority-color': PRIORITY_CONFIG[formData.priority]?.color }}
+                              title={`Prioridad: ${PRIORITY_CONFIG[formData.priority]?.label}`}
+                            >
+                              <span className="gam-dropdown-icon gam-priority-icon">
+                                <span className="gam-priority-ring" style={{ borderColor: PRIORITY_CONFIG[formData.priority]?.color }}></span>
+                              </span>
+                            </button>
+
+                            {openDropdowns.priority && (
+                              <div className="gam-dropdown-menu gam-dropdown-menu-priority" onClick={(e) => e.stopPropagation()}>
+                                {Object.entries(PRIORITY_CONFIG).map(([key, config]) => (
+                                  <button
+                                    key={key}
+                                    type="button"
+                                    className={`gam-dropdown-item ${formData.priority === key ? 'active' : ''}`}
+                                    onClick={() => {
+                                      updateField('priority', key)
+                                      closeDropdowns()
+                                    }}
+                                  >
+                                    <span className="gam-dropdown-item-icon">
+                                      <span className="gam-priority-ring" style={{ borderColor: config.color }}></span>
+                                    </span>
+                                    <span className="gam-dropdown-item-text">{config.label}</span>
+                                    {formData.priority === key && <span className="gam-dropdown-check">✓</span>}
+                                  </button>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </>
+
+                        {/* Fila de Tiempos - Compacta */}
+                        <div className="gam-task-times-row">
+                          <div className="gam-task-time-field">
+                            <input
+                              type="date"
+                              className="gam-task-date-input"
+                              value={formData.deadline}
+                              onChange={(e) => updateField('deadline', e.target.value)}
+                              required
+                            />
+                          </div>
+                          <div className="gam-task-time-field">
+                            <input
+                              type="time"
+                              className="gam-task-time-input"
+                              value={formData.deadlineTime}
+                              onChange={(e) => updateField('deadlineTime', e.target.value)}
+                              placeholder="Hora"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Cuerpo en Dos Columnas */}
+                        <div className="gam-task-body">
+                          {/* Columna Izquierda - Notas */}
+                          <div className="gam-task-col gam-task-col-notes">
+                            <textarea
+                              className="gam-task-notes-textarea"
+                              value={formData.description}
+                              onChange={(e) => updateField('description', e.target.value)}
+                              placeholder="Añade notas o detalles..."
+                            />
+                          </div>
+
+                          {/* Columna Derecha - Subtareas */}
+                          <div className="gam-task-col gam-task-col-subtasks">
+                            <div className="gam-subtasks-compact">
+                              <div className="gam-subtask-input-wrapper">
+                                <input
+                                  type="text"
+                                  className="gam-subtask-input"
+                                  value={formData.subtaskInput}
+                                  onChange={(e) => updateField('subtaskInput', e.target.value)}
+                                  onKeyPress={handleSubtaskKeyPress}
+                                  placeholder="Nueva subtarea..."
+                                />
+                                <button
+                                  type="button"
+                                  className="gam-subtask-add-btn"
+                                  onClick={addSubtask}
+                                  title="Añadir"
+                                >
+                                  +
+                                </button>
+                              </div>
+
+                              {formData.subtasks.length > 0 && (
+                                <div className="gam-subtasks-list-compact">
+                                  {formData.subtasks.map(subtask => (
+                                    <div key={subtask.id} className="gam-subtask-item-compact">
+                                      <input
+                                        type="checkbox"
+                                        className="gam-subtask-checkbox"
+                                        checked={subtask.completed}
+                                        onChange={() => toggleSubtask(subtask.id)}
+                                      />
+                                      <span className={`gam-subtask-text-compact ${subtask.completed ? 'completed' : ''}`}>
+                                        {subtask.text}
+                                      </span>
+                                      <button
+                                        type="button"
+                                        className="gam-subtask-remove-compact"
+                                        onClick={() => removeSubtask(subtask.id)}
+                                      >
+                                        ✕
+                                      </button>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     )}
 
-                    {formData.type === 'habit' && (
-                      <div className="gam-form-field gam-form-field-full">
-                        <label className="gam-form-label">Días de la semana</label>
-                        <div className="gam-habit-days">
-                          {WEEK_DAYS.map(day => (
+                    {/* ===== SECCIÓN EVENTO - Split View ===== */}
+                    {formData.type === 'event' && !isBirthdayModule && (
+                      <div className="gam-task-section gam-form-field-full" onClick={closeDropdowns}>
+                        {/* Cabecera: Título + Categoría + Prioridad */}
+                        <div className="gam-task-header-row">
+                          <input
+                            type="text"
+                            className="gam-task-title-input"
+                            value={formData.title}
+                            onChange={(e) => updateField('title', e.target.value)}
+                            placeholder="Título del evento..."
+                            required
+                          />
+                          {renderCategoryDropdown()}
+                          {renderPriorityDropdown()}
+                        </div>
+
+                        {/* Fila Tiempos: Fecha + Inicio + Fin */}
+                        <div className="gam-task-times-row">
+                          <div className="gam-task-time-field">
+                            <input
+                              type="date"
+                              className="gam-task-date-input"
+                              value={formData.eventDate}
+                              onChange={(e) => updateField('eventDate', e.target.value)}
+                              required
+                            />
+                          </div>
+                          <div className="gam-task-time-field">
+                            <input
+                              type="time"
+                              className="gam-task-time-input"
+                              value={formData.eventTime}
+                              onChange={(e) => updateField('eventTime', e.target.value)}
+                              placeholder="Inicio"
+                            />
+                          </div>
+                          <div className="gam-task-time-field">
+                            <input
+                              type="time"
+                              className="gam-task-time-input"
+                              value={formData.eventEndTime}
+                              onChange={(e) => updateField('eventEndTime', e.target.value)}
+                              placeholder="Fin"
+                            />
+                          </div>
+                        </div>
+
+                        {/* Split View: Notas | Ubicación */}
+                        <div className="gam-task-body">
+                          <div className="gam-task-col gam-task-col-notes">
+                            <textarea
+                              className="gam-task-notes-textarea"
+                              value={formData.description}
+                              onChange={(e) => updateField('description', e.target.value)}
+                              placeholder="Añade notas o detalles..."
+                            />
+                          </div>
+                          <div className="gam-task-col gam-task-col-location">
+                            <div className="gam-location-field">
+                              <span className="gam-location-icon" aria-hidden>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                  <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                              </span>
+                              <input
+                                type="text"
+                                className="gam-location-input"
+                                value={formData.location}
+                                onChange={(e) => updateField('location', e.target.value)}
+                                placeholder="Ubicación o enlace..."
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ===== SECCIÓN HÁBITO - Frecuencia dinámica ===== */}
+                    {formData.type === 'habit' && !isBirthdayModule && (
+                      <div className="gam-task-section gam-form-field-full" onClick={closeDropdowns}>
+                        {/* Cabecera: Título + Categoría + Prioridad */}
+                        <div className="gam-task-header-row">
+                          <input
+                            type="text"
+                            className="gam-task-title-input"
+                            value={formData.title}
+                            onChange={(e) => updateField('title', e.target.value)}
+                            placeholder="Título del hábito..."
+                            required
+                          />
+                          {renderCategoryDropdown()}
+                          {renderPriorityDropdown()}
+                        </div>
+
+                        {/* Fila de Frecuencia */}
+                        <div className="gam-task-times-row">
+                          <div className="gam-task-time-field gam-frequency-cell">
+                            {renderFrequencyDropdown()}
+                          </div>
+                          {formData.frequency === 'monthly' && (
+                            <div className="gam-task-time-field gam-monthly-cell">
+                              <input
+                                type="text"
+                                className="gam-task-time-input"
+                                value={formData.monthlyDays}
+                                onChange={(e) => updateField('monthlyDays', e.target.value)}
+                                placeholder="Días del mes (Ej: 1, 15, 28)"
+                              />
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Split View: Descripción | Selector de días */}
+                        <div className="gam-task-body">
+                          <div className="gam-task-col gam-task-col-notes">
+                            <textarea
+                              className="gam-task-notes-textarea"
+                              value={formData.description}
+                              onChange={(e) => updateField('description', e.target.value)}
+                              placeholder="Descripción / meta del hábito..."
+                            />
+                          </div>
+                          <div className="gam-task-col gam-task-col-frequency">
+                            {formData.frequency === 'daily' && (
+                              <div className="gam-frequency-info">
+                                <span className="gam-freq-icon">○</span>
+                                <span>Todos los días</span>
+                              </div>
+                            )}
+                            {(formData.frequency === 'weekly' || formData.frequency === 'multiple') && (
+                              <div className="gam-weekdays-panel">
+                                <div className="gam-weekdays-hint">
+                                  {formData.frequency === 'weekly' ? 'Elige 1 día' : 'Elige varios días'}
+                                </div>
+                                <div className="gam-habit-days">
+                                  {WEEK_DAYS.map(day => (
+                                    <button
+                                      key={day.value}
+                                      type="button"
+                                      className={`gam-habit-day ${formData.habitDays.includes(day.value) ? 'active' : ''}`}
+                                      onClick={() => {
+                                        if (formData.frequency === 'weekly') {
+                                          setFormData(prev => ({ ...prev, habitDays: [day.value] }))
+                                        } else {
+                                          toggleHabitDay(day.value)
+                                        }
+                                      }}
+                                    >
+                                      {day.label}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                            {formData.frequency === 'monthly' && (
+                              <div className="gam-frequency-info">
+                                <span className="gam-freq-icon">◑</span>
+                                <span>Día(s) del mes: <strong>{formData.monthlyDays || '—'}</strong></span>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ===== SECCIÓN PROYECTO - Roadmap interactivo ===== */}
+                    {formData.type === 'project' && !isBirthdayModule && (
+                      <div className="gam-task-section gam-form-field-full" onClick={closeDropdowns}>
+                        {/* Cabecera: Título + Categoría */}
+                        <div className="gam-task-header-row">
+                          <input
+                            type="text"
+                            className="gam-task-title-input"
+                            value={formData.title}
+                            onChange={(e) => updateField('title', e.target.value)}
+                            placeholder="Título del proyecto..."
+                            required
+                          />
+                          {renderCategoryDropdown()}
+                        </div>
+
+                        {/* Status Pills */}
+                        <div className="gam-status-row">
+                          {Object.entries(PROJECT_STATUS).map(([key, cfg]) => (
                             <button
-                              key={day.value}
+                              key={key}
                               type="button"
-                              className={`gam-habit-day ${formData.habitDays.includes(day.value) ? 'active' : ''}`}
-                              onClick={() => toggleHabitDay(day.value)}
+                              className={`gam-status-pill ${formData.projectStatus === key ? 'active' : ''}`}
+                              style={{ '--status-color': cfg.color }}
+                              onClick={() => updateField('projectStatus', key)}
                             >
-                              {day.label}
+                              <span className="gam-status-dot" style={{ backgroundColor: cfg.color }}></span>
+                              {cfg.label}
                             </button>
                           ))}
+                        </div>
+
+                        {/* Fila: Fecha límite + Progreso */}
+                        <div className="gam-task-times-row">
+                          <div className="gam-task-time-field">
+                            <input
+                              type="date"
+                              className="gam-task-date-input"
+                              value={formData.deadline}
+                              onChange={(e) => updateField('deadline', e.target.value)}
+                              placeholder="Fecha límite"
+                            />
+                          </div>
+                          <div className="gam-task-time-field gam-progress-cell">
+                            <div className="gam-progress-display">
+                              <div className="gam-progress-bar">
+                                <div className="gam-progress-fill" style={{ width: `${completionPercentage}%` }}></div>
+                              </div>
+                              <span className="gam-progress-value">{completionPercentage}%</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Split View: Meta | Roadmap */}
+                        <div className="gam-task-body">
+                          <div className="gam-task-col gam-task-col-notes">
+                            <textarea
+                              className="gam-task-notes-textarea"
+                              value={formData.description}
+                              onChange={(e) => updateField('description', e.target.value)}
+                              placeholder="Meta u objetivo del proyecto..."
+                            />
+                          </div>
+                          <div className="gam-task-col gam-task-col-subtasks">
+                            <div className="gam-subtasks-compact">
+                              <div className="gam-subtask-input-wrapper">
+                                <input
+                                  type="text"
+                                  className="gam-subtask-input"
+                                  value={formData.roadmapInput}
+                                  onChange={(e) => updateField('roadmapInput', e.target.value)}
+                                  onKeyPress={handleRoadmapKeyPress}
+                                  placeholder="Nuevo paso..."
+                                />
+                                <button
+                                  type="button"
+                                  className="gam-subtask-add-btn"
+                                  onClick={addRoadmapStep}
+                                  title="Añadir paso"
+                                >+</button>
+                              </div>
+                              {formData.roadmapSteps.length > 0 && (
+                                <div className="gam-subtasks-list-compact">
+                                  {formData.roadmapSteps.map(step => (
+                                    <div key={step.id} className="gam-subtask-item-compact">
+                                      <input
+                                        type="checkbox"
+                                        className="gam-subtask-checkbox"
+                                        checked={step.completed}
+                                        onChange={() => toggleRoadmapStep(step.id)}
+                                      />
+                                      <span className={`gam-subtask-text-compact ${step.completed ? 'completed' : ''}`}>
+                                        {step.text}
+                                      </span>
+                                      <button
+                                        type="button"
+                                        className="gam-subtask-remove-compact"
+                                        onClick={() => removeRoadmapStep(step.id)}
+                                      >✕</button>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </div>
                     )}
@@ -552,13 +1264,13 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
                     {isBirthdayModule && (
                       <>
                         <div className="gam-form-field">
-                          <label className="gam-form-label">Fecha de nacimiento</label>
                           <input
                             type="date"
                             className="gam-form-input"
                             value={formData.birthDate}
                             onChange={(e) => updateField('birthDate', e.target.value)}
                             required
+                            placeholder="Fecha de nacimiento"
                           />
                         </div>
                         <div className="gam-form-field">
@@ -574,22 +1286,22 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
                         {formData.hasParty && (
                           <>
                             <div className="gam-form-field">
-                              <label className="gam-form-label">Fecha de la fiesta</label>
                               <input
                                 type="date"
                                 className="gam-form-input"
                                 value={formData.partyDate}
                                 onChange={(e) => updateField('partyDate', e.target.value)}
                                 required={formData.hasParty}
+                                placeholder="Fecha de la fiesta"
                               />
                             </div>
                             <div className="gam-form-field">
-                              <label className="gam-form-label">Hora de la fiesta</label>
                               <input
                                 type="time"
                                 className="gam-form-input"
                                 value={formData.partyTime}
                                 onChange={(e) => updateField('partyTime', e.target.value)}
+                                placeholder="Hora de la fiesta"
                               />
                             </div>
                           </>
@@ -597,19 +1309,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
                       </>
                     )}
 
-                    {/* Descripción */}
-                    {!isBirthdayModule && (
-                      <div className="gam-form-field gam-form-field-full">
-                        <label className="gam-form-label">Notas (opcional)</label>
-                        <textarea
-                          className="gam-form-textarea"
-                          value={formData.description}
-                          onChange={(e) => updateField('description', e.target.value)}
-                          placeholder="Añade detalles adicionales..."
-                          rows={3}
-                        />
-                      </div>
-                    )}
+                    {/* (Todos los tipos tienen su propio split-view con notas integradas) */}
                   </div>
                 </div>
               )}

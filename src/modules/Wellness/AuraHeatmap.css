@@ -1,0 +1,385 @@
+/* Aura Heatmap Styles */
+
+.aura-heatmap-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 2rem;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Cabecera */
+.aura-heatmap-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.aura-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.aura-header-right {
+  display: flex;
+  align-items: center;
+}
+
+.aura-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: rgba(15, 23, 42, 0.8);
+  margin: 0;
+}
+
+.aura-calendar-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.55);
+  color: rgba(15, 23, 42, 0.75);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.aura-calendar-button:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: scale(1.05);
+}
+
+.aura-date-range {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(15, 23, 42, 0.65);
+  letter-spacing: 0.01em;
+}
+
+/* Grid 2x7 */
+.aura-heatmap-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.aura-heatmap-headers {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.25rem;
+  padding: 0 0.25rem;
+}
+
+.aura-day-header {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(15, 23, 42, 0.5);
+  text-align: center;
+  letter-spacing: 0.06em;
+  padding: 0.25rem 0;
+  /* Sin bordes, marcos ni fondos - flotan limpiamente */
+}
+
+.aura-heatmap-cells {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.25rem;
+  padding: 0 0.25rem;
+}
+
+.aura-heatmap-cell {
+  aspect-ratio: 1;
+  width: 100%;
+  min-width: 1.25rem;
+  min-height: 1.25rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.aura-heatmap-cell:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.aura-heatmap-cell.today {
+  border-color: rgba(147, 197, 253, 0.6);
+  box-shadow: 0 0 0 2px rgba(147, 197, 253, 0.2);
+}
+
+.aura-today-indicator {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: rgba(147, 197, 253, 0.8);
+  border-radius: 50%;
+}
+
+/* Popover de moods - layout horizontal */
+.aura-mood-popover {
+  position: absolute;
+  bottom: calc(100% + 0.75rem);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 100;
+}
+
+.aura-mood-button {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  /* Sin texto ni iconos - solo color */
+}
+
+.aura-mood-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.aura-mood-button:active {
+  transform: scale(0.95);
+}
+
+/* Backdrop para cerrar popover */
+.aura-popover-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  cursor: pointer;
+}
+
+/* Notificación nocturna */
+.aura-night-notification {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.aura-notification-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.aura-notification-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(15, 23, 42, 0.8);
+  margin: 0;
+}
+
+.aura-notification-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 28px;
+  border: none;
+  background: rgba(15, 23, 42, 0.05);
+  border-radius: 8px;
+  color: rgba(15, 23, 42, 0.6);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.aura-notification-close:hover {
+  background: rgba(15, 23, 42, 0.1);
+  color: rgba(15, 23, 42, 0.8);
+}
+
+/* Modal de calendario */
+.aura-calendar-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.aura-calendar-modal {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 20px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 1.5rem;
+  min-width: 320px;
+  max-width: 400px;
+}
+
+.aura-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.aura-calendar-header h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgba(15, 23, 42, 0.8);
+  margin: 0;
+}
+
+.aura-modal-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  border: none;
+  background: rgba(15, 23, 42, 0.05);
+  border-radius: 8px;
+  color: rgba(15, 23, 42, 0.6);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.aura-modal-close:hover {
+  background: rgba(15, 23, 42, 0.1);
+  color: rgba(15, 23, 42, 0.8);
+}
+
+.aura-calendar-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.aura-nav-button {
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  color: rgba(15, 23, 42, 0.7);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.aura-nav-button:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-1px);
+}
+
+.aura-current-week {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(15, 23, 42, 0.8);
+  text-align: center;
+}
+
+/* Botón Hoy */
+.aura-today-button {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  color: rgba(15, 23, 42, 0.7);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.aura-today-button:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-1px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .aura-mood-popover {
+    display: flex;
+    gap: 0.35rem;
+    padding: 0.6rem;
+    overflow-x: auto;
+  }
+  
+  .aura-mood-button {
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+  }
+  
+  .aura-calendar-modal {
+    min-width: 280px;
+    padding: 1.25rem;
+  }
+  
+  .aura-calendar-navigation {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .aura-nav-button {
+    width: 100%;
+  }
+}

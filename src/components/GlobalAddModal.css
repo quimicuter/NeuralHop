@@ -20,19 +20,21 @@
 .gam-modal {
   position: relative;
   background: rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(40px);
   border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 24px;
+  border-radius: 32px;
   width: 100%;
-  max-width: 720px;
-  max-height: 90vh;
+  max-width: 550px;
+  min-height: 560px;
+  max-height: 92vh;
+  height: 80vh;
   display: flex;
   flex-direction: column;
   box-shadow:
     0 20px 50px rgba(0, 0, 0, 0.15),
     0 0 0 1px rgba(255, 255, 255, 0.3) inset;
   overflow: hidden;
-  padding: 16px;
+  padding: 10px;
 }
 
 /* ============================================
@@ -84,14 +86,15 @@
   display: flex;
   flex: 1;
   overflow: hidden;
-  min-height: 400px;
+  min-height: 0;
+  gap: 4px;
 }
 
-/* COLUMNA IZQUIERDA - Ámbitos (140px) */
+/* COLUMNA IZQUIERDA - Ámbitos (110px) */
 .gam-col-left {
-  width: 140px;
+  width: 110px;
   flex-shrink: 0;
-  padding: 20px 16px;
+  padding: 8px 6px;
   text-align: center;
 }
 
@@ -107,8 +110,8 @@
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  padding: 12px 8px;
-  border-radius: 12px;
+  padding: 10px 8px;
+  border-radius: 14px;
   border: 1px solid rgba(0, 0, 0, 0.08);
   background: rgba(255, 255, 255, 0.6);
   cursor: pointer;
@@ -125,7 +128,7 @@
 .gam-scope-pill.active {
   background: rgba(255, 255, 255, 0.95);
   border: 2px solid #6d28d9;
-  box-shadow: 0 0 15px rgba(109, 40, 217, 0.6);
+  box-shadow: 0 0 15px rgba(109, 40, 217, 0.4);
 }
 
 .gam-scope-emoji {
@@ -195,19 +198,19 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 12px;
-  overflow-y: auto;
-  overflow-x: visible;
-  gap: 8px;
+  padding: 4px 6px 0 6px;
+  overflow: hidden;
+  gap: 4px;
+  min-width: 0;
 }
 
 /* MÓDULOS - Fila de círculos */
 .gam-modules-row {
   display: flex;
-  gap: 16px;
+  gap: 14px;
   justify-content: flex-start;
   align-items: center;
-  padding: 12px 0 12px 15px;
+  padding: 10px 0 10px 12px;
   overflow-x: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(0,0,0,0.1) transparent;
@@ -238,19 +241,20 @@
 }
 
 .gam-module-circle {
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   line-height: 1;
   transition: all 0.2s ease;
   border: 2px solid transparent;
   cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .gam-module-item:hover .gam-module-circle {
@@ -261,7 +265,7 @@
 .gam-module-item.selected .gam-module-circle {
   border: 2px solid #6d28d9;
   background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 0 15px rgba(109, 40, 217, 0.6);
+  box-shadow: 0 0 15px rgba(109, 40, 217, 0.4);
   transform: scale(1.08);
 }
 
@@ -283,78 +287,87 @@
   font-weight: 600;
 }
 
-/* PESTAÑAS - Tipo (Tarea/Evento/Hábito) */
-.gam-tabs {
+/* PESTAÑAS - Pill buttons flotantes */
+.gam-type-pills {
   display: flex;
-  gap: 0;
-  margin-bottom: 0;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 0;
+  align-items: center;
   position: relative;
-  z-index: 6;
+  z-index: 7;
 }
 
-.gam-tab {
-  padding: 8px 14px;
-  border-radius: 12px 12px 0 0;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-bottom: none;
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(25px);
+.gam-type-pill {
+  padding: 6px 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
   cursor: pointer;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 0.82rem;
   font-weight: 500;
-  color: #5f2d66;
-  transition: all 0.2s ease;
+  color: #6d28d9;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   gap: 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
-.gam-tab:hover {
-  background: rgba(244, 212, 217, 0.65);
+.gam-type-pill:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
-.gam-tab.active {
-  background: var(--accent);
-  backdrop-filter: blur(25px);
-  color: #3f1564;
+.gam-type-pill.active {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(20px);
+  color: #4c1d95;
   font-weight: 700;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-  position: relative;
-  z-index: 10;
-  margin-bottom: -1px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-bottom: none;
+  border-color: rgba(109, 40, 217, 0.3);
+  box-shadow: 0 8px 24px rgba(109, 40, 217, 0.2);
 }
 
-.gam-tab-emoji {
+.gam-pill-emoji {
   font-size: 1rem;
+  line-height: 1;
 }
 
-.gam-tab-label {
+.gam-pill-label {
   font-size: 0.85rem;
 }
 
 /* CONTENEDOR DEL FORMULARIO */
 .gam-form-container {
   flex: 1;
-  overflow-y: auto;
+  overflow: hidden;
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
+  max-height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .gam-form-card {
   background: var(--accent);
   backdrop-filter: blur(25px);
-  padding: 16px;
-  margin-top: -1px;
-  border-radius: 0 16px 16px 16px;
+  padding: 14px;
+  margin-top: 0;
+  border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.35);
-  border-top: none;
   position: relative;
   z-index: 5;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
 }
 
 /* GRID DEL FORMULARIO - 2 Columnas */
@@ -364,12 +377,16 @@
   gap: 8px;
   box-sizing: border-box;
   width: 100%;
+  overflow-y: auto;
+  max-height: 100%;
+  flex: 1;
+  min-height: 0;
 }
 
 .gam-form-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   min-width: 0;
 }
 
@@ -400,23 +417,31 @@
 .gam-form-input,
 .gam-form-select,
 .gam-form-textarea {
-  padding: 10px 12px;
-  border-radius: 12px;
+  padding: 8px 10px;
+  border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(8px);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 0.9rem;
-  color: #6d28d9;
+  font-size: 0.85rem;
+  color: #1a1a2e;
+  font-weight: 500;
   transition: all 0.2s ease;
-  min-height: 36px;
+  min-height: 32px;
   box-sizing: border-box;
 }
 
 .gam-form-input::placeholder,
 .gam-form-textarea::placeholder {
-  color: rgba(109, 40, 217, 0.6);
+  color: rgba(60, 60, 90, 0.5);
   font-style: italic;
+  font-weight: 400;
+}
+
+.gam-form-textarea {
+  resize: vertical;
+  min-height: 60px;
+  line-height: 1.4;
 }
 
 /* Quitar bordes del calendario del navegador */
@@ -448,42 +473,29 @@
   color: #6d28d9;
 }
 
-.gam-form-input::placeholder,
-.gam-form-textarea::placeholder {
-  color: #a78bfa;
-  opacity: 1;
-  font-weight: 400;
-}
-
 .gam-form-select {
   cursor: pointer;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 32px;
-}
-
-.gam-form-textarea {
-  resize: vertical;
-  min-height: 80px;
-  line-height: 1.5;
+  background-position: right 10px center;
+  padding-right: 28px;
 }
 
 /* TOGGLE */
 .gam-form-toggle {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+  gap: 10px;
+  padding: 8px 12px;
   background: rgba(255, 255, 255, 0.7);
-  border-radius: 12px;
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s ease;
   border: 1px solid rgba(0, 0, 0, 0.05);
   backdrop-filter: blur(4px);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: #6d28d9;
   font-weight: 500;
 }
@@ -503,18 +515,18 @@
 /* DÍAS DEL HÁBITO */
 .gam-habit-days {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
 .gam-habit-day {
-  padding: 8px 12px;
-  border-radius: 10px;
+  padding: 6px 10px;
+  border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 0.08);
   background: rgba(255, 255, 255, 0.7);
   cursor: pointer;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   font-weight: 500;
   color: #666;
   transition: all 0.2s ease;
@@ -534,33 +546,284 @@
 }
 
 /* ============================================
+   PRIORIDAD - Semáforo Minimalista
+   ============================================ */
+.gam-priority-semaphore {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.gam-priority-circle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  flex: 1;
+  min-width: 70px;
+  justify-content: center;
+  position: relative;
+}
+
+.gam-priority-circle:hover {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.gam-priority-circle.active {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: var(--priority-color);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+}
+
+.gam-priority-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.gam-priority-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #555;
+  white-space: nowrap;
+}
+
+.gam-priority-circle.active .gam-priority-label {
+  color: #2c2c3a;
+  font-weight: 600;
+}
+
+/* ============================================
+   CATEGORÍAS - Selector de Submódulos
+   ============================================ */
+.gam-category-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.gam-category-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #555;
+  white-space: nowrap;
+}
+
+.gam-category-tag:hover {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.gam-category-tag.active {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: var(--submodule-color);
+  color: #2c2c3a;
+  font-weight: 600;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.gam-category-emoji {
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.gam-category-name {
+  font-size: 0.75rem;
+}
+
+/* ============================================
+   SUBTAREAS - Panel Interactivo
+   ============================================ */
+.gam-subtasks-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gam-subtask-input-wrapper {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.gam-subtask-input {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.85rem;
+  color: #6d28d9;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.gam-subtask-input::placeholder {
+  color: rgba(109, 40, 217, 0.5);
+  font-style: italic;
+}
+
+.gam-subtask-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #6d28d9;
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1);
+}
+
+.gam-subtask-add-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid rgba(109, 40, 217, 0.2);
+  background: rgba(109, 40, 217, 0.1);
+  color: #6d28d9;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-weight: 300;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gam-subtask-add-btn:hover {
+  background: rgba(109, 40, 217, 0.2);
+  transform: scale(1.05);
+}
+
+.gam-subtasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 140px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.gam-subtasks-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.gam-subtasks-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+.gam-subtask-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.gam-subtask-item:hover {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.gam-subtask-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #6d28d9;
+  flex-shrink: 0;
+}
+
+.gam-subtask-text {
+  flex: 1;
+  font-size: 0.8rem;
+  color: #555;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+.gam-subtask-text.completed {
+  text-decoration: line-through;
+  color: #aaa;
+  opacity: 0.7;
+}
+
+.gam-subtask-remove {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: none;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 400;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.gam-subtask-remove:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: scale(1.1);
+}
+
+/* ============================================
    FOOTER - Botones alineados derecha
    ============================================ */
 .gam-footer {
-  padding: 16px 20px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 6px 8px 4px 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
+  margin-top: 4px;
 }
 
 .gam-footer-right {
   display: flex;
-  gap: 10px;
+  gap: 6px;
+  margin-left: auto;
 }
 
 .gam-btn {
-  padding: 10px 18px;
-  border-radius: 12px;
+  padding: 9px 24px;
+  border-radius: 10px;
   border: 1px solid rgba(0, 0, 0, 0.08);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   backdrop-filter: blur(8px);
   min-height: 36px;
+  letter-spacing: 0.2px;
 }
 
 .gam-btn-delete {
@@ -600,9 +863,750 @@
 }
 
 .gam-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   TASK SECTION - Alta Densidad (High Density)
+   ============================================ */
+
+.gam-task-section {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+  min-height: 0;
+  gap: 0;
+}
+
+/* Fila de Cabecera Triple */
+.gam-task-header-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 0 0 12px 0;
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+}
+
+.gam-task-title-input {
+  flex: 1 1 0;
+  min-width: 60px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.85);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.9rem;
+  color: #1a1a2e;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  font-weight: 600;
+}
+
+.gam-task-title-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #6d28d9;
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1);
+}
+
+.gam-task-title-input::placeholder {
+  color: rgba(60, 60, 90, 0.5);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Dropdown Wrapper */
+.gam-dropdown-wrapper {
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.gam-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.78rem;
+  color: #1a1a2e;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 34px;
+}
+
+.gam-dropdown-trigger:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+}
+
+.gam-dropdown-trigger:active,
+.gam-dropdown-trigger:focus {
+  background: #ffffff;
+  border-color: #6d28d9;
+}
+
+.gam-dropdown-category {
+  justify-content: center;
+}
+
+.gam-dropdown-priority {
+  justify-content: center;
+}
+
+/* Variante solo-icono: botón cuadrado compacto */
+.gam-dropdown-icon-only {
+  width: 38px;
+  min-width: 38px;
+  height: 38px;
+  padding: 0;
+  justify-content: center;
+  gap: 0;
+}
+
+.gam-dropdown-icon-only .gam-dropdown-icon {
+  font-size: 1.05rem;
+}
+
+.gam-dropdown-menu-category,
+.gam-dropdown-menu-priority {
+  min-width: 160px;
+}
+
+.gam-dropdown-icon {
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+
+.gam-priority-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gam-priority-dot-small {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* Anillo de prioridad: círculo sin relleno */
+.gam-priority-ring {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  background: transparent;
+  box-sizing: border-box;
+  display: inline-block;
+}
+
+.gam-dropdown-text {
+  font-size: 0.75rem;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gam-priority-text {
+  font-size: 0.7rem;
+}
+
+.gam-dropdown-arrow {
+  font-size: 0.65rem;
+  transition: transform 0.2s ease;
+}
+
+.gam-dropdown-trigger:active .gam-dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.gam-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 2px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+  overflow: hidden;
+  min-width: 120px;
+}
+
+.gam-dropdown-menu-category {
+  left: auto;
+  right: 0;
+}
+
+.gam-dropdown-menu-priority {
+  left: auto;
+  right: 0;
+}
+
+.gam-dropdown-item {
+  width: 100%;
+  padding: 6px 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.75rem;
+  color: #555;
+  text-align: left;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+}
+
+.gam-dropdown-item:hover {
+  background: rgba(109, 40, 217, 0.08);
+}
+
+.gam-dropdown-item.active {
+  background: rgba(109, 40, 217, 0.15);
+  color: #6d28d9;
+  font-weight: 600;
+}
+
+.gam-dropdown-item-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+  width: 18px;
+  text-align: center;
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+
+.gam-dropdown-item-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gam-dropdown-check {
+  flex-shrink: 0;
+  color: #6d28d9;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+/* Fila de Tiempos - Compacta */
+.gam-task-times-row {
+  display: flex;
+  gap: 8px;
+  padding: 0 0 12px 0;
+  flex-shrink: 0;
+}
+
+.gam-task-time-field {
+  flex: 1;
+}
+
+.gam-task-date-input,
+.gam-task-time-input {
+  width: 100%;
+  padding: 7px 9px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.85);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.78rem;
+  color: #1a1a2e;
+  font-weight: 500;
+  box-sizing: border-box;
+}
+
+.gam-task-date-input:focus,
+.gam-task-time-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #6d28d9;
+  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.1);
+}
+
+/* Cuerpo en Dos Columnas */
+.gam-task-body {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 10px;
+  min-height: 180px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.gam-task-col {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.gam-task-col-notes {
+  gap: 0;
+}
+
+.gam-task-col-subtasks {
+  gap: 0;
+}
+
+.gam-task-notes-textarea {
+  flex: 1;
+  min-height: 160px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.85);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.82rem;
+  color: #1a1a2e;
+  font-weight: 500;
+  resize: none;
+  box-sizing: border-box;
+  line-height: 1.5;
+  overflow-y: auto;
+}
+
+.gam-task-notes-textarea:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #6d28d9;
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1);
+}
+
+.gam-task-notes-textarea::placeholder {
+  color: rgba(60, 60, 90, 0.5);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Subtareas Compactas */
+.gam-subtasks-compact {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  min-width: 0;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.gam-subtask-input-wrapper {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+  width: 100%;
+  min-width: 0;
+}
+
+.gam-subtask-input {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.85);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.78rem;
+  color: #1a1a2e;
+  font-weight: 500;
+  box-sizing: border-box;
+}
+
+.gam-subtask-input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #6d28d9;
+  box-shadow: 0 0 0 2px rgba(109, 40, 217, 0.1);
+}
+
+.gam-subtask-input::placeholder {
+  color: rgba(60, 60, 90, 0.5);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.gam-subtask-add-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid rgba(109, 40, 217, 0.2);
+  background: rgba(109, 40, 217, 0.1);
+  color: #6d28d9;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 300;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gam-subtask-add-btn:hover {
+  background: rgba(109, 40, 217, 0.2);
+  transform: scale(1.05);
+}
+
+.gam-subtask-add-btn:active {
+  transform: scale(0.95);
+}
+
+/* Lista Compacta de Subtareas */
+.gam-subtasks-list-compact {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 2px;
+}
+
+.gam-subtasks-list-compact::-webkit-scrollbar {
+  width: 3px;
+}
+
+.gam-subtasks-list-compact::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 2px;
+}
+
+.gam-subtasks-list-compact::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.gam-subtask-item-compact {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  min-height: 22px;
+}
+
+.gam-subtask-item-compact:hover {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.gam-subtask-checkbox {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  accent-color: #6d28d9;
+  flex-shrink: 0;
+}
+
+.gam-subtask-text-compact {
+  flex: 1;
+  font-size: 0.74rem;
+  color: #1a1a2e;
+  font-weight: 500;
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gam-subtask-text-compact.completed {
+  text-decoration: line-through;
+  color: #aaa;
+  opacity: 0.6;
+}
+
+.gam-subtask-remove-compact {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: none;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 400;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.gam-subtask-remove-compact:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: scale(1.1);
+}
+
+.gam-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none !important;
+}
+
+/* ============================================
+   LOCATION FIELD (Evento)
+   ============================================ */
+.gam-location-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.85);
+  min-height: 160px;
+  align-self: stretch;
+  box-sizing: border-box;
+  flex: 1;
+}
+
+.gam-location-icon {
+  display: flex;
+  align-items: flex-start;
+  color: #6d28d9;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.gam-location-input {
+  flex: 1 1 0;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  color: #1a1a2e;
+  font-weight: 500;
+  padding: 0;
+  align-self: flex-start;
+}
+
+.gam-location-input::placeholder {
+  color: rgba(60, 60, 90, 0.5);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.gam-task-col-location {
+  display: flex;
+}
+
+/* ============================================
+   FREQUENCY (Hábito)
+   ============================================ */
+.gam-dropdown-wrapper-wide {
+  width: 100%;
+}
+
+.gam-dropdown-frequency {
+  width: 100%;
+  justify-content: space-between;
+  padding: 7px 10px;
+}
+
+.gam-dropdown-frequency .gam-dropdown-icon {
+  font-size: 0.95rem;
+  color: #6d28d9;
+}
+
+.gam-dropdown-frequency .gam-dropdown-text {
+  flex: 1;
+  text-align: left;
+  margin-left: 6px;
+  font-size: 0.78rem;
+}
+
+.gam-dropdown-frequency .gam-dropdown-arrow {
+  font-size: 0.7rem;
+  color: #666;
+}
+
+.gam-frequency-cell {
+  flex: 1.4 !important;
+}
+
+.gam-monthly-cell {
+  flex: 1.6 !important;
+}
+
+.gam-frequency-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 0.8rem;
+  color: #1a1a2e;
+  font-weight: 500;
+  flex: 1;
+  min-height: 60px;
+  align-self: stretch;
+  box-sizing: border-box;
+}
+
+.gam-freq-icon {
+  font-size: 1.3rem;
+  color: #6d28d9;
+}
+
+.gam-weekdays-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  flex: 1;
+  min-height: 60px;
+  align-self: stretch;
+  box-sizing: border-box;
+}
+
+.gam-weekdays-hint {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.gam-weekdays-panel .gam-habit-days {
+  display: flex;
+  gap: 4px;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.gam-weekdays-panel .gam-habit-day {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+.gam-task-col-frequency {
+  display: flex;
+}
+
+/* ============================================
+   PROJECT - Status Pills + Progress
+   ============================================ */
+.gam-status-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 0 0 12px 0;
+  flex-shrink: 0;
+}
+
+.gam-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.85);
+  color: #1a1a2e;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.gam-status-pill:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateY(-1px);
+}
+
+.gam-status-pill.active {
+  background: #ffffff;
+  border-color: var(--status-color);
+  box-shadow: 0 0 0 1px var(--status-color) inset, 0 2px 8px rgba(0, 0, 0, 0.08);
+  font-weight: 600;
+}
+
+.gam-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.gam-progress-cell {
+  flex: 1.5 !important;
+}
+
+.gam-progress-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  min-height: 32px;
+  box-sizing: border-box;
+}
+
+.gam-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.gam-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6d28d9, #a78bfa);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.gam-progress-value {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  min-width: 32px;
+  text-align: right;
 }
 
 /* ============================================

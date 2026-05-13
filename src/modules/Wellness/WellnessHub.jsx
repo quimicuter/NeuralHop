@@ -1,9 +1,10 @@
 ﻿import { useEffect, useMemo, useRef, useState } from 'react'
-import { format, subDays, eachDayOfInterval, isSameDay, startOfDay } from 'date-fns'
+import { format, startOfDay } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import './WellnessHub.css'
+import AuraHeatmap from './AuraHeatmap'
 
 const WELLNESS_TABS = [
   { id: 'glow', label: 'Glow', icon: '✧', description: 'Brillo y recuperación', accent: '255, 167, 102' },
@@ -110,14 +111,6 @@ const MODAL_CONTENT = {
   }
 }
 
-const STORAGE_KEY = 'wellness.moodEntries'
-const MOOD_OPTIONS = [
-  { id: 'glow', icon: '✧', label: 'Glow', color: 'rgba(147, 197, 253, 0.96)' },
-  { id: 'vitality', icon: '🗲', label: 'Vitality', color: 'rgba(251, 207, 232, 0.92)' },
-  { id: 'innerBalance', icon: '⸙', label: 'Inner Balance', color: 'rgba(167, 243, 208, 0.92)' },
-  { id: 'zenRest', icon: '☾', label: 'Zen Rest', color: 'rgba(199, 210, 254, 0.94)' }
-]
-
 const getSparklinePath = (values) => {
   const width = 120
   const height = 56
@@ -215,33 +208,6 @@ function WellnessHub() {
   }, [])
 
   const today = startOfDay(new Date())
-  const heatmapDates = useMemo(
-    () =>
-      eachDayOfInterval({
-        start: subDays(today, 27),
-        end: today
-      }),
-    [today]
-  )
-
-  const [moodEntries, setMoodEntries] = useState(() => {
-    try {
-      const stored = window.localStorage.getItem(STORAGE_KEY)
-      return stored ? JSON.parse(stored) : {}
-    } catch {
-      return {}
-    }
-  })
-  const [popoverIndex, setPopoverIndex] = useState(null)
-  const todayIndex = heatmapDates.findIndex((date) => isSameDay(date, today))
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(moodEntries))
-    } catch {
-      console.warn('No se pudo guardar moodEntries en localStorage')
-    }
-  }, [moodEntries])
 
   const showToast = (message) => {
     setToastMessage(message)
@@ -258,24 +224,6 @@ function WellnessHub() {
       setCycleAnimation({ skin: 0, sheets: 0, nails: 0 })
       showToast('Ciclo reiniciado')
     }, 900)
-  }
-
-  const handleMoodCellClick = (index) => {
-    if (index === todayIndex) {
-      setPopoverIndex((prev) => (prev === index ? null : index))
-    } else {
-      setPopoverIndex(null)
-    }
-  }
-
-  const handleMoodSelect = (index, mood) => {
-    const dateKey = format(heatmapDates[index], 'yyyy-MM-dd')
-    setMoodEntries((prev) => ({
-      ...prev,
-      [dateKey]: mood
-    }))
-    setPopoverIndex(null)
-    showToast(`Hoy: ${mood.label}`)
   }
 
   const handleRoutineToggle = (index) => {
@@ -596,69 +544,7 @@ function WellnessHub() {
             overflow: 'hidden'
           }}
         >
-          <div className="wellness-aura-header">
-            <p className="wellness-aura-title">AURA HEATMAP</p>
-            <span className="wellness-aura-caption">Mood tracker semanal</span>
-          </div>
-          <div className="wellness-heatmap-days">
-            {['L', 'M', 'X', 'J', 'V', 'S', 'D'].map((day) => (
-              <span key={day} className="wellness-heatmap-day-label">{day}</span>
-            ))}
-          </div>
-          <div className="wellness-heatmap-grid">
-            {heatmapDates.map((date, index) => {
-              const dateKey = format(date, 'yyyy-MM-dd')
-              const mood = moodEntries[dateKey]
-              const isToday = isSameDay(date, today)
-              const backgroundColor = mood?.color || 'rgba(147, 197, 253, 0.18)'
-              return (
-                <motion.div
-                  key={dateKey}
-                  role="button"
-                  tabIndex={0}
-                  className={`wellness-heatmap-cell ${isToday ? 'today' : ''}`}
-                  title={`${format(date, 'PPP', { locale: es })} · ${mood?.label || 'Sin registro'}`}
-                  onClick={() => (isToday ? handleMoodCellClick(index) : setPopoverIndex(null))}
-                  onKeyDown={(event) => {
-                    if (!isToday) return
-                    if (event.key === 'Enter' || event.key === ' ') {
-                      event.preventDefault()
-                      handleMoodCellClick(index)
-                    }
-                  }}
-                  whileHover={{ y: -1 }}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.02, duration: 0.26 }}
-                  style={{ backgroundColor }}
-                >
-                  {mood && <span className="wellness-heatmap-indicator">{mood.icon}</span>}
-                  {isToday && popoverIndex === index && (
-                    <motion.div
-                      className="wellness-heatmap-popover"
-                      initial={{ opacity: 0, scale: 0.88, y: 8 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.88, y: 8 }}
-                      transition={{ duration: 0.18, ease: 'easeOut' }}
-                    >
-                      {MOOD_OPTIONS.map((option) => (
-                        <motion.button
-                          key={option.id}
-                          type="button"
-                          className="wellness-heatmap-popover-button"
-                          onClick={() => handleMoodSelect(index, option)}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.94 }}
-                        >
-                          {option.icon}
-                        </motion.button>
-                      ))}
-                    </motion.div>
-                  )}
-                </motion.div>
-              )
-            })}
-          </div>
+          <AuraHeatmap />
         </div>
       </div>
       {isModalOpen && (
