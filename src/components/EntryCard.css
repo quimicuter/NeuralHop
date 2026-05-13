@@ -1,0 +1,209 @@
+/* ==========================================================
+   EntryCard — Tarjeta unificada para Tareas y Eventos
+   Layout: Checkbox | Centro (título + detalles) | Origen (scope + submódulo)
+   ========================================================== */
+
+.entry-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  background: rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(10px) saturate(140%);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(76, 29, 149, 0.04);
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.entry-card:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 4px 14px rgba(76, 29, 149, 0.10);
+}
+
+/* Tinte de borde por ámbito en hover */
+.entry-card.scope-personal:hover {
+  border-color: rgba(244, 114, 182, 0.55); /* rosa */
+}
+.entry-card.scope-academico:hover {
+  border-color: rgba(167, 139, 250, 0.6); /* lila */
+}
+.entry-card.scope-general:hover {
+  border-color: rgba(56, 189, 248, 0.55); /* azul */
+}
+
+.entry-card.is-completed {
+  opacity: 0.55;
+}
+
+.entry-card.is-completed .entry-title {
+  text-decoration: line-through;
+  text-decoration-color: rgba(76, 29, 149, 0.35);
+}
+
+/* ==========================================================
+   LADO IZQUIERDO — Checkbox / Marcador de evento
+   ========================================================== */
+.entry-card-left {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 2px;
+}
+
+.entry-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(109, 40, 217, 0.4);
+  background: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.18s ease;
+}
+
+.entry-checkbox:hover {
+  border-color: rgba(109, 40, 217, 0.8);
+  background: rgba(255, 255, 255, 0.9);
+  transform: scale(1.08);
+}
+
+.entry-checkbox.checked {
+  background: rgba(109, 40, 217, 0.85);
+  border-color: rgba(109, 40, 217, 0.95);
+}
+
+.entry-checkbox-tick {
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Marcador visual para eventos (sin checkbox) */
+.entry-event-marker {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  opacity: 0.55;
+  filter: grayscale(0.2);
+}
+
+/* ==========================================================
+   CENTRO — Título + Detalles
+   ========================================================== */
+.entry-card-center {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.entry-title {
+  margin: 0;
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-weight: 700;
+  font-size: 1.02rem;
+  line-height: 1.2;
+  color: #2d1b4e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.01em;
+}
+
+.entry-title.overdue {
+  color: #dc2626;
+}
+
+.entry-detail-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  color: rgba(126, 87, 194, 0.85); /* morado/lila tenue */
+  font-weight: 500;
+  min-width: 0;
+}
+
+.entry-priority-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+  box-shadow: 0 0 4px currentColor;
+}
+
+.entry-priority-dot.priority-critical,
+.entry-priority-dot.priority-high {
+  background-color: #ef4444;
+  color: #ef4444;
+}
+
+.entry-priority-dot.priority-medium {
+  background-color: #f59e0b;
+  color: #f59e0b;
+}
+
+.entry-priority-dot.priority-low {
+  background-color: #10b981;
+  color: #10b981;
+}
+
+.entry-datetime {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.entry-location {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.8;
+  font-size: 0.68rem;
+  max-width: 100px;
+}
+
+/* ==========================================================
+   DERECHA — Origen (Ámbito + Submódulo)
+   ========================================================== */
+.entry-card-right {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2px;
+  min-height: 32px;
+}
+
+.entry-scope-emoji {
+  font-size: 1.05rem;
+  line-height: 1;
+  opacity: 0.5;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+}
+
+.entry-submodule-symbol {
+  font-size: 0.75rem;
+  line-height: 1;
+  opacity: 0.7;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+  color: rgba(126, 87, 194, 0.9);
+}

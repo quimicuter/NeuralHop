@@ -84,28 +84,29 @@ function App() {
             <ClockWidget />
           </div>
           
-          {/* Tareas (2x5) */}
-          <div className="tasks-card">
-            <div className="card-header">
-              <h3>Mis Tareas</h3>
-              <div className="task-buttons">
-                <button className="task-btn circular" onClick={() => setIsTaskHistoryOpen(true)}>⏰</button>
-                <button className="task-btn circular" onClick={() => openModalWithType('task')}>+</button>
+          {/* Tareas + Eventos (50/50 dentro del bloque izquierdo) */}
+          <div className="tasks-events-row">
+            <div className="tasks-card">
+              <div className="card-header">
+                <h3>Mis Tareas</h3>
+                <div className="task-buttons">
+                  <button className="task-btn circular" onClick={() => setIsTaskHistoryOpen(true)}>⏰</button>
+                  <button className="task-btn circular" onClick={() => openModalWithType('task')}>+</button>
+                </div>
+              </div>
+              <div className="card-content">
+                <SimpleTasks />
               </div>
             </div>
-            <div className="card-content">
-              <SimpleTasks />
-            </div>
-          </div>
-          
-          {/* Eventos (2x5) */}
-          <div className="events-card">
-            <div className="card-header">
-              <h3>Próximos Eventos</h3>
-              <button className="task-btn circular" onClick={() => openModalWithType('event')}>+</button>
-            </div>
-            <div className="card-content">
-              <SimpleEvents />
+
+            <div className="events-card">
+              <div className="card-header">
+                <h3>Próximos Eventos</h3>
+                <button className="task-btn circular" onClick={() => openModalWithType('event')}>+</button>
+              </div>
+              <div className="card-content">
+                <SimpleEvents />
+              </div>
             </div>
           </div>
           

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useApp } from '../context/AppContext'
 import DetailModal from './DetailModal'
+import EntryCard from './EntryCard'
 
 function SimpleTasks() {
   const { state, actions, getTasks } = useApp()
@@ -156,49 +157,17 @@ function SimpleTasks() {
   return (
     <>
       <div className="task-list">
-        {visibleTasks.map(task => {
-          const taskDateTime = getTaskDateTime(task)
-          return (
-            <div
-              key={task.id}
-              className="task-item-new clickable"
-              onClick={() => openDetail(task)}
-              role="button"
-              tabIndex={0}
-            >
-              {/* Fila 1: Checkbox + Título + Emoji Módulo */}
-              <div className="task-item-header" style={{ justifyContent: 'space-between' }}>
-                <div className="task-item-left" style={{ flex: 1, minWidth: 0 }}>
-                  <input 
-                    type="checkbox" 
-                    className="task-checkbox-new"
-                    checked={task.status === 'completed'}
-                    onChange={() => handleTaskToggle(task.id)}
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                  <span 
-                    className={`task-title ${isTaskOverdue(task) ? 'text-red-500' : ''}`}
-                    style={{ fontFamily: "'Playfair Display', 'Georgia', serif", fontWeight: 700 }}
-                  >
-                    {task.title}
-                  </span>
-                </div>
-                <div className="task-item-right">
-                  <span className="task-emoji">{getModuleEmoji(task)}</span>
-                </div>
-              </div>
-              {/* Fila 2: Emoji Prioridad + Fecha/Hora */}
-              <div className="task-item-footer" style={{ marginLeft: 24, gap: 8 }}>
-                <span className="task-priority-emoji">{getPriorityEmoji(task.priority)}</span>
-                {taskDateTime && (
-                  <span className={`task-datetime ${isTaskOverdue(task) ? 'text-red-500' : ''}`}>
-                    {taskDateTime}
-                  </span>
-                )}
-              </div>
-            </div>
-          )
-        })}
+        {visibleTasks.map(task => (
+          <EntryCard
+            key={task.id}
+            entry={task}
+            variant="task"
+            isOverdue={isTaskOverdue(task)}
+            getDateTime={getTaskDateTime}
+            onToggle={handleTaskToggle}
+            onClick={() => openDetail(task)}
+          />
+        ))}
         {visibleTasks.length === 0 && (
           <div className="empty-tasks">
             <span>No hay tareas pendientes. ✨</span>

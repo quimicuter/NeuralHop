@@ -2,6 +2,18 @@ import React, { useState, useEffect } from 'react'
 import { useApp } from '../context/AppContext'
 import { MODULE_CONFIG } from './GlobalAddModal'
 
+// Color por ámbito para los puntos del calendario
+const SCOPE_DOT_COLORS = {
+  personal: '#f472b6',   // rosa
+  academico: '#a78bfa',  // lila / morado
+  general: '#38bdf8'     // azul
+}
+
+const getEntryDotColor = (entry) => {
+  if (entry?.scope && SCOPE_DOT_COLORS[entry.scope]) return SCOPE_DOT_COLORS[entry.scope]
+  return '#94a3b8' // gris fallback
+}
+
 function NexusCalendar() {
   const { state, actions } = useApp()
   const [currentDate, setCurrentDate] = useState(new Date())
@@ -157,6 +169,19 @@ function NexusCalendar() {
           {events.length > 0 && (
             <div className="cal-event-center" title={getTaskTooltip(events[0])}>
               {getTaskEmoji(events[0])}
+            </div>
+          )}
+          {/* Dots: una marca por cada entry (tasks + events) coloreada por ámbito */}
+          {(events.length + tasks.length) > 0 && (
+            <div className="cal-dots-row">
+              {[...events, ...tasks].slice(0, 5).map((entry, i) => (
+                <span
+                  key={`${entry.id || entry.title || i}-${i}`}
+                  className="cal-dot"
+                  style={{ backgroundColor: getEntryDotColor(entry) }}
+                  title={entry.title || ''}
+                ></span>
+              ))}
             </div>
           )}
         </div>

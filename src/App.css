@@ -125,7 +125,7 @@ body {
 
   /* 1. Aseguramos que la tarjeta permita que su contenido se estire */
   .welcome-card {
-    grid-area: 1 / 1 / 4 / 5;
+    grid-area: 1 / 1 / 4 / 6;
     background: rgba(255, 255, 255, 0.45);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.7);
@@ -235,10 +235,20 @@ body {
   margin-top: 8px;
 }
 
+/* Wrapper que ocupa el bloque izquierdo (cols 1-5) y reparte 50/50 */
+.tasks-events-row {
+  grid-area: 4 / 1 / 9 / 6; /* rows 4-8, cols 1-5 */
+  display: flex;
+  gap: 8px;
+  min-height: 0;
+  min-width: 0;
+}
+
 .tasks-card {
-  grid-area: 4 / 1 / 9 / 3; /* rows 4-8, cols 1-2 (5x2) */
-  background: rgba(255, 255, 255, 0.582); /* Same transparency as weekly-menu-card */
-  backdrop-filter: none; /* Removed blur */
+  flex: 1 1 0;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.582);
+  backdrop-filter: none;
   -webkit-backdrop-filter: none;
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 20px;
@@ -250,14 +260,16 @@ body {
 }
 
 .events-card {
-  grid-area: 4 / 3 / 9 / 5; /* rows 4-8, cols 3-4 (5x2) */
-  background: rgba(255, 255, 255, 0.582); /* Same transparency as weekly-menu-card */
-  backdrop-filter: none; /* Removed blur */
+  flex: 1 1 0;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.582);
+  backdrop-filter: none;
   -webkit-backdrop-filter: none;
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 20px;
   padding: 8px;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
 }
@@ -290,9 +302,9 @@ body {
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
 }
 
-/* BLOQUE CENTRAL (Columnas 5-10) - Navegación */
+/* BLOQUE CENTRAL (Columnas 6-10) - Navegación */
 .nexus-buttons {
-  grid-area: 1 / 5 / 2 / 11; /* rows 1-1, cols 5-10 (6x1) - Reduced to 1 row */
+  grid-area: 1 / 6 / 2 / 11; /* rows 1, cols 6-10 (5x1) */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -632,7 +644,7 @@ body {
 }
 
 .weekly-menu-card {
-  grid-area: 9 / 1 / 13 / 5; /* rows 9-12, cols 1-4 (4x4) - Extended to fill space below */
+  grid-area: 9 / 1 / 13 / 6; /* rows 9-12, cols 1-5 (4x5) - Extended to fill space below */
   background: rgba(255, 255, 255, 0.582); /* bg-white/15 equivalent - very transparent */
   backdrop-filter: none; /* Removed blur */
   -webkit-backdrop-filter: none;
@@ -2022,7 +2034,7 @@ html, body, #root, .app-container {
 
 /* 1. Contenedor Principal (Ubicación en el Dashboard - EXPANDIDO VERTICALMENTE) */
 .calendar-card {
-  grid-area: 2 / 5 / -1 / 11;
+  grid-area: 2 / 6 / -1 / 11;
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -2032,7 +2044,8 @@ html, body, #root, .app-container {
   overflow: hidden;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
   margin: 0;
-  align-self: start;
+  align-self: stretch;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -2094,22 +2107,21 @@ html, body, #root, .app-container {
   border-bottom: 1px solid rgba(255, 255, 255, 0.4);
 }
 
-/* 4. Cuadrícula y Celdas (AJUSTE DE ALTURA) */
+/* 4. Cuadrícula y Celdas - Full-bottom: ocupa toda la altura disponible */
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  /* Cambiamos 1fr por auto para que no fuerce el estirado vertical */
-  grid-auto-rows: auto; 
+  grid-auto-rows: 1fr;
   gap: 4px;
   width: 100%;
-  align-content: start; 
-  flex-grow: 0; /* Evita que la cuadrícula intente ocupar todo el alto disponible */
+  align-content: stretch;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .cal-day {
-  /* Eliminamos aspect-ratio para que la celda sea más bajita */
-  min-height: 57px; /* Altura mínima controlada */
-  max-height: 60px; /* Altura máxima para que se vea estilizado */
+  /* Las celdas crecen con la altura disponible (full-bottom) */
+  min-height: 56px;
   border-radius: 8px;
   background: rgb(250, 250, 250);
   padding: 4px;
@@ -2176,10 +2188,35 @@ html, body, #root, .app-container {
 /* Emoji de evento centrado */
 .cal-event-center {
   margin-top: auto;
-  margin-bottom: auto;
+  margin-bottom: 2px;
   font-size: 1.1rem;
   line-height: 1;
   cursor: default;
+}
+
+/* Dots: marcadores por entry coloreados por ámbito */
+.cal-dots-row {
+  display: flex;
+  gap: 3px;
+  justify-content: center;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 2px;
+  min-height: 8px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.cal-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.15);
+}
+
+.cal-day.today .cal-dot {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7);
 }
 
 /* Ajuste para que el indicador de tareas no se vea apretado */
