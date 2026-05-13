@@ -172,138 +172,141 @@ function WellnessHub() {
         </div>
       </header>
 
-      {/* ── BENTO GRID ────────────────────────────────────────────────────── */}
-      <main className="wh-bento">
+      {/* ── 3-COLUMN GRID ─────────────────────────────────────────────────── */}
+      <main className="wh-grid-3col">
 
-        {/* ── ZONE A: Norte-Izquierda — Actividades Wellness (col 1-4 / row 1-2) ── */}
-        <section
-          className="wh-card wh-zone-activities"
-          style={{ '--card-accent': accent, '--card-accent-soft': accentSoft }}
-        >
-          <div className="wh-card-header">
-            <h2 className="wh-card-title">Actividades Wellness</h2>
-            <button
-              className="wh-add-btn"
-              onClick={() => window.dispatchEvent(new CustomEvent('open-global-modal', { detail: { type: 'task', scope: 'personal', module: 'wellness' } }))}
-              title="Nueva actividad"
-            >+</button>
+        {/* ── COLUMNA 1: El Radar de Estado ─────────────────────────────────── */}
+        <section className="wh-column wh-column-radar">
+          {/* Aura Heatmap */}
+          <div className="wh-card wh-radar-aura">
+            <AuraHeatmap />
           </div>
 
-          {/* Toggle: Tareas / Eventos */}
-          <div className="wh-activities-toggle">
-            <SimpleTasks />
-          </div>
-        </section>
+          {/* Sleep Tracker */}
+          <div className="wh-card wh-radar-sleep">
+            <div className="wh-card-header">
+              <h2 className="wh-card-title">Sleep Tracker</h2>
+              <span className="wh-muted wh-sleep-avg">
+                Prom. {(SLEEP_DATA.reduce((a, b) => a + b, 0) / SLEEP_DATA.length).toFixed(1)}h
+              </span>
+            </div>
 
-        {/* ── ZONE B: Norte-Derecha — Aura Heatmap (col 5-12 / row 1-2) ── */}
-        <section className="wh-card wh-zone-aura">
-          <AuraHeatmap />
-        </section>
+            <div className="wh-sleep-chart">
+              {SLEEP_DATA.map((hours, i) => (
+                <div key={i} className="wh-sleep-bar-col">
+                  <div className="wh-sleep-bar-wrap">
+                    <motion.div
+                      className="wh-sleep-bar"
+                      initial={{ height: 0 }}
+                      animate={{ height: `${getSleepBarHeight(hours)}%` }}
+                      transition={{ duration: 0.8, delay: i * 0.08, ease: 'easeOut' }}
+                      style={{
+                        background: hours >= 7
+                          ? 'linear-gradient(to top, rgba(113,130,255,0.9), rgba(196,181,253,0.7))'
+                          : 'linear-gradient(to top, rgba(113,130,255,0.4), rgba(196,181,253,0.25))'
+                      }}
+                      title={`${hours}h`}
+                    />
+                  </div>
+                  <span className="wh-sleep-day-label">{SLEEP_LABELS[i]}</span>
+                  <span className="wh-sleep-hours">{hours}h</span>
+                </div>
+              ))}
+            </div>
 
-        {/* ── ZONE C: Centro — Routine Flow Timeline (col 1-12 / row 3-4) ── */}
-        <section
-          className="wh-card wh-zone-routine"
-          style={{ '--card-accent': accent, '--card-accent-soft': accentSoft }}
-        >
-          <div className="wh-card-header">
-            <h2 className="wh-card-title">Routine Flow</h2>
-            <div className="wh-routine-progress-label">
-              <span style={{ color: accent }}>{progressPercent}%</span>
-              <span className="wh-muted"> completado</span>
+            <div className="wh-sleep-legend">
+              <span className="wh-sleep-legend-dot optimal" />
+              <span className="wh-muted">≥ 7h óptimo</span>
+              <span className="wh-sleep-legend-dot low" />
+              <span className="wh-muted">{'< 7h'}</span>
             </div>
           </div>
 
-          {/* Progress bar */}
-          <div className="wh-routine-progressbar-track">
-            <motion.div
-              className="wh-routine-progressbar-fill"
-              style={{ background: accent }}
-              initial={{ width: 0 }}
-              animate={{ width: `${progressPercent}%` }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
-            />
-          </div>
+          {/* Actividades Wellness */}
+          <div className="wh-card wh-radar-activities">
+            <div className="wh-card-header">
+              <h2 className="wh-card-title">Actividades Wellness</h2>
+              <button
+                className="wh-add-btn"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-global-modal', { detail: { type: 'task', scope: 'personal', module: 'wellness' } }))}
+                title="Nueva actividad"
+              >+</button>
+            </div>
 
-          {/* Timeline steps */}
-          <div className="wh-timeline">
-            {routineSteps.map((step, i) => (
-              <motion.button
-                key={step.time}
-                type="button"
-                className={`wh-timeline-step ${checkedRoutine[i] ? 'checked' : ''}`}
-                style={checkedRoutine[i] ? { '--step-accent': accent, '--step-accent-soft': accentSoft } : {}}
-                onClick={() => handleRoutineToggle(i)}
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                <div className="wh-step-dot" style={checkedRoutine[i] ? { background: accent } : {}} />
-                <div className="wh-step-body">
-                  <span className="wh-step-time">{step.time}</span>
-                  <span className={`wh-step-label ${checkedRoutine[i] ? 'line-through' : ''}`}>
-                    {step.label}
-                  </span>
-                </div>
-                <div className="wh-step-check">{checkedRoutine[i] ? '✓' : ''}</div>
-              </motion.button>
-            ))}
+            <div className="wh-activities-toggle">
+              <SimpleTasks />
+            </div>
           </div>
         </section>
 
-        {/* ── ZONE D: Sur-Izquierda — Sleep Tracker (col 1-5 / row 5-6) ── */}
-        <section className="wh-card wh-zone-sleep">
-          <div className="wh-card-header">
-            <h2 className="wh-card-title">Sleep Tracker</h2>
-            <span className="wh-muted wh-sleep-avg">
-              Prom. {(SLEEP_DATA.reduce((a, b) => a + b, 0) / SLEEP_DATA.length).toFixed(1)}h
-            </span>
-          </div>
-
-          <div className="wh-sleep-chart">
-            {SLEEP_DATA.map((hours, i) => (
-              <div key={i} className="wh-sleep-bar-col">
-                <div className="wh-sleep-bar-wrap">
-                  <motion.div
-                    className="wh-sleep-bar"
-                    initial={{ height: 0 }}
-                    animate={{ height: `${getSleepBarHeight(hours)}%` }}
-                    transition={{ duration: 0.8, delay: i * 0.08, ease: 'easeOut' }}
-                    style={{
-                      background: hours >= 7
-                        ? 'linear-gradient(to top, rgba(113,130,255,0.9), rgba(196,181,253,0.7))'
-                        : 'linear-gradient(to top, rgba(113,130,255,0.4), rgba(196,181,253,0.25))'
-                    }}
-                    title={`${hours}h`}
-                  />
-                </div>
-                <span className="wh-sleep-day-label">{SLEEP_LABELS[i]}</span>
-                <span className="wh-sleep-hours">{hours}h</span>
+        {/* ── COLUMNA 2: El Eje de Vida ─────────────────────────────────────── */}
+        <section className="wh-column wh-column-axis">
+          <div className="wh-card wh-axis-routine">
+            <div className="wh-card-header">
+              <h2 className="wh-card-title">Routine Flow</h2>
+              <div className="wh-routine-progress-label">
+                <span style={{ color: accent }}>{progressPercent}%</span>
+                <span className="wh-muted"> completado</span>
               </div>
-            ))}
-          </div>
+            </div>
 
-          <div className="wh-sleep-legend">
-            <span className="wh-sleep-legend-dot optimal" />
-            <span className="wh-muted">≥ 7h óptimo</span>
-            <span className="wh-sleep-legend-dot low" />
-            <span className="wh-muted">{'< 7h'}</span>
+            {/* Progress bar */}
+            <div className="wh-routine-progressbar-track">
+              <motion.div
+                className="wh-routine-progressbar-fill"
+                style={{ background: accent }}
+                initial={{ width: 0 }}
+                animate={{ width: `${progressPercent}%` }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
+              />
+            </div>
+
+            {/* Vertical zig-zag timeline */}
+            <div className="wh-axis-timeline">
+              {routineSteps.map((step, i) => (
+                <motion.div
+                  key={step.time}
+                  className={`wh-axis-step ${i % 2 === 0 ? 'left' : 'right'} ${checkedRoutine[i] ? 'checked' : ''}`}
+                  style={checkedRoutine[i] ? { '--step-accent': accent, '--step-accent-soft': accentSoft } : {}}
+                  onClick={() => handleRoutineToggle(i)}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  {/* Connector line */}
+                  <div className="wh-axis-line" />
+                  
+                  {/* Dot on timeline */}
+                  <div className="wh-axis-dot" style={checkedRoutine[i] ? { background: accent } : {}} />
+                  
+                  {/* Card */}
+                  <div className="wh-axis-card">
+                    <div className="wh-axis-time">{step.time}</div>
+                    <div className={`wh-axis-label ${checkedRoutine[i] ? 'line-through' : ''}`}>
+                      {step.label}
+                    </div>
+                    <div className="wh-axis-check">{checkedRoutine[i] ? '✓' : ''}</div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* ── ZONE E: Sur-Derecha — Motivational Quote + Proyectos (col 6-12 / row 5-6) ── */}
-        <div className="wh-zone-south-right">
-
-          {/* Quote card (delgada, alto impacto) */}
-          <section className="wh-card wh-zone-quote">
+        {/* ── COLUMNA 3: El Impulso y Metas ─────────────────────────────────── */}
+        <section className="wh-column wh-column-boost">
+          {/* Frase Motivacional */}
+          <div className="wh-card wh-boost-quote">
             <p className="wh-quote-mark">&ldquo;</p>
             <blockquote className="wh-quote-text">{quote}</blockquote>
             <p className="wh-quote-mark wh-quote-mark-close">&rdquo;</p>
-          </section>
+          </div>
 
           {/* Proyectos Wellness */}
-          <section className="wh-card wh-zone-projects">
+          <div className="wh-card wh-boost-projects">
             <div className="wh-card-header">
               <h2 className="wh-card-title">Proyectos Wellness</h2>
               <button className="wh-add-btn" title="Nuevo proyecto">+</button>
+              <button className="wh-history-btn" title="Historial de proyectos">🕒</button>
             </div>
 
             <div className="wh-projects-list">
@@ -325,9 +328,8 @@ function WellnessHub() {
                 </div>
               ))}
             </div>
-          </section>
-
-        </div>
+          </div>
+        </section>
 
       </main>
 
