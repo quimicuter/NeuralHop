@@ -27,19 +27,39 @@ export function isReady() {
 }
 
 // ─────────────────────────────────────────────
+// SANITIZE - Firestore rechaza `undefined`; los convertimos en null o los omitimos
+// ─────────────────────────────────────────────
+function stripUndefined(value) {
+  if (value === undefined) return null
+  if (value === null) return null
+  if (Array.isArray(value)) {
+    return value.map(stripUndefined)
+  }
+  if (typeof value === 'object' && value.constructor === Object) {
+    const cleaned = {}
+    for (const [k, v] of Object.entries(value)) {
+      if (v === undefined) continue // omite claves con undefined
+      cleaned[k] = stripUndefined(v)
+    }
+    return cleaned
+  }
+  return value
+}
+
+// ─────────────────────────────────────────────
 // CREATE - Agregar entry a colección 'entries'
 // ─────────────────────────────────────────────
 export async function addEntry(entryData) {
   if (!db) { console.warn('EntryEngine: Firebase not initialized'); return null }
   try {
     const entryRef = doc(collection(db, 'entries'))
-    const entry = {
+    const entry = stripUndefined({
       ...entryData,
-      completed: false,
+      completed: entryData.completed ?? false,
       status: entryData.status || 'todo',
       createdAt: serverTimestamp(),
       completedAt: null,
-    }
+    })
     await setDoc(entryRef, entry)
     return entryRef.id
   } catch (e) {
@@ -73,7 +93,7 @@ export async function updateEntry(entryId, updates) {
   if (!db) return false
   try {
     const entryRef = doc(db, 'entries', entryId)
-    const payload = { ...updates }
+    const payload = stripUndefined({ ...updates })
     // Auto-set completedAt when marking completed
     if (updates.completed === true && !updates.completedAt) {
       payload.completedAt = serverTimestamp()

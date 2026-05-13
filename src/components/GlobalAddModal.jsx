@@ -441,7 +441,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editEntry = nul
             ...editEntry.metadata,
             description: formData.description,
             category: formData.category,
-            subtasks: formData.type === 'task' ? formData.subtasks : undefined,
+            subtasks: formData.type === 'task' ? (formData.subtasks || []) : [],
             hasSubtaskSync: hasSubtasks
           }
         }
@@ -543,7 +543,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editEntry = nul
               ...basePayload.metadata,
               deadlineTime: formData.deadlineTime,
               description: formData.description,
-              subtasks: formData.subtasks.length > 0 ? formData.subtasks : undefined,
+              subtasks: formData.subtasks || [],
               hasSubtaskSync: hasSubtasks
             }
           } else if (formData.type === 'event') {
