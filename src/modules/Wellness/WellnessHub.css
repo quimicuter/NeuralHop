@@ -1,6 +1,6 @@
 /* ============================================================
-   Wellness Hub — 3 Columnas Verticales (Radar | Eje | Impulso)
-   Zero-Scroll · Crystal Shell · Zig-Zag Timeline
+   Wellness Hub — 4 Columnas + 3D Cube + Aura Tracker
+   Zero-Scroll · Crystal Clear · High-Fidelity Animations
    ============================================================ */
 
 /* ── Google Fonts (Playfair Display + Inter) ──────────────── */
@@ -136,12 +136,12 @@
   text-transform: capitalize;
 }
 
-/* ── 3-COLUMN GRID ─────────────────────────────────────────── */
-.wh-grid-3col {
+/* ── 4-COLUMN GRID ─────────────────────────────────────────── */
+.wh-grid-4col {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: 1fr 1.2fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
   overflow: hidden;
 }
@@ -240,21 +240,149 @@
   transform: scale(1.08);
 }
 
-/* ── Column 1: El Radar de Estado ───────────────────────────── */
-.wh-radar-aura {
+/* ── COLUMN 1: Estado Interno ───────────────────────────────── */
+.wh-aura-tracker {
   flex: 1;
-  padding: 0; /* AuraHeatmap maneja su propio padding */
+  padding: 0.8rem;
 }
 
-.wh-radar-sleep {
+/* Aura Tracker 2x2 Grid */
+.wh-aura-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0.8rem;
+  height: 100%;
+}
+
+.wh-aura-quadrant {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Quadrant 1: Weekly bubbles */
+.wh-aura-weekly {
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.wh-aura-bubbles {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.3rem;
+  width: 100%;
+}
+
+.wh-aura-bubble {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all 0.2s ease;
+  position: relative;
+}
+.wh-aura-bubble:hover {
+  transform: scale(1.1);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+.wh-aura-bubble.today {
+  border-color: var(--text-lila);
+  box-shadow: 0 0 0 2px rgba(120, 90, 200, 0.3);
+}
+
+.wh-aura-bubble-label {
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* Mood popover */
+.wh-aura-popover {
+  position: absolute;
+  top: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.3rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+}
+
+.wh-aura-mood-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 0.9rem;
+  transition: transform 0.2s ease;
+}
+.wh-aura-mood-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Quadrant 3: Dynamic evaluation */
+.wh-aura-evaluation {
+  text-align: center;
+}
+
+.wh-aura-eval-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Quadrant 4: Monthly heatmap */
+.wh-aura-monthly {
+  align-items: center;
+  justify-content: center;
+}
+
+.wh-aura-mini-heatmap {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 2px;
+  width: 100%;
+}
+
+.wh-aura-mini-cell {
+  aspect-ratio: 1;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  transition: background 0.2s ease;
+}
+.wh-aura-mini-cell.today {
+  border: 1px solid var(--text-lila);
+}
+
+/* Sleep Tracker */
+.wh-sleep-tracker {
   flex: 1;
 }
 
-.wh-radar-activities {
-  flex: 1;
-}
-
-/* ── Sleep Tracker ────────────────────────────────────────── */
 .wh-sleep-avg {
   font-size: 0.72rem;
 }
@@ -320,39 +448,8 @@
 .wh-sleep-legend-dot.optimal { background: rgba(113, 130, 255, 0.9); }
 .wh-sleep-legend-dot.low     { background: rgba(113, 130, 255, 0.3); }
 
-/* ── Actividades Wellness ─────────────────────────────────── */
-.wh-activities-toggle {
-  flex: 1;
-  overflow-y: auto;
-  min-height: 0;
-}
-
-.wh-activities-toggle .task-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
-/* Mini-cards SÓLIDAS blancas (máximo contraste) */
-.wh-activities-toggle .entry-card,
-.wh-activities-toggle [class*="entry-card"] {
-  background: #ffffff !important;
-  border: 1px solid rgba(15, 23, 42, 0.07) !important;
-  border-radius: 1rem !important;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-}
-
-.wh-activities-toggle .empty-tasks {
-  font-size: 0.75rem;
-  color: var(--text-lila);
-  text-align: center;
-  margin-top: 0.5rem;
-}
-
-/* ── Column 2: El Eje de Vida ───────────────────────────────── */
-.wh-axis-routine {
+/* ── COLUMN 2: Eje de Vida ───────────────────────────────── */
+.wh-routine-flow {
   flex: 1;
 }
 
@@ -374,20 +471,19 @@
   border-radius: 999px;
 }
 
-/* Vertical zig-zag timeline */
-.wh-axis-timeline {
+/* Timeline with absolute centering */
+.wh-timeline-container {
   flex: 1;
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
   padding: 1rem 0;
   min-height: 0;
-  position: relative;
 }
 
-/* Central timeline line */
-.wh-axis-timeline::before {
-  content: '';
+/* Central axis line - perfectly centered */
+.wh-timeline-axis {
   position: absolute;
   left: 50%;
   top: 0;
@@ -395,46 +491,52 @@
   width: 2px;
   background: rgba(15, 23, 42, 0.08);
   transform: translateX(-50%);
-  z-index: 0;
+  z-index: 1;
 }
 
-.wh-axis-step {
+/* Timeline steps */
+.wh-timeline-step {
   display: flex;
   align-items: center;
   position: relative;
-  z-index: 1;
+  z-index: 2;
   cursor: pointer;
 }
 
-.wh-axis-step.left {
+.wh-timeline-step.left {
   flex-direction: row;
+  justify-content: flex-start;
 }
-.wh-axis-step.right {
+.wh-timeline-step.right {
   flex-direction: row-reverse;
+  justify-content: flex-start;
 }
 
-/* Connector line from timeline to card */
-.wh-axis-line {
+/* Connector line from axis to card */
+.wh-timeline-connector {
   width: 2rem;
   height: 2px;
   background: rgba(15, 23, 42, 0.08);
   flex-shrink: 0;
 }
 
-/* Timeline dot */
-.wh-axis-dot {
+/* Central dot - absolutely positioned on axis */
+.wh-timeline-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
   width: 12px;
   height: 12px;
   border-radius: 50%;
   background: rgba(15, 23, 42, 0.18);
   border: 2px solid rgba(255, 255, 255, 0.8);
-  flex-shrink: 0;
-  z-index: 2;
+  transform: translate(-50%, -50%);
+  z-index: 3;
   transition: all 0.2s ease;
 }
 
-/* Card */
-.wh-axis-card {
+/* Step card */
+.wh-timeline-card {
   flex: 1;
   padding: 0.75rem 1rem;
   background: rgba(255, 255, 255, 0.55);
@@ -447,34 +549,34 @@
   transition: all 0.2s ease;
   min-width: 0;
 }
-.wh-axis-step:hover .wh-axis-card {
+.wh-timeline-step:hover .wh-timeline-card {
   background: rgba(255, 255, 255, 0.8);
   transform: translateY(-2px);
 }
-.wh-axis-step.checked .wh-axis-card {
+.wh-timeline-step.checked .wh-timeline-card {
   background: var(--step-accent-soft, rgba(118, 97, 255, 0.1));
   border-color: var(--step-accent, rgba(118, 97, 255, 0.3));
 }
 
-.wh-axis-time {
+.wh-timeline-time {
   font-size: 0.62rem;
   font-weight: 600;
   color: var(--text-lila);
   letter-spacing: 0.04em;
 }
 
-.wh-axis-label {
+.wh-timeline-label {
   font-size: 0.73rem;
   font-weight: 500;
   color: var(--text-dark);
   line-height: 1.3;
 }
-.wh-axis-label.line-through {
+.wh-timeline-label.line-through {
   text-decoration: line-through;
   opacity: 0.5;
 }
 
-.wh-axis-check {
+.wh-timeline-check {
   position: absolute;
   top: 0.5rem;
   right: 0.75rem;
@@ -483,8 +585,8 @@
   color: var(--step-accent, rgba(118, 97, 255, 0.9));
 }
 
-/* ── Column 3: El Impulso y Metas ───────────────────────────── */
-.wh-boost-quote {
+/* ── COLUMN 3: Metas & Mindset ───────────────────────────── */
+.wh-motivation-quote {
   flex: 0 0 auto;
   border-radius: 2.5rem;
   padding: 0.65rem 1.4rem;
@@ -494,12 +596,12 @@
   gap: 0.5rem;
 }
 
-.wh-boost-projects {
+.wh-wellness-projects {
   flex: 1;
   min-height: 0;
 }
 
-/* ── Motivational Quote ───────────────────────────────────── */
+/* Quote */
 .wh-quote-mark {
   font-family: 'Playfair Display', serif;
   font-size: 1.8rem;
@@ -527,50 +629,164 @@
   flex: 1;
 }
 
-/* ── Proyectos Wellness ───────────────────────────────────── */
-.wh-projects-list {
+/* Compact Projects */
+.wh-projects-compact-list {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.5rem;
   flex: 1;
   overflow-y: auto;
   min-height: 0;
 }
-.wh-projects-list::-webkit-scrollbar { display: none; }
+.wh-projects-compact-list::-webkit-scrollbar { display: none; }
 
-.wh-project-row {
+.wh-project-compact-row {
   display: flex;
   flex-direction: column;
-  gap: 0.28rem;
+  gap: 0.2rem;
 }
 
-.wh-project-meta {
+.wh-project-compact-meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.wh-project-name {
-  font-size: 0.75rem;
+.wh-project-compact-name {
+  font-size: 0.7rem;
   font-weight: 600;
   color: var(--text-dark);
 }
 
-.wh-project-pct {
-  font-size: 0.7rem;
+.wh-project-compact-pct {
+  font-size: 0.65rem;
   font-weight: 700;
 }
 
-.wh-project-track {
-  height: 6px;
+.wh-project-compact-track {
+  height: 4px;
   border-radius: 999px;
   background: rgba(15, 23, 42, 0.07);
   overflow: hidden;
 }
 
-.wh-project-fill {
+.wh-project-compact-fill {
   height: 100%;
   border-radius: 999px;
+}
+
+/* ── COLUMN 4: Acción (3D Cube) ───────────────────────────── */
+.wh-action-cube {
+  flex: 1;
+  padding: 0.8rem;
+}
+
+/* Cube toggle buttons */
+.wh-cube-toggle {
+  display: flex;
+  gap: 0.3rem;
+  margin-bottom: 1rem;
+}
+
+.wh-cube-btn {
+  flex: 1;
+  padding: 0.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 0.8rem;
+  background: rgba(255, 255, 255, 0.3);
+  color: var(--text-mid);
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.wh-cube-btn.active {
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--text-dark);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+/* 3D Cube container with perspective */
+.wh-cube-container {
+  flex: 1;
+  perspective: 1000px;
+  min-height: 0;
+}
+
+.wh-cube {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease-in-out;
+}
+
+/* Cube faces - backface visibility hidden for clean flip */
+.wh-cube-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+}
+
+.wh-cube-front {
+  transform: rotateY(0deg);
+}
+
+.wh-cube-back {
+  transform: rotateY(180deg);
+}
+
+/* Cube face headers */
+.wh-cube-face-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+.wh-cube-face-header h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+/* Cube content */
+.wh-cube-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem;
+  min-height: 0;
+}
+.wh-cube-content::-webkit-scrollbar { display: none; }
+
+/* White solid mini-cards inside cube */
+.wh-cube-content .entry-card,
+.wh-cube-content [class*="entry-card"] {
+  background: #ffffff !important;
+  border: 1px solid rgba(15, 23, 42, 0.07) !important;
+  border-radius: 0.8rem !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  margin-bottom: 0.4rem;
+}
+
+.wh-cube-content .empty-tasks {
+  font-size: 0.7rem;
+  color: var(--text-lila);
+  text-align: center;
+  margin-top: 1rem;
 }
 
 /* ── Toast ────────────────────────────────────────────────── */

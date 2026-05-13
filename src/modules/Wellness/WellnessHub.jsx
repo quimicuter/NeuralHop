@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
-import { format } from 'date-fns'
+import { format, startOfWeek, addDays, isToday } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../../context/AppContext'
 import SimpleTasks from '../../components/SimpleTasks'
-import AuraHeatmap from './AuraHeatmap'
+import SimpleEvents from '../../components/SimpleEvents'
 import './WellnessHub.css'
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -63,6 +63,16 @@ const ACTIVE_PROJECTS = [
 const SLEEP_DATA = [6.2, 7.0, 5.8, 7.5, 8.0, 6.5, 7.2]
 const SLEEP_LABELS = ['L', 'M', 'X', 'J', 'V', 'S', 'D']
 
+const AURA_EVALUATIONS = [
+  'Tu energía hoy es pura química.',
+  'Brillas con luz propia.',
+  'Tu calma es tu superpotencia.',
+  'Estás en sintonía perfecta.',
+  'Tu vitalidad es contagiosa.',
+  'Fluyes con el universo.',
+  'Eres un faro de bienestar.'
+]
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const getTodayQuote = () => {
@@ -75,6 +85,13 @@ const getTodayQuote = () => {
 const getSleepBarHeight = (hours) => {
   const min = 4, max = 9
   return Math.min(100, Math.max(8, ((hours - min) / (max - min)) * 100))
+}
+
+const getTodayEvaluation = () => {
+  const dayOfYear = Math.floor(
+    (new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000
+  )
+  return AURA_EVALUATIONS[dayOfYear % AURA_EVALUATIONS.length]
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -91,6 +108,14 @@ function WellnessHub() {
   const [checkedMap,     setCheckedMap]      = useState({})
   const [toastMessage,   setToastMessage]    = useState('')
   const [toastVisible,   setToastVisible]    = useState(false)
+  
+  // Aura Tracker state
+  const [weeklyMoods,    setWeeklyMoods]     = useState({})
+  const [selectedDay,    setSelectedDay]     = useState(null)
+  const [monthlyMoods,   setMonthlyMoods]    = useState({})
+  
+  // 3D Cube state
+  const [cubeFace,       setCubeFace]        = useState('tasks')
 
   const activeTabConfig = WELLNESS_TABS.find(t => t.id === activeTab) || WELLNESS_TABS[0]
   const accent          = `rgba(${activeTabConfig.accent}, 1)`
@@ -98,6 +123,21 @@ function WellnessHub() {
   const routineSteps    = ROUTINE_FLOW[activeTab]
   const checkedRoutine  = checkedMap[activeTab] ?? routineSteps.map(() => false)
   const quote           = useMemo(() => getTodayQuote(), [])
+  const evaluation      = useMemo(() => getTodayEvaluation(), [])
+
+  // Generate week days for Aura Tracker
+  const weekDays = useMemo(() => {
+    const start = startOfWeek(new Date(), { weekStartsOn: 1 }) // Monday start
+    return Array.from({ length: 7 }, (_, i) => addDays(start, i))
+  }, [])
+
+  // Generate month days for mini heatmap
+  const monthDays = useMemo(() => {
+    const today = new Date()
+    const start = new Date(today.getFullYear(), today.getMonth(), 1)
+    const end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
+    return Array.from({ length: end.getDate() }, (_, i) => addDays(start, i))
+  }, [])
 
   // Persist active tab
   useEffect(() => {
@@ -139,6 +179,23 @@ function WellnessHub() {
     ? Math.round((checkedRoutine.filter(Boolean).length / checkedRoutine.length) * 100)
     : 0
 
+  // Aura Tracker handlers
+  const handleDayClick = (day) => {
+    const dayKey = format(day, 'yyyy-MM-dd')
+    if (isToday(day)) {
+      setSelectedDay(selectedDay === dayKey ? null : dayKey)
+    }
+  }
+
+  const handleMoodSelect = (moodColor) => {
+    if (selectedDay) {
+      setWeeklyMoods(prev => ({ ...prev, [selectedDay]: moodColor }))
+      setMonthlyMoods(prev => ({ ...prev, [selectedDay]: moodColor }))
+      setSelectedDay(null)
+      showToast('Mood registrado')
+    }
+  }
+
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <div className="wh-shell">
@@ -172,18 +229,93 @@ function WellnessHub() {
         </div>
       </header>
 
-      {/* ── 3-COLUMN GRID ─────────────────────────────────────────────────── */}
-      <main className="wh-grid-3col">
+      {/* ── 4-COLUMN GRID ─────────────────────────────────────────────────── */}
+      <main className="wh-grid-4col">
 
-        {/* ── COLUMNA 1: El Radar de Estado ─────────────────────────────────── */}
-        <section className="wh-column wh-column-radar">
-          {/* Aura Heatmap */}
-          <div className="wh-card wh-radar-aura">
-            <AuraHeatmap />
+        {/* ── COLUMN 1: Estado Interno ─────────────────────────────────────── */}
+        <section className="wh-column wh-column-state">
+          {/* Aura Tracker - 4 Quadrants */}
+          <div className="wh-card wh-aura-tracker">
+            <div className="wh-aura-grid">
+              {/* Quadrant 1: Weekly bubbles */}
+              <div className="wh-aura-quadrant wh-aura-weekly">
+                <div className="wh-aura-bubbles">
+                  {weekDays.map((day) => {
+                    const dayKey = format(day, 'yyyy-MM-dd')
+                    const mood = weeklyMoods[dayKey]
+                    const isTodayDay = isToday(day)
+                    const dayLabel = format(day, 'EEEEEE', { locale: es }).toUpperCase()
+                    
+                    return (
+                      <motion.button
+                        key={dayKey}
+                        className={`wh-aura-bubble ${isTodayDay ? 'today' : ''}`}
+                        style={{ backgroundColor: mood || 'rgba(255, 255, 255, 0.1)' }}
+                        onClick={() => handleDayClick(day)}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <span className="wh-aura-bubble-label">{dayLabel}</span>
+                      </motion.button>
+                    )
+                  })}
+                </div>
+                
+                {/* Mood selector popover */}
+                <AnimatePresence>
+                  {selectedDay && (
+                    <motion.div
+                      className="wh-aura-popover"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                    >
+                      {WELLNESS_TABS.map(tab => (
+                        <button
+                          key={tab.id}
+                          className="wh-aura-mood-btn"
+                          style={{ backgroundColor: `rgba(${tab.accent}, 0.9)` }}
+                          onClick={() => handleMoodSelect(`rgba(${tab.accent}, 0.9)`)}
+                        >
+                          {tab.icon}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Quadrant 2: Empty for balance */}
+              <div className="wh-aura-quadrant" />
+
+              {/* Quadrant 3: Dynamic evaluation */}
+              <div className="wh-aura-quadrant wh-aura-evaluation">
+                <p className="wh-aura-eval-text">{evaluation}</p>
+              </div>
+
+              {/* Quadrant 4: Monthly heatmap */}
+              <div className="wh-aura-quadrant wh-aura-monthly">
+                <div className="wh-aura-mini-heatmap">
+                  {monthDays.map((day) => {
+                    const dayKey = format(day, 'yyyy-MM-dd')
+                    const mood = monthlyMoods[dayKey]
+                    const isTodayDay = isToday(day)
+                    
+                    return (
+                      <div
+                        key={dayKey}
+                        className={`wh-aura-mini-cell ${isTodayDay ? 'today' : ''}`}
+                        style={{ backgroundColor: mood || 'rgba(255, 255, 255, 0.05)' }}
+                      />
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Sleep Tracker */}
-          <div className="wh-card wh-radar-sleep">
+          <div className="wh-card wh-sleep-tracker">
             <div className="wh-card-header">
               <h2 className="wh-card-title">Sleep Tracker</h2>
               <span className="wh-muted wh-sleep-avg">
@@ -221,27 +353,11 @@ function WellnessHub() {
               <span className="wh-muted">{'< 7h'}</span>
             </div>
           </div>
-
-          {/* Actividades Wellness */}
-          <div className="wh-card wh-radar-activities">
-            <div className="wh-card-header">
-              <h2 className="wh-card-title">Actividades Wellness</h2>
-              <button
-                className="wh-add-btn"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-global-modal', { detail: { type: 'task', scope: 'personal', module: 'wellness' } }))}
-                title="Nueva actividad"
-              >+</button>
-            </div>
-
-            <div className="wh-activities-toggle">
-              <SimpleTasks />
-            </div>
-          </div>
         </section>
 
-        {/* ── COLUMNA 2: El Eje de Vida ─────────────────────────────────────── */}
+        {/* ── COLUMN 2: Eje de Vida ─────────────────────────────────────── */}
         <section className="wh-column wh-column-axis">
-          <div className="wh-card wh-axis-routine">
+          <div className="wh-card wh-routine-flow">
             <div className="wh-card-header">
               <h2 className="wh-card-title">Routine Flow</h2>
               <div className="wh-routine-progress-label">
@@ -261,30 +377,34 @@ function WellnessHub() {
               />
             </div>
 
-            {/* Vertical zig-zag timeline */}
-            <div className="wh-axis-timeline">
+            {/* Vertical zig-zag timeline with absolute centering */}
+            <div className="wh-timeline-container">
+              {/* Central axis line */}
+              <div className="wh-timeline-axis" />
+              
+              {/* Timeline steps */}
               {routineSteps.map((step, i) => (
                 <motion.div
                   key={step.time}
-                  className={`wh-axis-step ${i % 2 === 0 ? 'left' : 'right'} ${checkedRoutine[i] ? 'checked' : ''}`}
+                  className={`wh-timeline-step ${i % 2 === 0 ? 'left' : 'right'} ${checkedRoutine[i] ? 'checked' : ''}`}
                   style={checkedRoutine[i] ? { '--step-accent': accent, '--step-accent-soft': accentSoft } : {}}
                   onClick={() => handleRoutineToggle(i)}
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.97 }}
                 >
                   {/* Connector line */}
-                  <div className="wh-axis-line" />
+                  <div className="wh-timeline-connector" />
                   
-                  {/* Dot on timeline */}
-                  <div className="wh-axis-dot" style={checkedRoutine[i] ? { background: accent } : {}} />
+                  {/* Central dot */}
+                  <div className="wh-timeline-dot" style={checkedRoutine[i] ? { background: accent } : {}} />
                   
-                  {/* Card */}
-                  <div className="wh-axis-card">
-                    <div className="wh-axis-time">{step.time}</div>
-                    <div className={`wh-axis-label ${checkedRoutine[i] ? 'line-through' : ''}`}>
+                  {/* Step card */}
+                  <div className="wh-timeline-card">
+                    <div className="wh-timeline-time">{step.time}</div>
+                    <div className={`wh-timeline-label ${checkedRoutine[i] ? 'line-through' : ''}`}>
                       {step.label}
                     </div>
-                    <div className="wh-axis-check">{checkedRoutine[i] ? '✓' : ''}</div>
+                    <div className="wh-timeline-check">{checkedRoutine[i] ? '✓' : ''}</div>
                   </div>
                 </motion.div>
               ))}
@@ -292,33 +412,33 @@ function WellnessHub() {
           </div>
         </section>
 
-        {/* ── COLUMNA 3: El Impulso y Metas ─────────────────────────────────── */}
-        <section className="wh-column wh-column-boost">
-          {/* Frase Motivacional */}
-          <div className="wh-card wh-boost-quote">
+        {/* ── COLUMN 3: Metas & Mindset ─────────────────────────────────── */}
+        <section className="wh-column wh-column-mindset">
+          {/* Motivational Quote */}
+          <div className="wh-card wh-motivation-quote">
             <p className="wh-quote-mark">&ldquo;</p>
             <blockquote className="wh-quote-text">{quote}</blockquote>
             <p className="wh-quote-mark wh-quote-mark-close">&rdquo;</p>
           </div>
 
-          {/* Proyectos Wellness */}
-          <div className="wh-card wh-boost-projects">
+          {/* Wellness Projects (compact) */}
+          <div className="wh-card wh-wellness-projects">
             <div className="wh-card-header">
               <h2 className="wh-card-title">Proyectos Wellness</h2>
               <button className="wh-add-btn" title="Nuevo proyecto">+</button>
               <button className="wh-history-btn" title="Historial de proyectos">🕒</button>
             </div>
 
-            <div className="wh-projects-list">
+            <div className="wh-projects-compact-list">
               {ACTIVE_PROJECTS.map((proj) => (
-                <div key={proj.id} className="wh-project-row">
-                  <div className="wh-project-meta">
-                    <span className="wh-project-name">{proj.title}</span>
-                    <span className="wh-project-pct" style={{ color: accent }}>{proj.progress}%</span>
+                <div key={proj.id} className="wh-project-compact-row">
+                  <div className="wh-project-compact-meta">
+                    <span className="wh-project-compact-name">{proj.title}</span>
+                    <span className="wh-project-compact-pct" style={{ color: accent }}>{proj.progress}%</span>
                   </div>
-                  <div className="wh-project-track">
+                  <div className="wh-project-compact-track">
                     <motion.div
-                      className="wh-project-fill"
+                      className="wh-project-compact-fill"
                       style={{ background: accent }}
                       initial={{ width: 0 }}
                       animate={{ width: `${proj.progress}%` }}
@@ -327,6 +447,69 @@ function WellnessHub() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── COLUMN 4: Acción (3D Cube) ─────────────────────────────────── */}
+        <section className="wh-column wh-column-action">
+          <div className="wh-card wh-action-cube">
+            {/* Toggle buttons */}
+            <div className="wh-cube-toggle">
+              <button
+                className={`wh-cube-btn ${cubeFace === 'tasks' ? 'active' : ''}`}
+                onClick={() => setCubeFace('tasks')}
+              >
+                Tareas
+              </button>
+              <button
+                className={`wh-cube-btn ${cubeFace === 'events' ? 'active' : ''}`}
+                onClick={() => setCubeFace('events')}
+              >
+                Eventos
+              </button>
+            </div>
+
+            {/* 3D Cube container */}
+            <div className="wh-cube-container">
+              <motion.div
+                className="wh-cube"
+                style={{
+                  transformStyle: 'preserve-3d',
+                  transform: cubeFace === 'events' ? 'rotateY(180deg)' : 'rotateY(0deg)'
+                }}
+                transition={{ duration: 0.6, ease: 'ease-in-out' }}
+              >
+                {/* Front face - Tasks */}
+                <div className="wh-cube-face wh-cube-front">
+                  <div className="wh-cube-face-header">
+                    <h3>Wellness Tasks</h3>
+                    <button
+                      className="wh-add-btn"
+                      onClick={() => window.dispatchEvent(new CustomEvent('open-global-modal', { detail: { type: 'task', scope: 'personal', module: 'wellness' } }))}
+                      title="Nueva tarea"
+                    >+</button>
+                  </div>
+                  <div className="wh-cube-content">
+                    <SimpleTasks />
+                  </div>
+                </div>
+
+                {/* Back face - Events */}
+                <div className="wh-cube-face wh-cube-back">
+                  <div className="wh-cube-face-header">
+                    <h3>Wellness Events</h3>
+                    <button
+                      className="wh-add-btn"
+                      onClick={() => window.dispatchEvent(new CustomEvent('open-global-modal', { detail: { type: 'event', scope: 'personal', module: 'wellness' } }))}
+                      title="Nuevo evento"
+                    >+</button>
+                  </div>
+                  <div className="wh-cube-content">
+                    <SimpleEvents />
+                  </div>
+                </div>
+              </motion.div>
             </div>
           </div>
         </section>
