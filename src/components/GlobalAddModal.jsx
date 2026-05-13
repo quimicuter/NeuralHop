@@ -124,10 +124,10 @@ export const MODULE_CONFIG = {
 }
 
 const TYPE_CONFIG = {
-  task: { label: 'Tarea', emoji: '📝', color: 'rgba(244, 212, 217, 0.65)' },    // Rosa Bruma
+  task: { label: 'Tarea', emoji: '✅', color: 'rgba(244, 212, 217, 0.65)' },    // Rosa Bruma
   event: { label: 'Evento', emoji: '📅', color: 'rgba(215, 189, 226, 0.65)' },   // Lavanda Mate
   habit: { label: 'Hábito', emoji: '🔄', color: 'rgba(189, 212, 231, 0.65)' },   // Azul Glaciar
-  project: { label: 'Proyecto', emoji: '🚧', color: 'rgba(201, 222, 197, 0.65)' } // Verde Salvia
+  project: { label: 'Proyecto', emoji: '�', color: 'rgba(201, 222, 197, 0.65)' } // Verde Salvia
 }
 
 const FREQUENCY_CONFIG = {
@@ -229,14 +229,14 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
   }
 
   const [formData, setFormData] = useState(emptyFormData)
-  const [openDropdowns, setOpenDropdowns] = useState({ category: false, priority: false, frequency: false })
+  const [openDropdowns, setOpenDropdowns] = useState({ category: false, priority: false, frequency: false, status: false })
 
   const toggleDropdown = (name) => {
     setOpenDropdowns(prev => ({ ...prev, [name]: !prev[name] }))
   }
 
   const closeDropdowns = () => {
-    setOpenDropdowns({ category: false, priority: false, frequency: false })
+    setOpenDropdowns({ category: false, priority: false, frequency: false, status: false })
   }
 
   // ===== ROADMAP STEPS (proyecto) =====
@@ -369,14 +369,15 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
   // Tipos disponibles según el módulo
   const getAvailableTypes = () => {
     const types = [
-      { value: 'task', label: 'Tarea', emoji: '📝' },
-      { value: 'event', label: 'Evento', emoji: '📅' },
-      { value: 'project', label: 'Proyecto', emoji: '🚧' }
+      { value: 'task', label: 'Tarea', emoji: '✅' },
+      { value: 'event', label: 'Evento', emoji: '📅' }
     ]
 
     if (canSelectHabit) {
-      types.push({ value: 'habit', label: 'Hábito', emoji: '🔄' })
+      types.push({ value: 'habit', label: 'Hábito', emoji: '�' })
     }
+
+    types.push({ value: 'project', label: 'Proyecto', emoji: '�' })
 
     return types
   }
@@ -665,6 +666,42 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
       )}
     </div>
   )
+
+  const renderStatusDropdown = () => {
+    const current = PROJECT_STATUS[formData.projectStatus] || PROJECT_STATUS.not_started
+    return (
+      <div className="gam-dropdown-wrapper">
+        <button
+          type="button"
+          className="gam-dropdown-trigger gam-dropdown-status gam-dropdown-icon-only"
+          onClick={(e) => { e.stopPropagation(); toggleDropdown('status') }}
+          title={`Estado: ${current.label}`}
+        >
+          <span className="gam-dropdown-icon">
+            <span className="gam-status-dot" style={{ backgroundColor: current.color }}></span>
+          </span>
+        </button>
+        {openDropdowns.status && (
+          <div className="gam-dropdown-menu gam-dropdown-menu-priority" onClick={(e) => e.stopPropagation()}>
+            {Object.entries(PROJECT_STATUS).map(([key, cfg]) => (
+              <button
+                key={key}
+                type="button"
+                className={`gam-dropdown-item ${formData.projectStatus === key ? 'active' : ''}`}
+                onClick={() => { updateField('projectStatus', key); closeDropdowns() }}
+              >
+                <span className="gam-dropdown-item-icon">
+                  <span className="gam-status-dot" style={{ backgroundColor: cfg.color }}></span>
+                </span>
+                <span className="gam-dropdown-item-text">{cfg.label}</span>
+                {formData.projectStatus === key && <span className="gam-dropdown-check">✓</span>}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
 
   const renderFrequencyDropdown = () => (
     <div className="gam-dropdown-wrapper gam-dropdown-wrapper-wide">
@@ -1151,10 +1188,10 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
                       </div>
                     )}
 
-                    {/* ===== SECCIÓN PROYECTO - Roadmap interactivo ===== */}
+                    {/* ===== SECCIÓN PROYECTO - Cabecera triple + Roadmap ===== */}
                     {formData.type === 'project' && !isBirthdayModule && (
                       <div className="gam-task-section gam-form-field-full" onClick={closeDropdowns}>
-                        {/* Cabecera: Título + Categoría */}
+                        {/* Cabecera Triple: Título + Categoría + Status */}
                         <div className="gam-task-header-row">
                           <input
                             type="text"
@@ -1165,25 +1202,10 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editingEntry = 
                             required
                           />
                           {renderCategoryDropdown()}
+                          {renderStatusDropdown()}
                         </div>
 
-                        {/* Status Pills */}
-                        <div className="gam-status-row">
-                          {Object.entries(PROJECT_STATUS).map(([key, cfg]) => (
-                            <button
-                              key={key}
-                              type="button"
-                              className={`gam-status-pill ${formData.projectStatus === key ? 'active' : ''}`}
-                              style={{ '--status-color': cfg.color }}
-                              onClick={() => updateField('projectStatus', key)}
-                            >
-                              <span className="gam-status-dot" style={{ backgroundColor: cfg.color }}></span>
-                              {cfg.label}
-                            </button>
-                          ))}
-                        </div>
-
-                        {/* Fila: Fecha límite + Progreso */}
+                        {/* Fila Meta: Fecha límite + Barra de Progreso */}
                         <div className="gam-task-times-row">
                           <div className="gam-task-time-field">
                             <input

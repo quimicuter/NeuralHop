@@ -287,58 +287,59 @@
   font-weight: 600;
 }
 
-/* PESTAÑAS - Pill buttons flotantes */
+/* PESTAÑAS - Pill switcher cohesivo (nav que desbloquea el cristal) */
 .gam-type-pills {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  padding: 8px 0;
+  gap: 6px;
+  flex-wrap: nowrap;
+  padding: 6px 0 8px 0;
   align-items: center;
   position: relative;
   z-index: 7;
 }
 
 .gam-type-pill {
-  padding: 6px 12px;
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
   background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   cursor: pointer;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 500;
-  color: #6d28d9;
-  transition: all 0.3s ease;
-  display: flex;
+  color: #4c1d95;
+  transition: all 0.25s ease;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  gap: 5px;
+  white-space: nowrap;
+  box-shadow: none;
 }
 
 .gam-type-pill:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.35);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-1px);
 }
 
 .gam-type-pill.active {
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(20px);
+  background: rgba(109, 40, 217, 0.18);
+  border: 1px solid rgba(109, 40, 217, 0.55);
   color: #4c1d95;
-  font-weight: 700;
-  border-color: rgba(109, 40, 217, 0.3);
-  box-shadow: 0 8px 24px rgba(109, 40, 217, 0.2);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(109, 40, 217, 0.15);
+  transform: translateY(0);
 }
 
 .gam-pill-emoji {
-  font-size: 1rem;
+  font-size: 0.92rem;
   line-height: 1;
 }
 
 .gam-pill-label {
-  font-size: 0.85rem;
+  font-size: 0.78rem;
 }
 
 /* CONTENEDOR DEL FORMULARIO */
@@ -353,14 +354,19 @@
   flex-direction: column;
 }
 
+/* RISING GLASS - Tarjeta maestra de cristal esmerilado */
 .gam-form-card {
-  background: var(--accent);
-  backdrop-filter: blur(25px);
-  padding: 14px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(40px) saturate(140%);
+  -webkit-backdrop-filter: blur(40px) saturate(140%);
+  padding: 14px 16px;
   margin-top: 0;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 2.5rem;
+  box-shadow:
+    0 8px 32px rgba(76, 29, 149, 0.08),
+    0 2px 6px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.45);
   position: relative;
   z-index: 5;
   flex: 1;
@@ -370,17 +376,17 @@
   overflow: hidden;
 }
 
-/* GRID DEL FORMULARIO - 2 Columnas */
+/* GRID DEL FORMULARIO - flujo único para que cada sección llene el cristal */
 .gam-form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   box-sizing: border-box;
   width: 100%;
-  overflow-y: auto;
   max-height: 100%;
   flex: 1;
   min-height: 0;
+  overflow: hidden;
 }
 
 .gam-form-field {
@@ -884,8 +890,17 @@
 .gam-task-header-row {
   display: flex;
   gap: 6px;
-  align-items: center;
-  padding: 0 0 12px 0;
+  align-items: stretch;
+  padding: 0 0 10px 0;
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+}
+
+.gam-task-times-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  padding: 0 0 10px 0;
   flex-shrink: 0;
   flex-wrap: nowrap;
 }
@@ -893,10 +908,11 @@
 .gam-task-title-input {
   flex: 1 1 0;
   min-width: 60px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.85);
+  padding: 9px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 0.9rem;
   color: #1a1a2e;
@@ -1151,7 +1167,7 @@
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
   gap: 10px;
-  min-height: 180px;
+  min-height: 160px;
   overflow: hidden;
   min-width: 0;
 }
@@ -1528,27 +1544,30 @@
    ============================================ */
 .gam-status-row {
   display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  padding: 0 0 12px 0;
+  gap: 5px;
+  flex-wrap: nowrap;
+  padding: 0 0 10px 0;
   flex-shrink: 0;
 }
 
 .gam-status-pill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: 14px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.85);
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(8px);
   color: #1a1a2e;
   font-family: 'Inter', sans-serif;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
+  flex: 1 1 0;
+  justify-content: center;
 }
 
 .gam-status-pill:hover {
