@@ -10,8 +10,6 @@ import AuraHeatmap from './AuraHeatmap'
 import SubModuleHubModal from './SubModuleHubModal'
 import SleepTracker from './SleepTracker'
 import WelcomeCard from './WelcomeCard'
-import WellnessProjects from './WellnessProjects'
-import { subscribeToTodayRoutine, getAuraColorByMood, getRoutineProgress } from '../../engine/RoutineEngine'
 import './WellnessHub.css'
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -90,12 +88,12 @@ function WellnessHub() {
   const navigate = useNavigate()
   useApp() // context subscription kept for future use
 
-  // Routine Flow state
+  // Routine Flow internal filter ('all' | submoduleId)
   const [routineFilter,   setRoutineFilter]   = useState(() => {
     const saved = window.localStorage.getItem('wellness.routineFilter')
     return ROUTINE_FILTERS.some(t => t.id === saved) ? saved : 'all'
   })
-  const [routineEntries,  setRoutineEntries]  = useState([])
+  // checkedMap: { [filterId]: boolean[] }
   const [checkedMap,     setCheckedMap]      = useState({})
   const [toastMessage,   setToastMessage]    = useState('')
   const [toastVisible,   setToastVisible]    = useState(false)
@@ -113,42 +111,17 @@ function WellnessHub() {
   const activeFilterConfig = ROUTINE_FILTERS.find(t => t.id === routineFilter) || ROUTINE_FILTERS[0]
   const accent          = `rgba(${activeFilterConfig.accent}, 1)`
   const accentSoft      = `rgba(${activeFilterConfig.accent}, 0.18)`
-  // Usar entradas reales de Firebase o fallback a datos estáticos
   const routineSteps    = useMemo(() => {
-    if (routineEntries.length > 0) {
-      return routineEntries.map(entry => ({
-        id: entry.id,
-        time: entry.datetime ? new Date(entry.datetime).toTimeString().slice(0, 5) : '09:00',
-        label: entry.title || entry.name || 'Sin título',
-        type: entry.type || 'task',
-        completed: entry.completed || entry.status === 'completed',
-        category: entry.category || 'glow',
-        entry: entry // Guardar referencia original
-      }))
-    }
-    
-    // Fallback a datos estáticos si no hay entradas
     if (routineFilter === 'all') {
-      const all = Object.entries(ROUTINE_FLOW).flatMap(([subModule, steps]) =>
-        steps.map(step => ({ ...step, sub: subModule }))
+      const all = Object.entries(ROUTINE_FLOW).flatMap(([sub, steps]) =>
+        steps.map(s => ({ ...s, sub }))
       )
-      return all.sort((firstEntry, secondEntry) => firstEntry.time.localeCompare(secondEntry.time))
+      return all.sort((a, b) => a.time.localeCompare(b.time))
     }
     return ROUTINE_FLOW[routineFilter] || []
-  }, [routineEntries, routineFilter])
-  
-  const checkedRoutine  = checkedMap[routineFilter] ?? routineSteps.map(() => false)
-  const routineProgress = useMemo(() => getRoutineProgress(routineSteps), [routineSteps])
-  const quote           = useMemo(() => getTodayQuote(), [])
-
-  // Suscripción a rutina del día desde Firebase
-  useEffect(() => {
-    const unsubscribe = subscribeToTodayRoutine((entries) => {
-      setRoutineEntries(entries)
-    }, routineFilter === 'all' ? null : routineFilter)
-    
-    return unsubscribe
   }, [routineFilter])
+  const checkedRoutine  = checkedMap[routineFilter] ?? routineSteps.map(() => false)
+  const quote           = useMemo(() => getTodayQuote(), [])
 
   // Persist routine filter
   useEffect(() => {
@@ -186,11 +159,9 @@ function WellnessHub() {
     })
   }
 
-  const progressPercent = routineProgress || (
-    checkedRoutine.length
-      ? Math.round((checkedRoutine.filter(Boolean).length / checkedRoutine.length) * 100)
-      : 0
-  )
+  const progressPercent = checkedRoutine.length
+    ? Math.round((checkedRoutine.filter(Boolean).length / checkedRoutine.length) * 100)
+    : 0
 
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
@@ -238,11 +209,6 @@ function WellnessHub() {
           {/* Aura Heatmap - Químicute */}
           <div className="wh-card wh-aura-tracker">
             <AuraHeatmap />
-          </div>
-
-          {/* Sleep Tracker */}
-          <div className="wh-card wh-sleep-tracker">
-            <SleepTracker />
           </div>
         </section>
 
@@ -297,45 +263,32 @@ function WellnessHub() {
               {/* Central axis line */}
               <div className="wh-timeline-axis" />
               
-              {/* Timeline steps with Neural Activity Cards */}
-              {routineSteps.map((step, i) => {
-                // Obtener color Aura según categoría o mood
-                const auraColor = step.category ? getAuraColorByMood(step.category) : accent
-                const isCompleted = step.completed || checkedRoutine[i]
-                
-                return (
-                  <motion.div
-                    key={`${step.id || `${step.sub ?? routineFilter}-${step.time}`}-${i}`}
-                    className={`wh-timeline-step ${i % 2 === 0 ? 'left' : 'right'} ${isCompleted ? 'checked' : ''}`}
-                    style={isCompleted ? { 
-                      '--step-accent': auraColor, 
-                      '--step-accent-soft': `${auraColor}18` 
-                    } : {}}
-                    onClick={() => handleRoutineToggle(i)}
-                    whileHover={{ y: -2 }}
-                    whileTap={{ scale: 0.97 }}
-                  >
-                    {/* Connector line */}
-                    <div className="wh-timeline-connector" />
-                    
-                    {/* Central dot con color Aura */}
-                    <div 
-                      className="wh-timeline-dot" 
-                      style={{ 
-                        background: isCompleted ? auraColor : 'rgba(15, 23, 42, 0.18)',
-                        borderColor: isCompleted ? auraColor : 'rgba(255, 255, 255, 0.8)'
-                      }}
-                    />
-                    
-                    {/* Neural Activity Card */}
-                    <div className="wh-timeline-card">
-                      <div className="wh-timeline-time">{step.time}</div>
-                      <div className="wh-timeline-label">{step.label}</div>
-                      {isCompleted && <div className="wh-timeline-check">✓</div>}
+              {/* Timeline steps */}
+              {routineSteps.map((step, i) => (
+                <motion.div
+                  key={`${step.sub ?? routineFilter}-${step.time}-${i}`}
+                  className={`wh-timeline-step ${i % 2 === 0 ? 'left' : 'right'} ${checkedRoutine[i] ? 'checked' : ''}`}
+                  style={checkedRoutine[i] ? { '--step-accent': accent, '--step-accent-soft': accentSoft } : {}}
+                  onClick={() => handleRoutineToggle(i)}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  {/* Connector line */}
+                  <div className="wh-timeline-connector" />
+                  
+                  {/* Central dot */}
+                  <div className="wh-timeline-dot" style={checkedRoutine[i] ? { background: accent } : {}} />
+                  
+                  {/* Step card */}
+                  <div className="wh-timeline-card">
+                    <div className="wh-timeline-time">{step.time}</div>
+                    <div className={`wh-timeline-label ${checkedRoutine[i] ? 'line-through' : ''}`}>
+                      {step.label}
                     </div>
-                  </motion.div>
-                )
-              })}
+                    <div className="wh-timeline-check">{checkedRoutine[i] ? '✓' : ''}</div>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </section>
@@ -349,9 +302,33 @@ function WellnessHub() {
             <p className="wh-quote-mark wh-quote-mark-close">&rdquo;</p>
           </div>
 
-          {/* Wellness Projects */}
+          {/* Wellness Projects (compact) */}
           <div className="wh-card wh-wellness-projects">
-            <WellnessProjects />
+            <div className="wh-card-header">
+              <h2 className="wh-card-title">Proyectos Wellness</h2>
+              <button className="wh-add-btn" title="Nuevo proyecto">+</button>
+              <button className="wh-history-btn" title="Historial de proyectos">🕒</button>
+            </div>
+
+            <div className="wh-projects-compact-list">
+              {ACTIVE_PROJECTS.map((proj) => (
+                <div key={proj.id} className="wh-project-compact-row">
+                  <div className="wh-project-compact-meta">
+                    <span className="wh-project-compact-name">{proj.title}</span>
+                    <span className="wh-project-compact-pct" style={{ color: accent }}>{proj.progress}%</span>
+                  </div>
+                  <div className="wh-project-compact-track">
+                    <motion.div
+                      className="wh-project-compact-fill"
+                      style={{ background: accent }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${proj.progress}%` }}
+                      transition={{ duration: 1, ease: 'easeOut' }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -417,7 +394,11 @@ function WellnessHub() {
             </div>
           </div>
 
-                  </section>
+          {/* Sleep Tracker debajo del cubo */}
+          <div className="wh-card wh-sleep-tracker">
+            <SleepTracker />
+          </div>
+        </section>
 
       </main>
 
