@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext'
 import DetailModal from './DetailModal'
 import EntryCard from './EntryCard'
 
-function SimpleEvents() {
+function SimpleEvents({ moduleFilter = null, scopeFilter = null, limit = 4 }) {
   const { state, actions, getEvents } = useApp()
   const events = (getEvents && getEvents()) || []
   const [selectedEntry, setSelectedEntry] = useState(null)
@@ -128,9 +128,14 @@ function SimpleEvents() {
   }
 
   // Mostrar solo eventos no completados
-  const visibleEvents = (events || []).filter(event => 
-    !event.completed && event.status !== 'completed' && event.module !== 'cumpleanos' && !event.isBirthdayReminder
-  ).slice(0, 4) // Limitar a 4 eventos para el dashboard
+  const visibleEvents = (events || []).filter(event =>
+    !event.completed &&
+    event.status !== 'completed' &&
+    event.module !== 'cumpleanos' &&
+    !event.isBirthdayReminder &&
+    (!moduleFilter || event.module === moduleFilter) &&
+    (!scopeFilter  || event.scope  === scopeFilter)
+  ).slice(0, limit)
 
   return (
     <>

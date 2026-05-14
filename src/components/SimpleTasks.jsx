@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext'
 import DetailModal from './DetailModal'
 import EntryCard from './EntryCard'
 
-function SimpleTasks() {
+function SimpleTasks({ moduleFilter = null, scopeFilter = null, limit = 6 }) {
   const { state, actions, getTasks } = useApp()
   const tasks = (getTasks && getTasks()) || []
   const [selectedEntry, setSelectedEntry] = useState(null)
@@ -150,9 +150,12 @@ function SimpleTasks() {
   }
 
   // Mostrar solo tareas no completadas (filtro !completed)
-  const visibleTasks = (tasks || []).filter(task => 
-    !task.completed && task.status !== 'completed'
-  ).slice(0, 6) // Limitar a 6 tareas para el dashboard
+  const visibleTasks = (tasks || []).filter(task =>
+    !task.completed &&
+    task.status !== 'completed' &&
+    (!moduleFilter || task.module === moduleFilter) &&
+    (!scopeFilter  || task.scope  === scopeFilter)
+  ).slice(0, limit)
 
   return (
     <>

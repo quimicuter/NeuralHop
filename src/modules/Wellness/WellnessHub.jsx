@@ -204,11 +204,6 @@ function WellnessHub() {
           <div className="wh-card wh-aura-tracker">
             <AuraHeatmap />
           </div>
-
-          {/* Sleep Tracker */}
-          <div className="wh-card wh-sleep-tracker">
-            <SleepTracker />
-          </div>
         </section>
 
         {/* ── COLUMN 2: Eje de Vida ─────────────────────────────────────── */}
@@ -370,8 +365,8 @@ function WellnessHub() {
                       title="Nueva tarea"
                     >+</button>
                   </div>
-                  <div className="wh-cube-content">
-                    <SimpleTasks />
+                  <div className="wh-cube-content wh-cube-content-compact">
+                    <SimpleTasks moduleFilter="wellness" limit={5} />
                   </div>
                 </div>
 
@@ -385,12 +380,17 @@ function WellnessHub() {
                       title="Nuevo evento"
                     >+</button>
                   </div>
-                  <div className="wh-cube-content">
-                    <SimpleEvents />
+                  <div className="wh-cube-content wh-cube-content-compact">
+                    <SimpleEvents moduleFilter="wellness" limit={4} />
                   </div>
                 </div>
               </motion.div>
             </div>
+          </div>
+
+          {/* Sleep Tracker debajo del cubo */}
+          <div className="wh-card wh-sleep-tracker">
+            <SleepTracker />
           </div>
         </section>
 
