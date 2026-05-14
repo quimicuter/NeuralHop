@@ -19,6 +19,15 @@ const WELLNESS_TABS = [
   { id: 'zenRest',      label: 'Zen Rest',       icon: '☾',  description: 'Sueño profundo y calma', accent: '113, 130, 255' }
 ]
 
+// Routine Flow internal filters (Global + submodules). Uses system glyphs.
+const ROUTINE_FILTERS = [
+  { id: 'all',          label: 'Global',         icon: '\u{1F310}', accent: '120, 130, 180' }, // 🌐
+  { id: 'glow',         label: 'Glow',           icon: '\u2727',    accent: '255, 167, 102' }, // ✧
+  { id: 'vitality',     label: 'Vitality',       icon: '\u{1F5F2}', accent: '118, 97, 255'  }, // 🗲
+  { id: 'innerBalance', label: 'Inner Balance',  icon: '\u2E19',    accent: '75, 190, 165'  }, // ⸙
+  { id: 'zenRest',      label: 'Zen Rest',       icon: '\u263E',    accent: '113, 130, 255' }, // ☾
+]
+
 const ROUTINE_FLOW = {
   glow: [
     { time: '07:30', label: 'Ritual facial matutino' },
@@ -89,11 +98,12 @@ function WellnessHub() {
   const navigate = useNavigate()
   useApp() // context subscription kept for future use
 
-  const [activeTab,       setActiveTab]       = useState(() => {
-    const saved = window.localStorage.getItem('wellness.activeTab')
-    return WELLNESS_TABS.some(t => t.id === saved) ? saved : 'glow'
+  // Routine Flow internal filter ('all' | submoduleId)
+  const [routineFilter,   setRoutineFilter]   = useState(() => {
+    const saved = window.localStorage.getItem('wellness.routineFilter')
+    return ROUTINE_FILTERS.some(t => t.id === saved) ? saved : 'all'
   })
-  // checkedMap: { [tabId]: boolean[] }
+  // checkedMap: { [filterId]: boolean[] }
   const [checkedMap,     setCheckedMap]      = useState({})
   const [toastMessage,   setToastMessage]    = useState('')
   const [toastVisible,   setToastVisible]    = useState(false)
@@ -108,25 +118,33 @@ function WellnessHub() {
   const openSubHub = (id) => { setSubHubId(id); setSubHubOpen(true) }
   const closeSubHub = () => { setSubHubOpen(false) }
 
-  const activeTabConfig = WELLNESS_TABS.find(t => t.id === activeTab) || WELLNESS_TABS[0]
-  const accent          = `rgba(${activeTabConfig.accent}, 1)`
-  const accentSoft      = `rgba(${activeTabConfig.accent}, 0.18)`
-  const routineSteps    = ROUTINE_FLOW[activeTab]
-  const checkedRoutine  = checkedMap[activeTab] ?? routineSteps.map(() => false)
+  const activeFilterConfig = ROUTINE_FILTERS.find(t => t.id === routineFilter) || ROUTINE_FILTERS[0]
+  const accent          = `rgba(${activeFilterConfig.accent}, 1)`
+  const accentSoft      = `rgba(${activeFilterConfig.accent}, 0.18)`
+  const routineSteps    = useMemo(() => {
+    if (routineFilter === 'all') {
+      const all = Object.entries(ROUTINE_FLOW).flatMap(([sub, steps]) =>
+        steps.map(s => ({ ...s, sub }))
+      )
+      return all.sort((a, b) => a.time.localeCompare(b.time))
+    }
+    return ROUTINE_FLOW[routineFilter] || []
+  }, [routineFilter])
+  const checkedRoutine  = checkedMap[routineFilter] ?? routineSteps.map(() => false)
   const quote           = useMemo(() => getTodayQuote(), [])
 
-  // Persist active tab
+  // Persist routine filter
   useEffect(() => {
-    window.localStorage.setItem('wellness.activeTab', activeTab)
-  }, [activeTab])
+    window.localStorage.setItem('wellness.routineFilter', routineFilter)
+  }, [routineFilter])
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts (cycle routine filter)
   useEffect(() => {
-    const map = { '1': 'glow', '2': 'vitality', '3': 'innerBalance', '4': 'zenRest' }
+    const map = { '0': 'all', '1': 'glow', '2': 'vitality', '3': 'innerBalance', '4': 'zenRest' }
     const onKey = (e) => {
       if (!e.ctrlKey) return
       const next = map[e.key]
-      if (next) { e.preventDefault(); setActiveTab(next) }
+      if (next) { e.preventDefault(); setRoutineFilter(next) }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -143,11 +161,11 @@ function WellnessHub() {
 
   const handleRoutineToggle = (i) => {
     setCheckedMap(prev => {
-      const current = prev[activeTab] ?? routineSteps.map(() => false)
+      const current = prev[routineFilter] ?? routineSteps.map(() => false)
       const next = [...current]
       next[i] = !next[i]
       if (next[i]) showToast(`✓ ${routineSteps[i].label}`)
-      return { ...prev, [activeTab]: next }
+      return { ...prev, [routineFilter]: next }
     })
   }
 
@@ -166,30 +184,18 @@ function WellnessHub() {
           <h1 className="wh-title">Wellness Hub</h1>
         </div>
 
-        {/* Tab pills */}
+        {/* Tab pills — clicking only opens the corresponding Sub-Hub Modal */}
         <nav className="wh-tabs">
           {WELLNESS_TABS.map(tab => (
-            <div
+            <button
               key={tab.id}
-              className={`wh-tab-pill ${activeTab === tab.id ? 'active' : ''}`}
-              style={activeTab === tab.id ? { '--tab-accent': `rgba(${tab.accent}, 0.22)`, borderColor: `rgba(${tab.accent}, 0.5)` } : {}}
+              className="wh-tab-pill"
+              title={`Abrir Sub-Hub ${tab.label}`}
+              onClick={() => openSubHub(tab.id)}
             >
-              {/* Icon → opens Sub-Hub Modal */}
-              <button
-                className="wh-tab-icon-btn"
-                title={`Abrir Sub-Hub ${tab.label}`}
-                onClick={() => openSubHub(tab.id)}
-              >
-                <span className="wh-tab-icon">{tab.icon}</span>
-              </button>
-              {/* Label → switches active tab */}
-              <button
-                className="wh-tab-label-btn"
-                onClick={() => setActiveTab(tab.id)}
-              >
-                {tab.label}
-              </button>
-            </div>
+              <span className="wh-tab-icon">{tab.icon}</span>
+              <span className="wh-tab-label">{tab.label}</span>
+            </button>
           ))}
         </nav>
 
@@ -262,6 +268,30 @@ function WellnessHub() {
               </div>
             </div>
 
+            {/* Internal filter nav (Global + 4 submódulos) */}
+            <nav className="wh-routine-filter" aria-label="Filtro de rutinas">
+              {ROUTINE_FILTERS.map(f => {
+                const isActive = routineFilter === f.id
+                return (
+                  <button
+                    key={f.id}
+                    className={`wh-routine-filter-btn ${isActive ? 'active' : ''}`}
+                    title={f.label}
+                    aria-pressed={isActive}
+                    onClick={() => setRoutineFilter(f.id)}
+                    style={isActive ? {
+                      color: `rgb(${f.accent})`,
+                      background: `rgba(${f.accent}, 0.14)`,
+                      borderColor: `rgba(${f.accent}, 0.45)`,
+                      boxShadow: `0 0 8px rgba(${f.accent}, 0.45)`
+                    } : {}}
+                  >
+                    <span className="wh-routine-filter-glyph">{f.icon}</span>
+                  </button>
+                )
+              })}
+            </nav>
+
             {/* Progress bar */}
             <div className="wh-routine-progressbar-track">
               <motion.div
@@ -281,7 +311,7 @@ function WellnessHub() {
               {/* Timeline steps */}
               {routineSteps.map((step, i) => (
                 <motion.div
-                  key={step.time}
+                  key={`${step.sub ?? routineFilter}-${step.time}-${i}`}
                   className={`wh-timeline-step ${i % 2 === 0 ? 'left' : 'right'} ${checkedRoutine[i] ? 'checked' : ''}`}
                   style={checkedRoutine[i] ? { '--step-accent': accent, '--step-accent-soft': accentSoft } : {}}
                   onClick={() => handleRoutineToggle(i)}

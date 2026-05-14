@@ -126,14 +126,37 @@
 
 .wh-tab-icon { font-size: 0.65rem; }
 
-/* Split tab pill: icon-btn + label-btn */
-.wh-tab-pill {
-  /* override: convert to flex container */
-  display: inline-flex;
+/* Routine Flow internal filter nav */
+.wh-routine-filter {
+  display: flex;
   align-items: center;
-  gap: 0;
-  padding: 0;
-  overflow: hidden;
+  justify-content: flex-end;
+  gap: 0.2rem;
+  margin: 0.15rem 0 0.35rem;
+}
+.wh-routine-filter-btn {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--text-mid);
+  font-size: 0.7rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.wh-routine-filter-btn:hover {
+  background: rgba(255, 255, 255, 0.85);
+  transform: scale(1.08);
+}
+.wh-routine-filter-glyph {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1;
 }
 
 .wh-tab-icon-btn {

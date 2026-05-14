@@ -335,7 +335,7 @@ function SubModuleHubModal({ isOpen, onClose, submoduleId }) {
   const modal = (
     <AnimatePresence>
       {isOpen && (
-        <>
+        <div className="smh-overlay">
           {/* Backdrop */}
           <motion.div
             className="smh-backdrop"
@@ -396,7 +396,7 @@ function SubModuleHubModal({ isOpen, onClose, submoduleId }) {
               </section>
             </div>
           </motion.div>
-        </>
+        </div>
       )}
     </AnimatePresence>
   )

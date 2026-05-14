@@ -18,23 +18,31 @@
   --smh-radius-sm: 0.75rem;
 }
 
+/* ── Overlay (centers modal full-viewport) ─────────────────── */
+.smh-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
 /* ── Backdrop ──────────────────────────────────────────────── */
 .smh-backdrop {
-  position: fixed;
+  position: absolute;
   inset: 0;
   background: rgba(10, 8, 30, 0.38);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  z-index: 10000;
+  z-index: 0;
 }
 
 /* ── Modal Window ──────────────────────────────────────────── */
 .smh-modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10001;
+  position: relative;
+  z-index: 1;
 
   width: min(92vw, 960px);
   height: min(88vh, 620px);
