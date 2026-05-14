@@ -45,8 +45,8 @@
 .aura-circle {
   aspect-ratio: 1;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  background: rgba(255, 255, 255, 0.2);
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.22);
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
   cursor: pointer;
@@ -55,6 +55,7 @@
   overflow: hidden;
   font-size: 0.65rem;
   font-weight: 600;
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.2);
 }
 
 .aura-circle:hover {

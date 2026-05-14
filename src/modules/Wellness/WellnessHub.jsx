@@ -9,6 +9,7 @@ import SimpleEvents from '../../components/SimpleEvents'
 import AuraHeatmap from './AuraHeatmap'
 import SubModuleHubModal from './SubModuleHubModal'
 import SleepTracker from './SleepTracker'
+import WelcomeCard from './WelcomeCard'
 import './WellnessHub.css'
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -200,9 +201,19 @@ function WellnessHub() {
 
         {/* ── COLUMN 1: Estado Interno ─────────────────────────────────────── */}
         <section className="wh-column wh-column-state">
+          {/* Welcome Card */}
+          <div className="wh-card wh-welcome-card-wrapper">
+            <WelcomeCard />
+          </div>
+
           {/* Aura Heatmap - Químicute */}
           <div className="wh-card wh-aura-tracker">
             <AuraHeatmap />
+          </div>
+
+          {/* Sleep Tracker */}
+          <div className="wh-card wh-sleep-tracker">
+            <SleepTracker />
           </div>
         </section>
 

@@ -7,12 +7,12 @@ import './AuraHeatmap.css'
 
 const STORAGE_KEY = 'wellness_aura_map'
 
-// Diccionario Cromático de Emociones - Químicute Palette
+// Diccionario Cromático de Emociones - Químicute Palette (más saturados)
 const CHROMATIC_EMOTIONS = {
-  euphoric: { color: '#e73df7', label: 'Euforia', icon: '✨' },
-  happy: { color: '#FF8FAB', label: 'Felicidad', icon: '😊' },
-  calm: { color: '#B0E0E6', label: 'Zen', icon: '🧘' },
-  lowEnergy: { color: '#A9BCD0', label: 'Baja Energía', icon: '🔋' }
+  euphoric: { color: '#d734f4', label: 'Euforia', icon: '✨' },
+  happy: { color: '#ff6b95', label: 'Felicidad', icon: '😊' },
+  calm: { color: '#7dd3fc', label: 'Zen', icon: '🧘' },
+  lowEnergy: { color: '#94a3b8', label: 'Baja Energía', icon: '🔋' }
 }
 
 
