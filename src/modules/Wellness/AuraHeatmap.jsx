@@ -1,28 +1,25 @@
-import { useEffect, useState } from 'react'
-import { format, startOfWeek, endOfWeek, addDays, isSameDay, isToday, startOfDay } from 'date-fns'
+import { useEffect, useState, useMemo } from 'react'
+import { format, startOfWeek, addDays, isToday, startOfMonth, endOfMonth, getDay, subMonths, addMonths } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { AnimatePresence, motion } from 'framer-motion'
 import './AuraHeatmap.css'
 
 const STORAGE_KEY = 'wellness_aura_map'
 
-// Diccionario Cromático de Emociones
+// Diccionario Cromático de Emociones - Químicute Palette
 const CHROMATIC_EMOTIONS = {
-  euphoric: { color: '#e73df7', label: 'Eufórica' },
-  happy: { color: '#FF8FAB', label: 'Feliz' },
-  calm: { color: '#B0E0E6', label: 'Tranquila' },
-  thoughtful: { color: '#E6E6FA', label: 'Pensativa' },
-  sad: { color: '#A9BCD0', label: 'Agüitada' },
-  depressed: { color: '#973d37', label: 'Triste' },
-  stressed: { color: '#e91000', label: 'Estresada' }
+  euphoric: { color: '#e73df7', label: 'Euforia', icon: '✨' },
+  happy: { color: '#FF8FAB', label: 'Felicidad', icon: '😊' },
+  calm: { color: '#B0E0E6', label: 'Zen', icon: '🧘' },
+  lowEnergy: { color: '#A9BCD0', label: 'Baja Energía', icon: '🔋' }
 }
 
-// Array de colores para el popover
-const MOOD_COLORS = Object.values(CHROMATIC_EMOTIONS)
 
-const DAY_LABELS = ['D', 'L', 'M', 'X', 'J', 'V', 'S']
+
+const DAY_LABELS = ['L', 'M', 'M', 'J', 'V', 'S', 'D'] // Lunes a Domingo
 
 function AuraHeatmap() {
+  // Estado principal
   const [moodMap, setMoodMap] = useState(() => {
     try {
       const saved = window.localStorage.getItem(STORAGE_KEY)
@@ -32,18 +29,39 @@ function AuraHeatmap() {
     }
   })
   
-  const [selectedCell, setSelectedCell] = useState(null)
-  const [showNightNotification, setShowNightNotification] = useState(false)
-  const [showCalendarModal, setShowCalendarModal] = useState(false)
-  const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 0 }))
+  const [selectedDay, setSelectedDay] = useState(null)
+  const [showMoodModal, setShowMoodModal] = useState(false)
+  const [currentMonth, setCurrentMonth] = useState(new Date())
 
-  // Obtener los 7 días de la semana actual
-  const weekDays = Array.from({ length: 7 }, (_, i) => addDays(currentWeekStart, i))
+  // Obtener la semana actual (Lunes a Domingo)
+  const weekDays = useMemo(() => {
+    const start = startOfWeek(new Date(), { weekStartsOn: 1 }) // Lunes como inicio
+    return Array.from({ length: 7 }, (_, i) => addDays(start, i))
+  }, [])
 
-  // Calcular el rango de fechas para el encabezado
-  const weekStart = startOfWeek(currentWeekStart, { weekStartsOn: 0 })
-  const weekEnd = endOfWeek(currentWeekStart, { weekStartsOn: 0 })
-  const dateRange = `${format(weekStart, 'd')} al ${format(weekEnd, 'd')} de ${format(weekStart, 'MMMM')}, ${format(weekStart, 'yyyy')}`
+  // Obtener días del mes actual para el heatmap
+  const monthDays = useMemo(() => {
+    const start = startOfMonth(currentMonth)
+    const end = endOfMonth(currentMonth)
+    const days = []
+    
+    // Agregar espacios vacíos al inicio para alinear con el día de la semana
+    const startDayOfWeek = getDay(start)
+    const adjustedStartDay = startDayOfWeek === 0 ? 6 : startDayOfWeek - 1 // Lunes = 0, Domingo = 6
+    
+    for (let i = 0; i < adjustedStartDay; i++) {
+      days.push(null)
+    }
+    
+    // Agregar todos los días del mes
+    for (let i = 0; i < end.getDate(); i++) {
+      days.push(addDays(start, i))
+    }
+    
+    return days
+  }, [currentMonth])
+
+
 
   // Persistencia en localStorage
   useEffect(() => {
@@ -54,208 +72,178 @@ function AuraHeatmap() {
     }
   }, [moodMap])
 
-  // Notificación nocturna después de las 21:00
-  useEffect(() => {
-    const checkNightNotification = () => {
-      const now = new Date()
-      const currentHour = now.getHours()
-      const todayKey = format(startOfDay(now), 'yyyy-MM-dd')
-      
-      // Si es después de las 21:00 y no hay mood registrado hoy
-      const shouldShow = currentHour >= 21 && !moodMap[todayKey]
-      setShowNightNotification(shouldShow)
-    }
-
-    checkNightNotification()
-    const interval = setInterval(checkNightNotification, 60000) // Verificar cada minuto
-    
-    return () => clearInterval(interval)
-  }, [moodMap])
-
-  const handleCellClick = (day) => {
-    const dayKey = format(startOfDay(day), 'yyyy-MM-dd')
-    setSelectedCell(dayKey)
+  // Handlers
+  const handleDayClick = (day) => {
+    const dayKey = format(day, 'yyyy-MM-dd')
+    setSelectedDay(dayKey)
+    setShowMoodModal(true)
   }
 
-  const handleMoodSelect = (moodColor) => {
-    if (selectedCell) {
-      setMoodMap((prev) => ({
+  const handleMoodSelect = (moodKey) => {
+    if (selectedDay) {
+      const moodColor = CHROMATIC_EMOTIONS[moodKey].color
+      setMoodMap(prev => ({
         ...prev,
-        [selectedCell]: moodColor
+        [selectedDay]: moodColor
       }))
-      setSelectedCell(null)
+      setShowMoodModal(false)
+      setSelectedDay(null)
     }
   }
 
-  const handlePreviousWeek = () => {
-    setCurrentWeekStart((prev) => addDays(prev, -7))
+  const handlePreviousMonth = () => {
+    setCurrentMonth(prev => subMonths(prev, 1))
   }
 
-  const handleNextWeek = () => {
-    setCurrentWeekStart((prev) => addDays(prev, 7))
+  const handleNextMonth = () => {
+    setCurrentMonth(prev => addMonths(prev, 1))
   }
 
   const getMoodColor = (day) => {
-    const dayKey = format(startOfDay(day), 'yyyy-MM-dd')
+    if (!day) return null
+    const dayKey = format(day, 'yyyy-MM-dd')
     return moodMap[dayKey] || null
   }
 
+  const monthYearLabel = format(currentMonth, "MMMM yyyy", { locale: es })
+
   return (
     <div className="aura-heatmap-container">
-      {/* Cabecera de la tarjeta */}
-      <div className="aura-heatmap-header">
-        <div className="aura-header-left">
-          <h2 className="aura-title">AURA HEATMAP</h2>
-          <button 
-            className="aura-calendar-button"
-            onClick={() => setShowCalendarModal(true)}
-            aria-label="Abrir calendario mensual"
-          >
-            ⛶
-          </button>
-        </div>
-        <div className="aura-header-right">
-          <span className="aura-date-range">{dateRange}</span>
-          <button 
-            className="aura-today-button"
-            onClick={() => handleCellClick(new Date())}
-          >
-            Hoy
-          </button>
-        </div>
-      </div>
-
-      {/* Grid 2x7 */}
-      <div className="aura-heatmap-grid">
-        {/* Fila 1: Headers */}
-        <div className="aura-heatmap-headers">
-          {DAY_LABELS.map((label, index) => (
-            <div key={index} className="aura-day-header">
-              {label}
-            </div>
-          ))}
-        </div>
-
-        {/* Fila 2: Celdas */}
-        <div className="aura-heatmap-cells">
+      {/* Estructura Superior: Registro Semanal */}
+      <div className="aura-weekly-section">
+        {/* Título */}
+        <h2 className="aura-title">Aura Heatmap</h2>
+        
+        {/* Fila de Círculos con Días Integrados */}
+        <div className="aura-circles-row">
           {weekDays.map((day, index) => {
-            const dayKey = format(startOfDay(day), 'yyyy-MM-dd')
             const moodColor = getMoodColor(day)
-            const isTodayCell = isToday(day)
-
+            const isTodayDay = isToday(day)
+            const dayLabel = DAY_LABELS[index]
+            
+            // Lógica de contraste para el texto
+            const isDarkBackground = moodColor && (
+              moodColor === '#e73df7' || 
+              moodColor === '#FF8FAB' || 
+              moodColor === '#A9BCD0'
+            )
+            const textColor = isDarkBackground ? '#ffffff' : '#333333'
+            
             return (
-              <div
-                key={index}
-                className={`aura-heatmap-cell ${isTodayCell ? 'today' : ''}`}
-                onClick={() => handleCellClick(day)}
+              <motion.button
+                key={format(day, 'yyyy-MM-dd')}
+                className={`aura-circle ${isTodayDay ? 'today' : ''}`}
                 style={{
-                  backgroundColor: moodColor ? `${moodColor}99` : 'rgba(255, 255, 255, 0.05)'
+                  backgroundColor: moodColor || 'rgba(255, 255, 255, 0.2)',
+                  boxShadow: moodColor ? `0 0 20px ${moodColor}40` : 'none',
+                  color: textColor,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.65rem',
+                  fontWeight: '600'
                 }}
+                onClick={() => handleDayClick(day)}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
               >
-                {/* Sin símbolos - solo color */}
-              </div>
+                {dayLabel}
+              </motion.button>
             )
           })}
         </div>
       </div>
 
-      {/* Popover de selección de mood */}
-      <AnimatePresence>
-        {selectedCell && (
-          <motion.div
-            className="aura-mood-popover"
-            initial={{ opacity: 0, scale: 0.9, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 10 }}
-            transition={{ duration: 0.2 }}
-          >
-            {MOOD_COLORS.map((mood) => (
-              <button
-                key={mood.color}
-                className="aura-mood-button"
-                style={{ backgroundColor: mood.color }}
-                onClick={() => handleMoodSelect(mood.color)}
-                title={mood.label}
-                aria-label={mood.label}
-              />
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Notificación nocturna */}
-      <AnimatePresence>
-        {showNightNotification && (
-          <motion.div
-            className="aura-night-notification"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="aura-notification-content">
-              <p className="aura-notification-text">Hola, ¿no has llenado tu mood de hoy?</p>
-              <button
-                className="aura-notification-close"
-                onClick={() => setShowNightNotification(false)}
-              >
-                ✕
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Modal de calendario */}
-      <AnimatePresence>
-        {showCalendarModal && (
-          <motion.div
-            className="aura-calendar-modal-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowCalendarModal(false)}
-          >
-            <motion.div
-              className="aura-calendar-modal"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              transition={{ duration: 0.2 }}
+      {/* Estructura Inferior: Heatmap Mensual Compacto */}
+      <div className="aura-analysis-section">
+        <div className="aura-heatmap-column">
+          {/* Navegación del Mes */}
+          <div className="aura-month-navigation">
+            <button 
+              className="aura-nav-btn"
+              onClick={handlePreviousMonth}
+              aria-label="Mes anterior"
             >
-              <div className="aura-calendar-header">
-                <h3>Seleccionar Semana</h3>
-                <button
+              ‹
+            </button>
+            <span className="aura-month-label">{monthYearLabel}</span>
+            <button 
+              className="aura-nav-btn"
+              onClick={handleNextMonth}
+              aria-label="Mes siguiente"
+            >
+              ›
+            </button>
+          </div>
+          
+          {/* Grid del Mes */}
+          <div className="aura-month-grid">
+            {monthDays.map((day, index) => {
+              const moodColor = getMoodColor(day)
+              const isTodayDay = day && isToday(day)
+              
+              return (
+                <div
+                  key={day ? format(day, 'yyyy-MM-dd') : `empty-${index}`}
+                  className={`aura-month-cell ${!day ? 'empty' : ''} ${isTodayDay ? 'today' : ''}`}
+                  style={{
+                    backgroundColor: moodColor || 'rgba(255, 255, 255, 0.05)',
+                    boxShadow: moodColor ? `0 0 8px ${moodColor}30` : 'none'
+                  }}
+                />
+              )
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Modal Flotante Central */}
+      <AnimatePresence>
+        {showMoodModal && (
+          <>
+            {/* Backdrop */}
+            <div 
+              className="aura-modal-backdrop"
+              onClick={() => setShowMoodModal(false)}
+            />
+            
+            {/* Modal */}
+            <motion.div
+              className="aura-mood-modal"
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 20 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+            >
+              <div className="aura-modal-header">
+                <h3>¿Cómo te sientes hoy?</h3>
+                <button 
                   className="aura-modal-close"
-                  onClick={() => setShowCalendarModal(false)}
+                  onClick={() => setShowMoodModal(false)}
                 >
                   ✕
                 </button>
               </div>
-              <div className="aura-calendar-navigation">
-                <button onClick={handlePreviousWeek} className="aura-nav-button">
-                  ← Semana anterior
-                </button>
-                <span className="aura-current-week">
-                  {format(weekStart, 'd MMM')} - {format(weekEnd, 'd MMM yyyy')}
-                </span>
-                <button onClick={handleNextWeek} className="aura-nav-button">
-                  Siguiente semana →
-                </button>
+              
+              <div className="aura-mood-options">
+                {Object.entries(CHROMATIC_EMOTIONS).map(([key, mood]) => (
+                  <motion.button
+                    key={key}
+                    className="aura-mood-option"
+                    style={{ backgroundColor: mood.color }}
+                    onClick={() => handleMoodSelect(key)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <span className="aura-mood-icon">{mood.icon}</span>
+                    <span className="aura-mood-label">{mood.label}</span>
+                  </motion.button>
+                ))}
               </div>
             </motion.div>
-          </motion.div>
+          </>
         )}
       </AnimatePresence>
-
-      {/* Cerrar popover al hacer clic fuera */}
-      {selectedCell && (
-        <div
-          className="aura-popover-backdrop"
-          onClick={() => setSelectedCell(null)}
-        />
-      )}
     </div>
   )
 }

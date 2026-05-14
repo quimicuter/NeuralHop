@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
-import { format, startOfWeek, addDays, isToday } from 'date-fns'
+import { format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../../context/AppContext'
 import SimpleTasks from '../../components/SimpleTasks'
 import SimpleEvents from '../../components/SimpleEvents'
+import AuraHeatmap from './AuraHeatmap'
 import './WellnessHub.css'
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -63,15 +64,7 @@ const ACTIVE_PROJECTS = [
 const SLEEP_DATA = [6.2, 7.0, 5.8, 7.5, 8.0, 6.5, 7.2]
 const SLEEP_LABELS = ['L', 'M', 'X', 'J', 'V', 'S', 'D']
 
-const AURA_EVALUATIONS = [
-  'Tu energía hoy es pura química.',
-  'Brillas con luz propia.',
-  'Tu calma es tu superpotencia.',
-  'Estás en sintonía perfecta.',
-  'Tu vitalidad es contagiosa.',
-  'Fluyes con el universo.',
-  'Eres un faro de bienestar.'
-]
+
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -87,12 +80,7 @@ const getSleepBarHeight = (hours) => {
   return Math.min(100, Math.max(8, ((hours - min) / (max - min)) * 100))
 }
 
-const getTodayEvaluation = () => {
-  const dayOfYear = Math.floor(
-    (new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000
-  )
-  return AURA_EVALUATIONS[dayOfYear % AURA_EVALUATIONS.length]
-}
+
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
@@ -109,11 +97,6 @@ function WellnessHub() {
   const [toastMessage,   setToastMessage]    = useState('')
   const [toastVisible,   setToastVisible]    = useState(false)
   
-  // Aura Tracker state
-  const [weeklyMoods,    setWeeklyMoods]     = useState({})
-  const [selectedDay,    setSelectedDay]     = useState(null)
-  const [monthlyMoods,   setMonthlyMoods]    = useState({})
-  
   // 3D Cube state
   const [cubeFace,       setCubeFace]        = useState('tasks')
 
@@ -123,21 +106,6 @@ function WellnessHub() {
   const routineSteps    = ROUTINE_FLOW[activeTab]
   const checkedRoutine  = checkedMap[activeTab] ?? routineSteps.map(() => false)
   const quote           = useMemo(() => getTodayQuote(), [])
-  const evaluation      = useMemo(() => getTodayEvaluation(), [])
-
-  // Generate week days for Aura Tracker
-  const weekDays = useMemo(() => {
-    const start = startOfWeek(new Date(), { weekStartsOn: 1 }) // Monday start
-    return Array.from({ length: 7 }, (_, i) => addDays(start, i))
-  }, [])
-
-  // Generate month days for mini heatmap
-  const monthDays = useMemo(() => {
-    const today = new Date()
-    const start = new Date(today.getFullYear(), today.getMonth(), 1)
-    const end = new Date(today.getFullYear(), today.getMonth() + 1, 0)
-    return Array.from({ length: end.getDate() }, (_, i) => addDays(start, i))
-  }, [])
 
   // Persist active tab
   useEffect(() => {
@@ -179,23 +147,6 @@ function WellnessHub() {
     ? Math.round((checkedRoutine.filter(Boolean).length / checkedRoutine.length) * 100)
     : 0
 
-  // Aura Tracker handlers
-  const handleDayClick = (day) => {
-    const dayKey = format(day, 'yyyy-MM-dd')
-    if (isToday(day)) {
-      setSelectedDay(selectedDay === dayKey ? null : dayKey)
-    }
-  }
-
-  const handleMoodSelect = (moodColor) => {
-    if (selectedDay) {
-      setWeeklyMoods(prev => ({ ...prev, [selectedDay]: moodColor }))
-      setMonthlyMoods(prev => ({ ...prev, [selectedDay]: moodColor }))
-      setSelectedDay(null)
-      showToast('Mood registrado')
-    }
-  }
-
   // ── Render ──────────────────────────────────────────────────────────────────
   return (
     <div className="wh-shell">
@@ -234,84 +185,9 @@ function WellnessHub() {
 
         {/* ── COLUMN 1: Estado Interno ─────────────────────────────────────── */}
         <section className="wh-column wh-column-state">
-          {/* Aura Tracker - 4 Quadrants */}
+          {/* Aura Heatmap - Químicute */}
           <div className="wh-card wh-aura-tracker">
-            <div className="wh-aura-grid">
-              {/* Quadrant 1: Weekly bubbles */}
-              <div className="wh-aura-quadrant wh-aura-weekly">
-                <div className="wh-aura-bubbles">
-                  {weekDays.map((day) => {
-                    const dayKey = format(day, 'yyyy-MM-dd')
-                    const mood = weeklyMoods[dayKey]
-                    const isTodayDay = isToday(day)
-                    const dayLabel = format(day, 'EEEEEE', { locale: es }).toUpperCase()
-                    
-                    return (
-                      <motion.button
-                        key={dayKey}
-                        className={`wh-aura-bubble ${isTodayDay ? 'today' : ''}`}
-                        style={{ backgroundColor: mood || 'rgba(255, 255, 255, 0.1)' }}
-                        onClick={() => handleDayClick(day)}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <span className="wh-aura-bubble-label">{dayLabel}</span>
-                      </motion.button>
-                    )
-                  })}
-                </div>
-                
-                {/* Mood selector popover */}
-                <AnimatePresence>
-                  {selectedDay && (
-                    <motion.div
-                      className="wh-aura-popover"
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                    >
-                      {WELLNESS_TABS.map(tab => (
-                        <button
-                          key={tab.id}
-                          className="wh-aura-mood-btn"
-                          style={{ backgroundColor: `rgba(${tab.accent}, 0.9)` }}
-                          onClick={() => handleMoodSelect(`rgba(${tab.accent}, 0.9)`)}
-                        >
-                          {tab.icon}
-                        </button>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* Quadrant 2: Empty for balance */}
-              <div className="wh-aura-quadrant" />
-
-              {/* Quadrant 3: Dynamic evaluation */}
-              <div className="wh-aura-quadrant wh-aura-evaluation">
-                <p className="wh-aura-eval-text">{evaluation}</p>
-              </div>
-
-              {/* Quadrant 4: Monthly heatmap */}
-              <div className="wh-aura-quadrant wh-aura-monthly">
-                <div className="wh-aura-mini-heatmap">
-                  {monthDays.map((day) => {
-                    const dayKey = format(day, 'yyyy-MM-dd')
-                    const mood = monthlyMoods[dayKey]
-                    const isTodayDay = isToday(day)
-                    
-                    return (
-                      <div
-                        key={dayKey}
-                        className={`wh-aura-mini-cell ${isTodayDay ? 'today' : ''}`}
-                        style={{ backgroundColor: mood || 'rgba(255, 255, 255, 0.05)' }}
-                      />
-                    )
-                  })}
-                </div>
-              </div>
-            </div>
+            <AuraHeatmap />
           </div>
 
           {/* Sleep Tracker */}

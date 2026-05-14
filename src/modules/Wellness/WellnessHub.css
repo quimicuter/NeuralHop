@@ -34,8 +34,8 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: 1.5rem;
-  gap: 1rem;
+  padding: 0.75rem;
+  gap: 0.5rem;
   /* Gradient: lila suave → azul cristalino */
   background: linear-gradient(135deg,
     #ede9f8 0%,
@@ -52,14 +52,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.45rem 0.9rem;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
   background: rgba(255, 255, 255, 0.72);
   border: 1px solid rgba(255, 255, 255, 0.85);
-  border-radius: 1.2rem;
+  border-radius: 0.8rem;
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
-  box-shadow: 0 4px 20px rgba(90, 60, 180, 0.07);
+  box-shadow: 0 2px 12px rgba(90, 60, 180, 0.05);
 }
 
 .wh-topbar-left {
@@ -69,13 +69,13 @@
 }
 
 .wh-back-btn {
-  width: 34px;
-  height: 34px;
+  width: 24px;
+  height: 24px;
   border: 1px solid rgba(15, 23, 42, 0.1);
-  border-radius: 10px;
+  border-radius: 6px;
   background: rgba(255, 255, 255, 0.8);
   color: var(--text-dark);
-  font-size: 1rem;
+  font-size: 0.75rem;
   cursor: pointer;
   display: grid;
   place-items: center;
@@ -85,8 +85,8 @@
 
 .wh-title {
   font-family: 'Playfair Display', serif;
-  font-size: 1.05rem;
-  font-weight: 700;
+  font-size: 0.9rem;
+  font-weight: 600;
   color: var(--text-dark);
   margin: 0;
   letter-spacing: 0.01em;
@@ -96,21 +96,21 @@
 .wh-tabs {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.25rem;
 }
 
 .wh-tab-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.32rem 0.75rem;
+  gap: 0.2rem;
+  padding: 0.2rem 0.5rem;
   border-radius: 999px;
   border: 1px solid rgba(15, 23, 42, 0.1);
   background: rgba(255, 255, 255, 0.55);
   color: var(--text-mid);
   font-family: 'Inter', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 600;
+  font-size: 0.65rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -121,15 +121,15 @@
   background: var(--tab-accent, rgba(200, 190, 255, 0.35));
   border-color: var(--tab-accent, rgba(180, 160, 255, 0.4));
   color: var(--text-dark);
-  box-shadow: 0 2px 10px rgba(120, 90, 200, 0.12);
+  box-shadow: 0 1px 6px rgba(120, 90, 200, 0.08);
 }
 
-.wh-tab-icon { font-size: 0.78rem; }
+.wh-tab-icon { font-size: 0.65rem; }
 
 /* Date chip */
 .wh-date-chip {
-  font-size: 0.72rem;
-  font-weight: 500;
+  font-size: 0.6rem;
+  font-weight: 400;
   color: var(--text-mid);
   white-space: nowrap;
   text-transform: capitalize;
@@ -141,14 +141,14 @@
   min-height: 0;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  gap: 0.5rem;
   overflow: hidden;
 }
 
 .wh-column {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.5rem;
   min-height: 0;
 }
 
@@ -157,15 +157,15 @@
   background: rgba(255, 255, 255, 0.45);
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
-  border-radius: 2.5rem;
+  border-radius: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.20);
   box-shadow:
-    0 8px 40px rgba(90, 60, 180, 0.07),
+    0 4px 20px rgba(90, 60, 180, 0.05),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  padding: 1.1rem 1.2rem;
+  padding: 0.6rem 0.8rem;
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
+  gap: 0.4rem;
   overflow: hidden;
   min-height: 0;
   min-width: 0;
@@ -173,9 +173,9 @@
 }
 .wh-card:hover {
   box-shadow:
-    0 16px 56px rgba(90, 60, 180, 0.11),
+    0 8px 28px rgba(90, 60, 180, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  transform: translateY(-1px);
+  transform: translateY(-0.5px);
 }
 
 /* ── Card Header ──────────────────────────────────────────── */
@@ -188,28 +188,28 @@
 
 .wh-card-title {
   font-family: 'Playfair Display', serif;
-  font-size: 0.88rem;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 600;
   color: var(--text-dark);
   margin: 0;
   letter-spacing: 0.01em;
 }
 
 .wh-muted {
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-weight: 400;
   color: var(--text-lila);
 }
 
 .wh-add-btn {
-  width: 28px;
-  height: 28px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.6);
   background: rgba(255, 255, 255, 0.7);
   color: var(--text-dark);
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 500;
   cursor: pointer;
   display: grid;
   place-items: center;
@@ -476,8 +476,8 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  padding: 1rem 0;
+  gap: 0.4rem;
+  padding: 0.5rem 0;
   min-height: 0;
 }
 
@@ -524,11 +524,11 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: rgba(15, 23, 42, 0.18);
-  border: 2px solid rgba(255, 255, 255, 0.8);
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
   transform: translate(-50%, -50%);
   z-index: 3;
   transition: all 0.2s ease;
@@ -537,13 +537,13 @@
 /* Step card */
 .wh-timeline-card {
   flex: 1;
-  padding: 0.75rem 1rem;
+  padding: 0.3rem 0.5rem;
   background: rgba(255, 255, 255, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 1.2rem;
+  border-radius: 0.7rem;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.1rem;
   position: relative;
   transition: all 0.2s ease;
   min-width: 0;
@@ -558,17 +558,17 @@
 }
 
 .wh-timeline-time {
-  font-size: 0.62rem;
-  font-weight: 600;
+  font-size: 0.55rem;
+  font-weight: 500;
   color: var(--text-lila);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
 }
 
 .wh-timeline-label {
-  font-size: 0.73rem;
+  font-size: 0.62rem;
   font-weight: 500;
   color: var(--text-dark);
-  line-height: 1.3;
+  line-height: 1.2;
 }
 .wh-timeline-label.line-through {
   text-decoration: line-through;
@@ -603,8 +603,8 @@
 /* Quote */
 .wh-quote-mark {
   font-family: 'Playfair Display', serif;
-  font-size: 1.8rem;
-  font-weight: 700;
+  font-size: 1.1rem;
+  font-weight: 600;
   color: rgba(120, 90, 200, 0.35);
   line-height: 1;
   margin: 0;
@@ -618,12 +618,12 @@
 
 .wh-quote-text {
   font-family: 'Playfair Display', serif;
-  font-size: 0.82rem;
+  font-size: 0.68rem;
   font-style: italic;
-  font-weight: 600;
+  font-weight: 500;
   color: rgba(30, 20, 60, 0.78);
   text-align: center;
-  line-height: 1.5;
+  line-height: 1.4;
   margin: 0;
   flex: 1;
 }
@@ -747,15 +747,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.8rem 1rem;
+  padding: 0.4rem 0.6rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   flex-shrink: 0;
 }
 
 .wh-cube-face-header h3 {
   font-family: 'Playfair Display', serif;
-  font-size: 0.85rem;
-  font-weight: 700;
+  font-size: 0.72rem;
+  font-weight: 600;
   color: var(--text-dark);
   margin: 0;
 }
