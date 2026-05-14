@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from 'react'
+import { createPortal } from 'react-dom'
 import { format, startOfWeek, addDays, isToday, startOfMonth, endOfMonth, getDay, subMonths, addMonths } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -107,7 +108,7 @@ function AuraHeatmap() {
 
   const monthYearLabel = format(currentMonth, "MMMM yyyy", { locale: es })
 
-  return (
+  const mainContent = (
     <div className="aura-heatmap-container">
       {/* Estructura Superior: Registro Semanal */}
       <div className="aura-weekly-section">
@@ -197,54 +198,66 @@ function AuraHeatmap() {
         </div>
       </div>
 
-      {/* Modal Flotante Central */}
-      <AnimatePresence>
-        {showMoodModal && (
-          <>
-            {/* Backdrop */}
-            <div 
-              className="aura-modal-backdrop"
-              onClick={() => setShowMoodModal(false)}
-            />
-            
-            {/* Modal */}
-            <motion.div
-              className="aura-mood-modal"
-              initial={{ opacity: 0, scale: 0.8, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.8, y: 20 }}
-              transition={{ duration: 0.3, ease: 'easeOut' }}
-            >
-              <div className="aura-modal-header">
-                <h3>¿Cómo te sientes hoy?</h3>
-                <button 
-                  className="aura-modal-close"
-                  onClick={() => setShowMoodModal(false)}
-                >
-                  ✕
-                </button>
-              </div>
-              
-              <div className="aura-mood-options">
-                {Object.entries(CHROMATIC_EMOTIONS).map(([key, mood]) => (
-                  <motion.button
-                    key={key}
-                    className="aura-mood-option"
-                    style={{ backgroundColor: mood.color }}
-                    onClick={() => handleMoodSelect(key)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <span className="aura-mood-icon">{mood.icon}</span>
-                    <span className="aura-mood-label">{mood.label}</span>
-                  </motion.button>
-                ))}
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
     </div>
+  )
+
+  // Portal: renderiza el modal directamente en document.body para escapar
+  // cualquier stacking context creado por transform/filter en ancestros
+  const moodModalPortal = createPortal(
+    <AnimatePresence>
+      {showMoodModal && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="aura-modal-backdrop"
+            onClick={() => setShowMoodModal(false)}
+          />
+
+          {/* Modal */}
+          <motion.div
+            className="aura-mood-modal"
+            initial={{ opacity: 0, scale: 0.85, y: 12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.85, y: 12 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+          >
+            <div className="aura-modal-header">
+              <h3>¿Cómo te sientes hoy?</h3>
+              <button
+                className="aura-modal-close"
+                onClick={() => setShowMoodModal(false)}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="aura-mood-options">
+              {Object.entries(CHROMATIC_EMOTIONS).map(([key, mood]) => (
+                <motion.button
+                  key={key}
+                  className="aura-mood-option"
+                  style={{ backgroundColor: mood.color }}
+                  onClick={() => handleMoodSelect(key)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <span className="aura-mood-icon">{mood.icon}</span>
+                  <span className="aura-mood-label">{mood.label}</span>
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>,
+    document.body
+  )
+
+  return (
+    <>
+      {mainContent}
+      {moodModalPortal}
+    </>
   )
 }
 

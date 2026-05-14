@@ -96,6 +96,9 @@
 
 /* Heatmap Mensual */
 .aura-heatmap-column {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -150,17 +153,19 @@
 .aura-month-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 1fr;
   gap: 2px;
   flex: 1;
   min-height: 0;
+  overflow: hidden;
 }
 
 .aura-month-cell {
-  aspect-ratio: 1;
   border-radius: 3px;
   background: rgba(255, 255, 255, 0.05);
   transition: all 0.2s ease;
   cursor: pointer;
+  min-height: 0;
 }
 
 .aura-month-cell:hover:not(.empty) {

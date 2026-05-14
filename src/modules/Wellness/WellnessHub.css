@@ -241,7 +241,8 @@
 
 /* ── COLUMN 1: Estado Interno ───────────────────────────────── */
 .wh-aura-tracker {
-  flex: 1;
+  flex: 2;
+  min-height: 0;
   padding: 0.8rem;
 }
 
@@ -379,7 +380,8 @@
 
 /* Sleep Tracker */
 .wh-sleep-tracker {
-  flex: 1;
+  flex: 0 0 180px;
+  min-height: 0;
 }
 
 .wh-sleep-avg {
