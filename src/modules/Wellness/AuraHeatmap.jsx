@@ -115,44 +115,38 @@ function AuraHeatmap() {
         {/* Título */}
         <h2 className="aura-title">Aura Heatmap</h2>
         
-        {/* Fila de Círculos con Días Integrados */}
-        <div className="aura-circles-row">
-          {weekDays.map((day, index) => {
-            const moodColor = getMoodColor(day)
-            const isTodayDay = isToday(day)
-            const dayLabel = DAY_LABELS[index]
-            
-            // Lógica de contraste para el texto
-            const isDarkBackground = moodColor && (
-              moodColor === '#e73df7' || 
-              moodColor === '#FF8FAB' || 
-              moodColor === '#A9BCD0'
-            )
-            const textColor = isDarkBackground ? '#ffffff' : '#333333'
-            
-            return (
-              <motion.button
-                key={format(day, 'yyyy-MM-dd')}
-                className={`aura-circle ${isTodayDay ? 'today' : ''}`}
-                style={{
-                  backgroundColor: moodColor || 'rgba(255, 255, 255, 0.2)',
-                  boxShadow: moodColor ? `0 0 20px ${moodColor}40` : 'none',
-                  color: textColor,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '0.65rem',
-                  fontWeight: '600'
-                }}
-                onClick={() => handleDayClick(day)}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {dayLabel}
-              </motion.button>
-            )
-          })}
-        </div>
+        {/* Renderizado de círculos semanales con iniciales y contraste dinámico */}
+        {(() => {
+          const renderWeeklyBubbles = () => (
+            <div className="wh-aura-bubbles">
+              {weekDays.map((day, i) => {
+                const dayKey = format(day, 'yyyy-MM-dd')
+                const mood = moodMap[dayKey]
+                const isToday = isToday(day)
+                const moodConfig = mood ? CHROMATIC_EMOTIONS[mood] : null
+                
+                // Contraste dinámico: si hay mood, texto blanco; si no, texto oscuro
+                const textColor = moodConfig ? '#ffffff' : 'rgba(15, 23, 42, 0.9)'
+                
+                return (
+                  <div
+                    key={dayKey}
+                    className={`wh-aura-bubble ${isToday ? 'today' : ''}`}
+                    style={moodConfig ? { background: moodConfig.color } : {}}
+                    onClick={() => handleDayClick(day)}
+                    title={`${format(day, 'EEEE d', { locale: es })}${mood ? ` - ${moodConfig.label}` : ''}`}
+                  >
+                    <span className="wh-aura-bubble-label" style={{ color: textColor }}>
+                      {DAY_LABELS[i]}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          )
+          return renderWeeklyBubbles()
+        })()}
+
       </div>
 
       {/* Estructura Inferior: Heatmap Mensual Compacto */}

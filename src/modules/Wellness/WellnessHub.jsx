@@ -399,11 +399,7 @@ function WellnessHub() {
             </div>
           </div>
 
-          {/* Sleep Tracker debajo del cubo */}
-          <div className="wh-card wh-sleep-tracker">
-            <SleepTracker />
-          </div>
-        </section>
+                  </section>
 
       </main>
 

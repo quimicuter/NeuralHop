@@ -34,8 +34,8 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: 0.5rem;
-  gap: 0.35rem;
+  padding: 0.35rem;
+  gap: 0.25rem;
   /* Gradient: lila suave → azul cristalino */
   background: linear-gradient(135deg,
     #ede9f8 0%,
@@ -207,20 +207,22 @@
   text-transform: capitalize;
 }
 
-/* ── 4-COLUMN GRID ─────────────────────────────────────────── */
+/* ── 4-COLUMN GRID ──────────────────────────────────────── */
 .wh-grid-4col {
   flex: 1;
   display: grid;
   grid-template-columns: 1fr 1.2fr 1fr 1fr;
-  gap: 0.5rem;
+  gap: 0.2rem;
   min-height: 0;
+  overflow: hidden;
 }
 
 .wh-column {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.175rem;
   min-height: 0;
+  overflow: hidden;
 }
 
 /* ── Crystal Card Shell ───────────────────────────────────── */
@@ -231,11 +233,12 @@
   border: 1px solid var(--crystal-border);
   border-radius: 0.8rem;
   box-shadow: var(--crystal-shadow);
-  padding: 0.45rem;
+  padding: 0.125rem;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.125rem;
   min-height: 0;
+  overflow: hidden;
 }
 
 /* ── Card Header ──────────────────────────────────────────── */
@@ -243,22 +246,25 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.35rem;
+  gap: 0.175rem;
 }
 
 .wh-card-title {
   margin: 0;
   font-family: 'Playfair Display', serif;
-  font-size: 0.75rem;
+  font-size: 0.55rem;
   font-weight: 600;
   color: var(--text-dark);
-  line-height: 1.2;
+  line-height: 1.05;
+  min-width: 0;
+  flex-shrink: 1;
 }
 
 .wh-muted {
-  font-size: 0.6rem;
-  font-weight: 400;
+  font-size: 0.48rem;
+  font-weight: 300;
   color: var(--text-lila);
+  line-height: 1.1;
 }
 
 .wh-add-btn {
@@ -268,7 +274,7 @@
   border: 1px solid rgba(255, 255, 255, 0.6);
   background: rgba(255, 255, 255, 0.7);
   color: var(--text-dark);
-  font-size: 0.65rem;
+  font-size: 0.55rem;
   font-weight: 500;
   cursor: pointer;
   display: grid;
@@ -287,7 +293,7 @@
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.6);
   background: rgba(255, 255, 255, 0.7);
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   cursor: pointer;
   display: grid;
   place-items: center;
@@ -302,12 +308,15 @@
 /* ── COLUMN 1: Estado Interno ───────────────────────────────── */
 .wh-welcome-card-wrapper {
   flex: 0 0 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .wh-aura-tracker {
   flex: 1;
   min-height: 0;
-  padding: 0.4rem;
+  padding: 0.2rem;
+  overflow: hidden;
 }
 
 .wh-sleep-tracker {
@@ -322,7 +331,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  gap: 0.6rem;
+  gap: 0.3rem;
   height: 100%;
 }
 
@@ -330,24 +339,24 @@
   background: rgba(255, 255, 255, 0.15);
   border-radius: 1.2rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0.45rem;
+  padding: 0.225rem;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* Quadrant 1: Weekly bubbles */
 .wh-aura-weekly {
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.15rem;
 }
 
 .wh-aura-bubbles {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.25rem;
+  gap: 0.125rem;
   width: 100%;
 }
 
@@ -372,7 +381,7 @@
 }
 
 .wh-aura-bubble-label {
-  font-size: 0.5rem;
+  font-size: 0.4rem;
   font-weight: 700;
   color: var(--text-dark);
   text-transform: uppercase;
@@ -386,8 +395,8 @@
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 0.25rem;
-  padding: 0.4rem;
+  gap: 0.125rem;
+  padding: 0.2rem;
   background: rgba(255, 255, 255, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 12px;
@@ -404,7 +413,7 @@
   cursor: pointer;
   display: grid;
   place-items: center;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   transition: transform 0.2s ease;
 }
 .wh-aura-mood-btn:hover {
@@ -419,7 +428,7 @@
 .wh-aura-eval-text {
   font-family: 'Playfair Display', serif;
   font-style: italic;
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-weight: 600;
   color: var(--text-dark);
   line-height: 1.4;
@@ -435,13 +444,14 @@
 .wh-aura-mini-heatmap {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  gap: 2px;
+  gap: 1px;
   width: 100%;
 }
 
 .wh-aura-mini-cell {
   aspect-ratio: 1;
   border-radius: 2px;
+  border: 0.5px solid rgba(167, 139, 250, 0.5);
   background: rgba(255, 255, 255, 0.05);
   transition: background 0.2s ease;
 }
@@ -452,19 +462,22 @@
 /* Sleep Tracker */
 .wh-sleep-tracker {
   flex: 1 1 auto;
-  min-height: 280px;
+  min-height: 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .wh-sleep-avg {
-  font-size: 0.65rem;
+  font-size: 0.48rem;
+  font-weight: 300;
+  line-height: 1.1;
 }
 
 .wh-sleep-chart {
   display: flex;
   align-items: flex-end;
-  gap: 0.3rem;
+  gap: 0.15rem;
   flex: 1;
   min-height: 0;
 }
@@ -474,7 +487,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.15rem;
+  gap: 0.075rem;
   height: 100%;
 }
 
@@ -494,21 +507,24 @@
 }
 
 .wh-sleep-day-label {
-  font-size: 0.55rem;
-  font-weight: 700;
+  font-size: 0.4rem;
+  font-weight: 300;
   color: var(--text-mid);
   letter-spacing: 0.05em;
+  line-height: 1.05;
 }
 
 .wh-sleep-hours {
-  font-size: 0.52rem;
+  font-size: 0.38rem;
   color: var(--text-lila);
-  font-weight: 500;
+  font-weight: 300;
+  line-height: 1.05;
 }
 
 .wh-sleep-legend {
   display: flex;
   align-items: center;
+  gap: 0.15rem;
   gap: 0.3rem;
   gap: 0.4rem;
   flex-shrink: 0;
@@ -576,6 +592,9 @@
   position: relative;
   z-index: 2;
   cursor: pointer;
+  width: 100%;
+  min-height: 32px;
+  margin: 0.25rem 0;
 }
 
 .wh-timeline-step.left {
@@ -589,8 +608,8 @@
 
 /* Connector line from axis to card */
 .wh-timeline-connector {
-  width: 2rem;
-  height: 2px;
+  width: 1.5rem;
+  height: 1px;
   background: rgba(15, 23, 42, 0.08);
   flex-shrink: 0;
 }
@@ -613,16 +632,17 @@
 /* Step card */
 .wh-timeline-card {
   flex: 1;
-  padding: 0.25rem 0.4rem;
+  padding: 0.2rem 0.35rem;
   background: rgba(255, 255, 255, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 0.55rem;
+  border-radius: 0.45rem;
   display: flex;
   flex-direction: column;
-  gap: 0.08rem;
+  gap: 0.06rem;
   position: relative;
   transition: all 0.2s ease;
   min-width: 0;
+  max-width: 180px;
 }
 .wh-timeline-step:hover .wh-timeline-card {
   background: rgba(255, 255, 255, 0.8);
@@ -634,17 +654,18 @@
 }
 
 .wh-timeline-time {
-  font-size: 0.48rem;
-  font-weight: 400;
+  font-size: 0.42rem;
+  font-weight: 300;
   color: var(--text-lila);
   letter-spacing: 0.02em;
+  line-height: 1.05;
 }
 
 .wh-timeline-label {
-  font-size: 0.55rem;
-  font-weight: 400;
+  font-size: 0.5rem;
+  font-weight: 300;
   color: var(--text-dark);
-  line-height: 1.15;
+  line-height: 1.05;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -677,6 +698,7 @@
 .wh-wellness-projects {
   flex: 1;
   min-height: 0;
+  overflow: hidden;
 }
 
 /* Quote */
@@ -753,12 +775,23 @@
   border-radius: 999px;
 }
 
-/* ── COLUMN 4: Acción (3D Cube) ───────────────────────────── */
-.wh-column-action {
+/* ── COLUMN 4: Action Cube (Tasks/Events) ─────────────────────── */
+.wh-routine-tracker {
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.4rem;
+  overflow: hidden;
+}
+
+.wh-action-cube {
+  flex: 1;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  overflow: hidden;
 }
 
 .wh-action-cube {
@@ -769,6 +802,32 @@
 }
 
 /* Compact variant for entry cards inside cube */
+.wh-cube-content-compact {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(167, 139, 250, 0.3) transparent;
+  padding: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* WebKit scrollbar styling */
+.wh-cube-content-compact::-webkit-scrollbar {
+  width: 4px;
+}
+.wh-cube-content-compact::-webkit-scrollbar-track {
+  background: transparent;
+}
+.wh-cube-content-compact::-webkit-scrollbar-thumb {
+  background: rgba(167, 139, 250, 0.3);
+  border-radius: 2px;
+}
+.wh-cube-content-compact::-webkit-scrollbar-thumb:hover {
+  background: rgba(167, 139, 250, 0.5);
+}
+
 .wh-cube-content-compact .entry-card {
   padding: 0.45rem 0.55rem !important;
   gap: 0.5rem !important;
@@ -778,6 +837,11 @@
   font-size: 0.78rem !important;
   font-weight: 600 !important;
   letter-spacing: 0.005em;
+  min-width: 0;
+  flex-shrink: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .wh-cube-content-compact .entry-detail-row {
   font-size: 0.6rem !important;

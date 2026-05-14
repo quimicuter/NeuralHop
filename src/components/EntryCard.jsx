@@ -79,14 +79,17 @@ function EntryCard({
         </div>
       </div>
 
-      {/* DERECHA: Origen (Ámbito + Submódulo) */}
+      {/* LADO DERECHO: Emoji de ámbito, título y símbolo de submódulo */}
       <div className="entry-card-right">
-        <span className="entry-scope-emoji" title={`Ámbito: ${scope}`}>
+        <span className="entry-scope-emoji" aria-hidden="true">
           {getScopeEmoji(entry)}
         </span>
-        <span className="entry-submodule-symbol" title={`Categoría: ${entry?.module || ''}`}>
-          {getSubmoduleSymbol(entry)}
-        </span>
+        <span className="entry-title">{entry?.title || entry?.name || 'Sin título'}</span>
+        {entry?.module === 'wellness' && (
+          <span className="entry-submodule-symbol" aria-hidden="true">
+            {getSubmoduleSymbol(entry)}
+          </span>
+        )}
       </div>
     </div>
   )
