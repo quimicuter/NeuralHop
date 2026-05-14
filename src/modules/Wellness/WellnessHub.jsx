@@ -159,6 +159,20 @@ function WellnessHub() {
     })
   }
 
+  const handleRoutineEdit = (step, index) => {
+    const routineEntry = {
+      type: 'routine',
+      scope: 'personal',
+      module: 'wellness',
+      title: step.label,
+      description: `Horario: ${step.time}${step.sub ? ` (${step.sub})` : ''}`,
+      time: step.time,
+      completed: checkedRoutine[index] || false,
+      routineId: `routine-${routineFilter}-${index}`
+    }
+    window.dispatchEvent(new CustomEvent('open-global-modal', { detail: routineEntry }))
+  }
+
   const progressPercent = checkedRoutine.length
     ? Math.round((checkedRoutine.filter(Boolean).length / checkedRoutine.length) * 100)
     : 0
@@ -258,37 +272,36 @@ function WellnessHub() {
               />
             </div>
 
-            {/* Vertical zig-zag timeline with absolute centering */}
-            <div className="wh-timeline-container">
-              {/* Central axis line */}
-              <div className="wh-timeline-axis" />
-              
-              {/* Timeline steps */}
-              {routineSteps.map((step, i) => (
-                <motion.div
-                  key={`${step.sub ?? routineFilter}-${step.time}-${i}`}
-                  className={`wh-timeline-step ${i % 2 === 0 ? 'left' : 'right'} ${checkedRoutine[i] ? 'checked' : ''}`}
-                  style={checkedRoutine[i] ? { '--step-accent': accent, '--step-accent-soft': accentSoft } : {}}
-                  onClick={() => handleRoutineToggle(i)}
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.97 }}
-                >
-                  {/* Connector line */}
-                  <div className="wh-timeline-connector" />
-                  
-                  {/* Central dot */}
-                  <div className="wh-timeline-dot" style={checkedRoutine[i] ? { background: accent } : {}} />
-                  
-                  {/* Step card */}
-                  <div className="wh-timeline-card">
-                    <div className="wh-timeline-time">{step.time}</div>
-                    <div className={`wh-timeline-label ${checkedRoutine[i] ? 'line-through' : ''}`}>
-                      {step.label}
+            {/* Two-column grid with alternating routine steps */}
+            <div className="wh-routine-grid">
+              {routineSteps.map((step, i) => {
+                const isLeft = i % 2 === 0
+                return (
+                  <motion.div
+                    key={`${step.sub ?? routineFilter}-${step.time}-${i}`}
+                    className={`wh-routine-item ${isLeft ? 'left-col' : 'right-col'} ${checkedRoutine[i] ? 'checked' : ''}`}
+                    style={checkedRoutine[i] ? { '--step-accent': accent, '--step-accent-soft': accentSoft } : {}}
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.97 }}
+                  >
+                    <div className="wh-routine-check-btn" onClick={() => handleRoutineToggle(i)} title="Marcar completado">
+                      <div className="wh-routine-checkbox" style={checkedRoutine[i] ? { background: accent, borderColor: accent } : {}}>
+                        {checkedRoutine[i] && <span className="wh-routine-checkmark">✓</span>}
+                      </div>
                     </div>
-                    <div className="wh-timeline-check">{checkedRoutine[i] ? '✓' : ''}</div>
-                  </div>
-                </motion.div>
-              ))}
+                    <div className="wh-routine-content" onClick={() => handleRoutineEdit(step, i)}>
+                      <div className="wh-routine-time">{step.time}</div>
+                      <div className={`wh-routine-text ${checkedRoutine[i] ? 'line-through' : ''}`}>
+                        {step.label}
+                      </div>
+                      {step.sub && <div className="wh-routine-submodule">({step.sub})</div>}
+                    </div>
+                    <div className="wh-routine-edit-icon" onClick={() => handleRoutineEdit(step, i)} title="Editar">
+                      ✎
+                    </div>
+                  </motion.div>
+                )
+              })}
             </div>
           </div>
         </section>

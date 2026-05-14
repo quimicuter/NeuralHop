@@ -122,7 +122,7 @@ function AuraHeatmap() {
               {weekDays.map((day, i) => {
                 const dayKey = format(day, 'yyyy-MM-dd')
                 const mood = moodMap[dayKey]
-                const isToday = isToday(day)
+                const todayFlag = isToday(day)
                 const moodConfig = mood ? CHROMATIC_EMOTIONS[mood] : null
                 
                 // Contraste dinámico: si hay mood, texto blanco; si no, texto oscuro
@@ -131,7 +131,7 @@ function AuraHeatmap() {
                 return (
                   <div
                     key={dayKey}
-                    className={`wh-aura-bubble ${isToday ? 'today' : ''}`}
+                    className={`wh-aura-bubble ${todayFlag ? 'today' : ''}`}
                     style={moodConfig ? { background: moodConfig.color } : {}}
                     onClick={() => handleDayClick(day)}
                     title={`${format(day, 'EEEE d', { locale: es })}${mood ? ` - ${moodConfig.label}` : ''}`}

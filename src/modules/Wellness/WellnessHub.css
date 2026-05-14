@@ -36,14 +36,42 @@
   flex-direction: column;
   padding: 0.35rem;
   gap: 0.25rem;
-  /* Gradient: lila suave → azul cristalino */
   background: linear-gradient(135deg,
-    #ede9f8 0%,
-    #dce8f8 40%,
-    #e8f4fd 70%,
-    #f0e9f9 100%);
+    rgba(237, 233, 248, 0.75) 0%,
+    rgba(220, 232, 248, 0.75) 40%,
+    rgba(232, 244, 253, 0.75) 70%,
+    rgba(240, 233, 249, 0.75) 100%);
   font-family: 'Inter', -apple-system, sans-serif;
   box-sizing: border-box;
+}
+
+.wh-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(180deg, rgba(12, 19, 28, 0.18), rgba(12, 19, 28, 0.35)),
+    url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1600&q=80');
+  background-size: cover;
+  background-position: center;
+  filter: blur(0px) saturate(1.12);
+  opacity: 0.95;
+  z-index: 0;
+}
+
+.wh-shell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top center, rgba(255,255,255,0.18), transparent 28%),
+              linear-gradient(180deg, rgba(255,255,255,0.04), rgba(15, 23, 42, 0.16));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.wh-shell > * {
+  position: relative;
+  z-index: 2;
 }
 
 /* ── Top Bar ──────────────────────────────────────────────── */
@@ -562,127 +590,156 @@
   border-radius: 999px;
 }
 
-/* Timeline with absolute centering */
-.wh-timeline-container {
+/* Two-column Routine Grid */
+.wh-routine-grid {
   flex: 1;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  padding: 0.5rem 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem;
+  padding: 0.25rem 0;
   min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-/* Central axis line - perfectly centered */
-.wh-timeline-axis {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: rgba(15, 23, 42, 0.08);
-  transform: translateX(-50%);
-  z-index: 1;
-}
-
-/* Timeline steps */
-.wh-timeline-step {
+.wh-routine-item {
   display: flex;
   align-items: center;
-  position: relative;
-  z-index: 2;
+  gap: 0.25rem;
+  padding: 0.2rem;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 0.4rem;
   cursor: pointer;
-  width: 100%;
-  min-height: 32px;
-  margin: 0.25rem 0;
-}
-
-.wh-timeline-step.left {
-  flex-direction: row;
-  justify-content: flex-start;
-}
-.wh-timeline-step.right {
-  flex-direction: row-reverse;
-  justify-content: flex-start;
-}
-
-/* Connector line from axis to card */
-.wh-timeline-connector {
-  width: 1.5rem;
-  height: 1px;
-  background: rgba(15, 23, 42, 0.08);
-  flex-shrink: 0;
-}
-
-/* Central dot - absolutely positioned on axis */
-.wh-timeline-dot {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: rgba(15, 23, 42, 0.18);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  transform: translate(-50%, -50%);
-  z-index: 3;
   transition: all 0.2s ease;
-}
-
-/* Step card */
-.wh-timeline-card {
-  flex: 1;
-  padding: 0.2rem 0.35rem;
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 0.45rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.06rem;
   position: relative;
-  transition: all 0.2s ease;
-  min-width: 0;
-  max-width: 180px;
 }
-.wh-timeline-step:hover .wh-timeline-card {
-  background: rgba(255, 255, 255, 0.8);
-  transform: translateY(-2px);
+
+.wh-routine-item:hover {
+  background: rgba(255, 255, 255, 0.75);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
-.wh-timeline-step.checked .wh-timeline-card {
-  background: var(--step-accent-soft, rgba(118, 97, 255, 0.1));
+
+.wh-routine-item.checked {
+  background: var(--step-accent-soft, rgba(118, 97, 255, 0.12));
   border-color: var(--step-accent, rgba(118, 97, 255, 0.3));
 }
 
-.wh-timeline-time {
-  font-size: 0.42rem;
-  font-weight: 300;
-  color: var(--text-lila);
-  letter-spacing: 0.02em;
-  line-height: 1.05;
+.wh-routine-check-btn {
+  flex-shrink: 0;
+  padding: 0.15rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
 }
 
-.wh-timeline-label {
-  font-size: 0.5rem;
-  font-weight: 300;
+.wh-routine-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid rgba(15, 23, 42, 0.2);
+  border-radius: 0.25rem;
+  display: grid;
+  place-items: center;
+  transition: all 0.18s ease;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.wh-routine-check-btn:hover .wh-routine-checkbox {
+  border-color: rgba(15, 23, 42, 0.35);
+  background: rgba(255, 255, 255, 1);
+}
+
+.wh-routine-checkmark {
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.wh-routine-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.04rem;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.wh-routine-time {
+  font-size: 0.38rem;
+  font-weight: 400;
+  color: var(--text-lila);
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+.wh-routine-text {
+  font-size: 0.48rem;
+  font-weight: 400;
   color: var(--text-dark);
-  line-height: 1.05;
+  line-height: 1.1;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.wh-timeline-label.line-through {
-  text-decoration: line-through;
-  opacity: 0.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  transition: opacity 0.2s ease;
 }
 
-.wh-timeline-check {
-  position: absolute;
-  top: 0.3rem;
-  right: 0.5rem;
-  font-size: 0.62rem;
-  font-weight: 600;
-  color: var(--step-accent, rgba(118, 97, 255, 0.9));
+.wh-routine-text.line-through {
+  text-decoration: line-through;
+  opacity: 0.55;
 }
+
+.wh-routine-submodule {
+  font-size: 0.35rem;
+  color: rgba(15, 23, 42, 0.45);
+  line-height: 1;
+  font-style: italic;
+}
+
+.wh-routine-edit-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  font-size: 0.5rem;
+  color: rgba(15, 23, 42, 0.3);
+  cursor: pointer;
+  border-radius: 0.3rem;
+  transition: all 0.15s ease;
+  opacity: 0;
+}
+
+.wh-routine-item:hover .wh-routine-edit-icon {
+  opacity: 1;
+  background: rgba(118, 97, 255, 0.1);
+  color: rgba(118, 97, 255, 0.8);
+}
+
+.wh-routine-edit-icon:hover {
+  background: rgba(118, 97, 255, 0.2);
+  color: rgba(118, 97, 255, 1);
+  transform: scale(1.1);
+}
+
+/* Scrollbar styling for routine grid */
+.wh-routine-grid::-webkit-scrollbar {
+  width: 4px;
+}
+.wh-routine-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+.wh-routine-grid::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.1);
+  border-radius: 2px;
+}
+.wh-routine-grid::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.2);
+}
+
 
 /* ── COLUMN 3: Metas & Mindset ───────────────────────────── */
 .wh-motivation-quote {

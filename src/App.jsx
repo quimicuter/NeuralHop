@@ -54,8 +54,19 @@ function App() {
       }
     }
 
+    const handleOpenGlobalModal = (event) => {
+      const type = event?.detail?.type || 'task'
+      setModalPreselectedType(type)
+      setEditEntryData(null)
+      setIsModalOpen(true)
+    }
+
     window.addEventListener('open-edit-modal', handleEditEvent)
-    return () => window.removeEventListener('open-edit-modal', handleEditEvent)
+    window.addEventListener('open-global-modal', handleOpenGlobalModal)
+    return () => {
+      window.removeEventListener('open-edit-modal', handleEditEvent)
+      window.removeEventListener('open-global-modal', handleOpenGlobalModal)
+    }
   }, [])
 
   const openRecipeModal = (day, mealType) => {
@@ -134,9 +145,9 @@ function App() {
                   <div className="menu-cell meal-emoji">
                     {mealType.emoji}
                   </div>
-                  {['L', 'M', 'M', 'J', 'V'].map(day => (
+                  {['L', 'M', 'M', 'J', 'V'].map((day, dayIndex) => (
                     <div 
-                      key={`${day}-${mealType.key}`}
+                      key={`${day}-${dayIndex}-${mealType.key}`}
                       className={`menu-cell meal-cell ${mealType.key === 'comida' ? 'has-meal' : 'empty-meal'}`}
                       onClick={() => openRecipeModal(day, mealType.key)}
                     >
