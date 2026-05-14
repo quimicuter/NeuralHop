@@ -129,10 +129,10 @@ function WellnessHub() {
     
     // Fallback a datos estáticos si no hay entradas
     if (routineFilter === 'all') {
-      const all = Object.entries(ROUTINE_FLOW).flatMap(([sub, steps]) =>
-        steps.map(step => ({ ...step, sub }))
+      const all = Object.entries(ROUTINE_FLOW).flatMap(([subModule, steps]) =>
+        steps.map(step => ({ ...step, sub: subModule }))
       )
-      return all.sort((entryA, entryB) => entryA.time.localeCompare(entryB.time))
+      return all.sort((firstEntry, secondEntry) => firstEntry.time.localeCompare(secondEntry.time))
     }
     return ROUTINE_FLOW[routineFilter] || []
   }, [routineEntries, routineFilter])
