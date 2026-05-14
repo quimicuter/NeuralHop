@@ -8,6 +8,7 @@ import SimpleTasks from '../../components/SimpleTasks'
 import SimpleEvents from '../../components/SimpleEvents'
 import AuraHeatmap from './AuraHeatmap'
 import SubModuleHubModal from './SubModuleHubModal'
+import SleepTracker from './SleepTracker'
 import './WellnessHub.css'
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -71,11 +72,6 @@ const ACTIVE_PROJECTS = [
   { id: 'zen',   title: 'Zen 30 días',     progress: 63 }
 ]
 
-const SLEEP_DATA = [6.2, 7.0, 5.8, 7.5, 8.0, 6.5, 7.2]
-const SLEEP_LABELS = ['L', 'M', 'X', 'J', 'V', 'S', 'D']
-
-
-
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const getTodayQuote = () => {
@@ -84,13 +80,6 @@ const getTodayQuote = () => {
   )
   return MOTIVATIONAL_QUOTES[dayOfYear % MOTIVATIONAL_QUOTES.length]
 }
-
-const getSleepBarHeight = (hours) => {
-  const min = 4, max = 9
-  return Math.min(100, Math.max(8, ((hours - min) / (max - min)) * 100))
-}
-
-
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
@@ -218,42 +207,7 @@ function WellnessHub() {
 
           {/* Sleep Tracker */}
           <div className="wh-card wh-sleep-tracker">
-            <div className="wh-card-header">
-              <h2 className="wh-card-title">Sleep Tracker</h2>
-              <span className="wh-muted wh-sleep-avg">
-                Prom. {(SLEEP_DATA.reduce((a, b) => a + b, 0) / SLEEP_DATA.length).toFixed(1)}h
-              </span>
-            </div>
-
-            <div className="wh-sleep-chart">
-              {SLEEP_DATA.map((hours, i) => (
-                <div key={i} className="wh-sleep-bar-col">
-                  <div className="wh-sleep-bar-wrap">
-                    <motion.div
-                      className="wh-sleep-bar"
-                      initial={{ height: 0 }}
-                      animate={{ height: `${getSleepBarHeight(hours)}%` }}
-                      transition={{ duration: 0.8, delay: i * 0.08, ease: 'easeOut' }}
-                      style={{
-                        background: hours >= 7
-                          ? 'linear-gradient(to top, rgba(113,130,255,0.9), rgba(196,181,253,0.7))'
-                          : 'linear-gradient(to top, rgba(113,130,255,0.4), rgba(196,181,253,0.25))'
-                      }}
-                      title={`${hours}h`}
-                    />
-                  </div>
-                  <span className="wh-sleep-day-label">{SLEEP_LABELS[i]}</span>
-                  <span className="wh-sleep-hours">{hours}h</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="wh-sleep-legend">
-              <span className="wh-sleep-legend-dot optimal" />
-              <span className="wh-muted">≥ 7h óptimo</span>
-              <span className="wh-sleep-legend-dot low" />
-              <span className="wh-muted">{'< 7h'}</span>
-            </div>
+            <SleepTracker />
           </div>
         </section>
 

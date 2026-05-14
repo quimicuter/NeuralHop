@@ -1,0 +1,262 @@
+/* ============================================================
+   SleepEntryModal — Registro nocturno · Crystal Violet
+   z-index: 15000 (sobre SubModuleHubModal, bajo GlobalAddModal)
+   ============================================================ */
+
+.sem-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 15000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+
+.sem-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 12, 45, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.sem-modal {
+  position: relative;
+  z-index: 1;
+  width: min(92vw, 460px);
+  background: rgba(255, 255, 255, 0.78);
+  background-image: linear-gradient(135deg,
+    rgba(196, 181, 253, 0.18) 0%,
+    rgba(167, 139, 250, 0.06) 60%,
+    rgba(245, 240, 255, 0.14) 100%);
+  backdrop-filter: blur(36px);
+  -webkit-backdrop-filter: blur(36px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 1.25rem;
+  box-shadow:
+    0 24px 64px rgba(80, 40, 180, 0.18),
+    0 4px 16px rgba(80, 40, 180, 0.08);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header */
+.sem-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem 0.7rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.35);
+}
+.sem-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.sem-header-icon {
+  font-size: 1.4rem;
+  color: #7c3aed;
+  filter: drop-shadow(0 0 8px rgba(124, 58, 237, 0.5));
+  line-height: 1;
+}
+.sem-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgba(15, 23, 42, 0.92);
+  margin: 0;
+  line-height: 1.1;
+}
+.sem-subtitle {
+  font-size: 0.6rem;
+  color: rgba(15, 23, 42, 0.5);
+  margin: 0.15rem 0 0;
+  text-transform: capitalize;
+  letter-spacing: 0.02em;
+}
+.sem-close {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: rgba(255, 255, 255, 0.75);
+  color: rgba(15, 23, 42, 0.55);
+  font-size: 0.72rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all 0.18s ease;
+}
+.sem-close:hover {
+  background: #fff;
+  color: rgba(15, 23, 42, 0.9);
+  transform: scale(1.06);
+}
+
+/* Body */
+.sem-body {
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.sem-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 0.55rem;
+  align-items: end;
+}
+
+.sem-field, .sem-field-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.sem-label {
+  font-size: 0.58rem;
+  font-weight: 500;
+  color: rgba(15, 23, 42, 0.55);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.sem-time {
+  padding: 0.4rem 0.55rem;
+  font-size: 0.78rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  color: rgba(15, 23, 42, 0.85);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  border-radius: 0.55rem;
+  outline: none;
+  transition: all 0.18s ease;
+}
+.sem-time:focus {
+  border-color: #a78bfa;
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.18);
+}
+
+.sem-hours-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.55rem;
+  min-width: 60px;
+  background: linear-gradient(135deg, rgba(196, 181, 253, 0.35), rgba(167, 139, 250, 0.15));
+  border: 1px solid rgba(167, 139, 250, 0.4);
+  border-radius: 0.55rem;
+  line-height: 1;
+}
+.sem-hours-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #7c3aed;
+}
+.sem-hours-unit {
+  font-size: 0.5rem;
+  color: rgba(15, 23, 42, 0.5);
+  margin-top: 0.15rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Quality */
+.sem-quality-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.3rem;
+}
+.sem-quality-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.18rem;
+  padding: 0.45rem 0.2rem;
+  border-radius: 0.6rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.55);
+  color: rgba(15, 23, 42, 0.65);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.sem-quality-btn:hover {
+  background: rgba(255, 255, 255, 0.85);
+  transform: translateY(-1px);
+}
+.sem-quality-btn.active {
+  color: #fff;
+  font-weight: 600;
+}
+.sem-quality-emoji { font-size: 1.05rem; line-height: 1; }
+.sem-quality-label {
+  font-size: 0.52rem;
+  letter-spacing: 0.02em;
+}
+
+/* Note */
+.sem-note {
+  width: 100%;
+  resize: none;
+  padding: 0.45rem 0.6rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  line-height: 1.4;
+  color: rgba(15, 23, 42, 0.85);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  border-radius: 0.55rem;
+  outline: none;
+  transition: all 0.18s ease;
+}
+.sem-note:focus {
+  border-color: #a78bfa;
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15);
+}
+
+/* Footer */
+.sem-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.3);
+}
+.sem-btn {
+  padding: 0.4rem 0.95rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  border: 1px solid transparent;
+}
+.sem-btn-ghost {
+  background: rgba(255, 255, 255, 0.7);
+  color: rgba(15, 23, 42, 0.6);
+  border-color: rgba(15, 23, 42, 0.1);
+}
+.sem-btn-ghost:hover { background: #fff; color: rgba(15, 23, 42, 0.85); }
+
+.sem-btn-primary {
+  background: linear-gradient(135deg, #a78bfa, #7c3aed);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+}
+.sem-btn-primary:hover:not(:disabled) {
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.45);
+  transform: translateY(-1px);
+}
+.sem-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

@@ -452,8 +452,10 @@
 
 /* Sleep Tracker */
 .wh-sleep-tracker {
-  flex: 0 0 180px;
-  min-height: 0;
+  flex: 1 1 auto;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
 }
 
 .wh-sleep-avg {
