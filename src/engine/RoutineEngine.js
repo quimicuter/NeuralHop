@@ -1,4 +1,4 @@
-import { filterEntries } from './EntryEngine'
+import { subscribeToAllEntries } from './EntryEngine'
 
 // Helper para obtener fecha actual en formato YYYY-MM-DD
 const getTodayKey = () => {
@@ -28,38 +28,27 @@ const sortByTime = (entries) => {
   })
 }
 
-// Obtener rutina del día desde Firebase
-export const getTodayRoutine = async (filter = 'all') => {
-  try {
-    const todayEntries = await filterEntries((entry) => {
-      if (!isTodayEntry(entry)) return false
-      
-      // Filtrar por módulo wellness si es necesario
-      if (filter !== 'all') {
-        return entry.module === 'wellness' && entry.category === filter
-      }
-      
-      return entry.module === 'wellness'
-    })
+// Helper para filtrar entradas
+const filterTodayEntries = (entries, filter = 'all') => {
+  return entries.filter(entry => {
+    if (!isTodayEntry(entry)) return false
     
-    return sortByTime(todayEntries)
-  } catch (error) {
-    console.error('Error fetching today routine:', error)
-    return []
-  }
+    // Filtrar por módulo wellness
+    if (entry.module !== 'wellness') return false
+    
+    // Filtrar por categoría si es necesario
+    if (filter !== 'all' && entry.category !== filter) return false
+    
+    return true
+  })
 }
 
 // Suscripción a rutina del día en tiempo real
 export const subscribeToTodayRoutine = (callback, filter = 'all') => {
-  return filterEntries((entry) => {
-    if (!isTodayEntry(entry)) return false
-    
-    if (filter !== 'all') {
-      return entry.module === 'wellness' && entry.category === filter
-    }
-    
-    return entry.module === 'wellness'
-  }, callback)
+  return subscribeToAllEntries((entries) => {
+    const todayEntries = filterTodayEntries(entries, filter)
+    callback(sortByTime(todayEntries))
+  })
 }
 
 // Helper para obtener color de Aura según mood del día

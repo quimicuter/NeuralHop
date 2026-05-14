@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { filterEntries } from '../../engine/EntryEngine'
+import { subscribeToAllEntries } from '../../engine/EntryEngine'
 import './WellnessProjects.css'
 
 // Helper para calcular progreso de proyecto
@@ -23,10 +23,11 @@ function WellnessProjects() {
 
   // Suscribirse a proyectos de wellness
   useEffect(() => {
-    const unsubscribe = filterEntries((entry) => {
-      return entry.type === 'project' && entry.module === 'wellness'
-    }, (entries) => {
-      setProjects(entries)
+    const unsubscribe = subscribeToAllEntries((entries) => {
+      const wellnessProjects = entries.filter(entry => 
+        entry.type === 'project' && entry.module === 'wellness'
+      )
+      setProjects(wellnessProjects)
     })
     
     return unsubscribe
