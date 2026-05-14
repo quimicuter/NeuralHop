@@ -188,7 +188,7 @@ export const isHabitDueToday = (habit, refDate = new Date()) => {
 }
 
 // ===== COMPONENTE PRINCIPAL =====
-function GlobalAddModal({ isOpen, onClose, preselectedType = '', editEntry = null }) {
+function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModule = '', preselectedCategory = null, editEntry = null }) {
   const { actions } = useApp()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -340,12 +340,14 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', editEntry = nul
       } else {
         setFormData({
           ...emptyFormData,
-          type: preselectedType || 'task'
+          type: preselectedType || 'task',
+          ...(preselectedModule ? { module: preselectedModule } : {}),
+          ...(preselectedCategory ? { category: preselectedCategory } : {})
         })
       }
       setIsSubmitting(false)
     }
-  }, [isOpen, preselectedType, editEntry])
+  }, [isOpen, preselectedType, preselectedModule, preselectedCategory, editEntry])
 
   // Reset type to 'task' when module changes
   useEffect(() => {

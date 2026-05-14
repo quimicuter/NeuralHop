@@ -7,6 +7,7 @@ import { useApp } from '../../context/AppContext'
 import SimpleTasks from '../../components/SimpleTasks'
 import SimpleEvents from '../../components/SimpleEvents'
 import AuraHeatmap from './AuraHeatmap'
+import SubModuleHubModal from './SubModuleHubModal'
 import './WellnessHub.css'
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -100,6 +101,13 @@ function WellnessHub() {
   // 3D Cube state
   const [cubeFace,       setCubeFace]        = useState('tasks')
 
+  // Sub-Hub Modal state
+  const [subHubOpen,     setSubHubOpen]      = useState(false)
+  const [subHubId,       setSubHubId]        = useState(null)
+
+  const openSubHub = (id) => { setSubHubId(id); setSubHubOpen(true) }
+  const closeSubHub = () => { setSubHubOpen(false) }
+
   const activeTabConfig = WELLNESS_TABS.find(t => t.id === activeTab) || WELLNESS_TABS[0]
   const accent          = `rgba(${activeTabConfig.accent}, 1)`
   const accentSoft      = `rgba(${activeTabConfig.accent}, 0.18)`
@@ -161,15 +169,27 @@ function WellnessHub() {
         {/* Tab pills */}
         <nav className="wh-tabs">
           {WELLNESS_TABS.map(tab => (
-            <button
+            <div
               key={tab.id}
               className={`wh-tab-pill ${activeTab === tab.id ? 'active' : ''}`}
               style={activeTab === tab.id ? { '--tab-accent': `rgba(${tab.accent}, 0.22)`, borderColor: `rgba(${tab.accent}, 0.5)` } : {}}
-              onClick={() => setActiveTab(tab.id)}
             >
-              <span className="wh-tab-icon">{tab.icon}</span>
-              <span>{tab.label}</span>
-            </button>
+              {/* Icon → opens Sub-Hub Modal */}
+              <button
+                className="wh-tab-icon-btn"
+                title={`Abrir Sub-Hub ${tab.label}`}
+                onClick={() => openSubHub(tab.id)}
+              >
+                <span className="wh-tab-icon">{tab.icon}</span>
+              </button>
+              {/* Label → switches active tab */}
+              <button
+                className="wh-tab-label-btn"
+                onClick={() => setActiveTab(tab.id)}
+              >
+                {tab.label}
+              </button>
+            </div>
           ))}
         </nav>
 
@@ -406,6 +426,15 @@ function WellnessHub() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* ── SUB-HUB MODAL ──────────────────────────────────────────────────── */}
+      {subHubId && (
+        <SubModuleHubModal
+          isOpen={subHubOpen}
+          onClose={closeSubHub}
+          submoduleId={subHubId}
+        />
+      )}
 
     </div>
   )
