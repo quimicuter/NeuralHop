@@ -278,27 +278,48 @@
   grid-row: span 2;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .hub-shell {
-    padding: 1rem;
+    padding: 0.8rem;
+    overflow-y: auto;
   }
-  
+
+  .hub-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hub-back-btn,
+  .hub-add-btn {
+    width: 100%;
+  }
+
+  .hub-add-btn {
+    margin-left: 0;
+    margin-top: 0.75rem;
+  }
+
   .hub-bento {
     grid-template-columns: repeat(6, 1fr);
     gap: 0.75rem;
   }
-  
-  .hub-widget,
-  .hub-widget-wide,
-  .hub-widget-large {
-    grid-column: span 6;
+
+  .hub-widget {
+    padding: 1rem;
   }
-  
-  .hub-widget-tall {
-    grid-row: span 1;
+}
+
+@media (max-width: 768px) {
+  .hub-bento {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
   }
-  
-  .hub-widget-habits {
-    grid-column: span 3;
+
+  .hub-widget {
+    padding: 1rem;
+  }
+
+  .hub-header {
+    margin-bottom: 0.5rem;
   }
 }
