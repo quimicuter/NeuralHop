@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useApp } from '../context/AppContext'
-import DetailModal from './DetailModal'
+import ActivityDetailModal from './ActivityDetailModal'
 import EntryCard from './EntryCard'
 
 function SimpleEvents({ moduleFilter = null, scopeFilter = null, limit = 4 }) {
-  const { state, actions, getEvents } = useApp()
-  const events = (getEvents && getEvents()) || []
+  const { state, actions } = useApp()
+  const events = state.entries || []
   const [selectedEntry, setSelectedEntry] = useState(null)
   const [isDetailOpen, setIsDetailOpen] = useState(false)
 
@@ -127,14 +127,16 @@ function SimpleEvents({ moduleFilter = null, scopeFilter = null, limit = 4 }) {
     return eventDate < today
   }
 
-  // Mostrar solo eventos no completados
+  // Mostrar eventos reales y entradas tipo task con fecha pero sin deadline,
+  // que son eventos mal etiquetados en la data.
   const visibleEvents = (events || []).filter(event =>
+    ((event.type === 'event') || (event.type === 'task' && event.date && !event.deadline)) &&
     !event.completed &&
     event.status !== 'completed' &&
     event.module !== 'cumpleanos' &&
     !event.isBirthdayReminder &&
     (!moduleFilter || event.module === moduleFilter) &&
-    (!scopeFilter  || event.scope  === scopeFilter)
+    (!scopeFilter || event.scope === scopeFilter)
   ).slice(0, limit)
 
   return (
@@ -157,7 +159,7 @@ function SimpleEvents({ moduleFilter = null, scopeFilter = null, limit = 4 }) {
         )}
       </div>
 
-      <DetailModal
+      <ActivityDetailModal
         entry={selectedEntry}
         isOpen={isDetailOpen}
         onClose={closeDetail}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useApp } from '../context/AppContext'
-import DetailModal from './DetailModal'
+import ActivityDetailModal from './ActivityDetailModal'
 import EntryCard from './EntryCard'
 
 function SimpleTasks({ moduleFilter = null, scopeFilter = null, limit = 6 }) {
@@ -47,7 +47,7 @@ function SimpleTasks({ moduleFilter = null, scopeFilter = null, limit = 6 }) {
       case 'escolar':
       case 'academico':
       case 'academic': return '#c8a2c8'
-      case 'general': return '#ff9aa2'
+      case 'general': return '#9af8ff'
       default: return '#4A90E2'
     }
   }
@@ -149,12 +149,15 @@ function SimpleTasks({ moduleFilter = null, scopeFilter = null, limit = 6 }) {
     return null
   }
 
-  // Mostrar solo tareas no completadas (filtro !completed)
+  // Mostrar solo tareas reales. Excluir entradas tipo task que tienen `date` pero no `deadline`,
+  // porque en la práctica son eventos mal etiquetados y deben ir a la lista de Eventos.
   const visibleTasks = (tasks || []).filter(task =>
+    task.type === 'task' &&
     !task.completed &&
     task.status !== 'completed' &&
+    (!task.date || task.deadline) &&
     (!moduleFilter || task.module === moduleFilter) &&
-    (!scopeFilter  || task.scope  === scopeFilter)
+    (!scopeFilter || task.scope === scopeFilter)
   ).slice(0, limit)
 
   return (
@@ -178,7 +181,7 @@ function SimpleTasks({ moduleFilter = null, scopeFilter = null, limit = 6 }) {
         )}
       </div>
 
-      <DetailModal
+      <ActivityDetailModal
         entry={selectedEntry}
         isOpen={isDetailOpen}
         onClose={closeDetail}

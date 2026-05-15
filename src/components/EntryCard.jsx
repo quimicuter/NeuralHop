@@ -17,6 +17,13 @@ const getSubmoduleSymbol = (entry) => {
   return moduleCfg.emoji || '·'
 }
 
+const getEventMarkerEmoji = (entry) => {
+  if (!entry) return '📅'
+  const moduleEmoji = MODULE_CONFIG?.[entry.module]?.emoji
+  const metadataEmoji = entry.metadata?.emoji
+  return metadataEmoji || moduleEmoji || getScopeEmoji(entry) || '📅'
+}
+
 // ===== Componente principal =====
 function EntryCard({
   entry,
@@ -47,7 +54,7 @@ function EntryCard({
       {/* LADO IZQUIERDO: Checkbox / Indicador de evento */}
       <div className="entry-card-left">
         {variant === 'event' || hideCheckbox ? (
-          <span className="entry-event-marker" aria-hidden="true">📅</span>
+          <span className="entry-event-marker" aria-hidden="true">{getEventMarkerEmoji(entry)}</span>
         ) : (
           <button
             type="button"

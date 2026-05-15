@@ -52,20 +52,26 @@ function NexusCalendar() {
     const monthDayStr = `${month}-${dayStr}`
     const entries = state.entries || []
 
-    // Filtrar tareas (type: 'task' o sin type) con fecha exacta
+    // Filtrar tareas reales basadas en deadline.
     const tasks = entries.filter(task =>
-      (task.type === 'task' || !task.type || task.type === undefined) &&
-      task.date === dateStr
+      task.type === 'task' &&
+      (task.deadline === dateStr || (task.date === dateStr && task.deadline))
     )
 
-    // Filtrar eventos: fecha exacta O cumpleaños anuales (coincidencia mes-día)
+    // Filtrar eventos: type event o tareas mal etiquetadas con date pero sin deadline,
+    // además de eventos recurrentes.
     const events = entries.filter(task => {
-      if (task.type !== 'event') return false
-      if (task.date === dateStr) return true
-      // Eventos recurrentes anuales (cumpleaños): coincidir mes-día ignorando año
-      if (task.recurrence === 'annual' && task.date) {
-        const taskMonthDay = task.date.slice(5)
-        return taskMonthDay === monthDayStr
+      if (task.type === 'event') {
+        if (task.date === dateStr) return true
+        if (task.deadline === dateStr) return true
+        if (task.recurrence === 'annual' && (task.date || task.deadline)) {
+          const sourceDate = task.date || task.deadline
+          return sourceDate.slice(5) === monthDayStr
+        }
+        return false
+      }
+      if (task.type === 'task' && task.date && !task.deadline) {
+        return task.date === dateStr
       }
       return false
     })
@@ -74,15 +80,31 @@ function NexusCalendar() {
   }
 
   const getTaskEmoji = (task) => {
-    // Si es un evento, usar emoji del módulo desde MODULE_CONFIG
+    if (!task) return '📌'
+
+    const moduleEmoji = MODULE_CONFIG[task.module]?.emoji
+    const metadataEmoji = task.metadata?.emoji
+
+    if (metadataEmoji) return metadataEmoji
+    if (moduleEmoji) return moduleEmoji
+
     if (task.type === 'event') {
-      const mod = MODULE_CONFIG[task.module]
-      return mod ? mod.emoji : '📅'
+      if (task.title?.trim()) return task.title.trim()[0]
+      return '📅'
     }
 
-    // Si es una tarea, usar emoji de categoría
-    const category = state.categories[task.category]
-    return category ? category.icon : '📌'
+    if (task.type === 'task') {
+      if (task.title?.trim()) return task.title.trim()[0]
+      return '📌'
+    }
+
+    if (task.category && state.categories[task.category]) {
+      return state.categories[task.category].icon || '📌'
+    }
+    if (task.scope && state.categories[task.scope]) {
+      return state.categories[task.scope].icon || '📌'
+    }
+    return '📌'
   }
 
   // Calcular edad del cumpleañero a partir de birthYear
@@ -114,22 +136,48 @@ function NexusCalendar() {
 
   // Helper: determinar estado del semáforo para un día
   const getTrafficLight = (tasks) => {
-    if (!tasks || tasks.length === 0) {
-      return { color: '#e2e8f0', count: null, tooltip: 'ESTÁS LIBRE' }
+    const all = tasks || []
+    const total = all.length
+    const pending = all.filter(t => t.completed !== true && t.status !== 'completed')
+    const pendingCount = pending.length
+
+    // Si no hay ninguna tarea planificada para ese día => gris (ocultar contador)
+    if (total === 0) {
+      return { color: '#94a3b8', count: null, tooltip: 'No hay tareas para este día' }
     }
-    const allCompleted = tasks.every(t => t.completed === true || t.status === 'completed')
-    if (allCompleted) {
-      return { color: '#10b981', count: null, tooltip: 'EXCELENTE, LO LOGRASTE' }
+
+    // Si hay tareas pero ya completadas todas => verde
+    if (pendingCount === 0) {
+      return { color: '#16a34a', count: 0, tooltip: `Todas completadas (${total})` }
     }
-    const pending = tasks.filter(t => t.completed !== true && t.status !== 'completed')
-    const hasCriticalOrHigh = pending.some(t => t.priority === 'critical' || t.priority === 'high')
-    const scopes = [...new Set(pending.map(t => t.scope || t.category || 'general'))]
+
+    const scopeNames = [...new Set(pending.map(t => t.scope || t.category || 'general'))]
       .map(s => s.charAt(0).toUpperCase() + s.slice(1))
       .join(', ')
+
+    let color = '#facc15'
+    let tooltip = `Tareas pendientes: ${pendingCount} • ${scopeNames}`
+
+    // Umbrales aplicados sobre tareas pendientes:
+    // 1-2 => amarillo, 3-5 => naranja oscuro, >5 => rojo
+    if (pendingCount <= 2) {
+      color = '#facc15' // amarillo
+    } else if (pendingCount <= 5) {
+      color = '#f97316' // naranja oscuro
+    } else {
+      color = '#ef4444' // rojo
+    }
+
+    // Si hay prioridad alta en las pendientes, enfatizar en rojo oscuro
+    if (pending.some(t => t.priority === 'critical' || t.priority === 'high')) {
+      color = '#b91c1c'
+      tooltip = `Urgente: ${pendingCount} tareas pendientes • ${scopeNames}`
+    }
+
     return {
-      color: hasCriticalOrHigh ? '#ef4444' : '#f59e0b',
-      count: pending.length,
-      tooltip: `Tareas pendientes: ${scopes}`
+      color,
+      count: pendingCount,
+      tooltip
     }
   }
 
@@ -165,22 +213,12 @@ function NexusCalendar() {
             </div>
             <div className="day-num">{day}</div>
           </div>
-          {/* Centro: emoji del primer evento si existe */}
           {events.length > 0 && (
-            <div className="cal-event-center" title={getTaskTooltip(events[0])}>
-              {getTaskEmoji(events[0])}
-            </div>
-          )}
-          {/* Dots: una marca por cada entry (tasks + events) coloreada por ámbito */}
-          {(events.length + tasks.length) > 0 && (
-            <div className="cal-dots-row">
-              {[...events, ...tasks].slice(0, 5).map((entry, i) => (
-                <span
-                  key={`${entry.id || entry.title || i}-${i}`}
-                  className="cal-dot"
-                  style={{ backgroundColor: getEntryDotColor(entry) }}
-                  title={entry.title || ''}
-                ></span>
+            <div className="cal-event-row" title={getTaskTooltip(events[0])}>
+              {events.slice(0, 3).map((event, index) => (
+                <span key={`${event.id || event.title || index}-${index}`} className="cal-event-emoji">
+                  {getTaskEmoji(event)}
+                </span>
               ))}
             </div>
           )}

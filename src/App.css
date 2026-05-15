@@ -2186,37 +2186,32 @@ html, body, #root, .app-container {
 }
 
 /* Emoji de evento centrado */
+.cal-event-row {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.cal-event-emoji {
+  font-size: 1rem;
+  line-height: 1;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+}
+
 .cal-event-center {
   margin-top: auto;
   margin-bottom: 2px;
   font-size: 1.1rem;
   line-height: 1;
   cursor: default;
-}
-
-/* Dots: marcadores por entry coloreados por ámbito */
-.cal-dots-row {
-  display: flex;
-  gap: 3px;
-  justify-content: center;
-  align-items: center;
-  margin-top: auto;
-  padding-top: 2px;
-  min-height: 8px;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-.cal-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  display: inline-block;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.15);
-}
-
-.cal-day.today .cal-dot {
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.7);
 }
 
 /* Ajuste para que el indicador de tareas no se vea apretado */

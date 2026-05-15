@@ -340,7 +340,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
       } else {
         setFormData({
           ...emptyFormData,
-          type: preselectedType || 'task',
+          type: preselectedType || (MODULE_CONFIG[preselectedModule]?.isBirthday ? 'event' : 'task'),
           ...(preselectedModule ? { module: preselectedModule } : {}),
           ...(preselectedCategory ? { category: preselectedCategory } : {})
         })
@@ -348,16 +348,6 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
       setIsSubmitting(false)
     }
   }, [isOpen, preselectedType, preselectedModule, preselectedCategory, editEntry])
-
-  // Reset type to 'task' when module changes
-  useEffect(() => {
-    if (formData.module && !MODULE_CONFIG[formData.module]?.isBirthday) {
-      setFormData(prev => ({
-        ...prev,
-        type: 'task'
-      }))
-    }
-  }, [formData.module])
 
   // ===== HANDLERS =====
   const updateField = (field, value) => {
@@ -368,13 +358,18 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
       if (field === 'scope') {
         const firstModuleOfScope = SCOPE_MODULES[value][0];
         updates.module = firstModuleOfScope;
-        updates.type = 'task'; // Forzamos a que siempre inicie en Tarea
+        if (MODULE_CONFIG[firstModuleOfScope]?.isBirthday) {
+          updates.type = 'event';
+        }
       }
 
-      // Si cambia el módulo manualmente, nos aseguramos de que no se pierda el tipo
+      // Si cambia el módulo manualmente, conservamos el tipo seleccionado,
+      // excepto cuando el nuevo módulo es de cumpleaños, el cual debe ser evento.
       if (field === 'module') {
         const moduleConfig = MODULE_CONFIG[value] || {};
-        updates.type = moduleConfig.isBirthday ? 'event' : 'task';
+        if (moduleConfig.isBirthday) {
+          updates.type = 'event';
+        }
       }
 
       return { ...prev, ...updates };
@@ -497,7 +492,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
             status: 'todo',
             priority: 'medium',
             completed: false,
-            deadline: new Date(formData.birthDate + 'T12:00:00').toISOString().split('T')[0],
+            date: new Date(formData.birthDate + 'T12:00:00').toISOString().split('T')[0],
             metadata: {
               isBirthdayReminder: true,
               birthdayPerson: formData.birthdayName,
@@ -516,7 +511,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
               status: 'todo',
               priority: 'high',
               completed: false,
-              deadline: new Date(formData.partyDate + 'T12:00:00').toISOString().split('T')[0],
+              date: new Date(formData.partyDate + 'T12:00:00').toISOString().split('T')[0],
               metadata: {
                 isBirthdayParty: true,
                 birthdayPerson: formData.birthdayName,

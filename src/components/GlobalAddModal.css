@@ -23,17 +23,17 @@
   backdrop-filter: blur(40px);
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: 32px;
-  width: 100%;
-  max-width: 720px;
-  min-height: 560px;
+  width: min(92vw, 720px);
+  max-width: 100%;
+  min-height: 420px;
   max-height: 92vh;
-  height: 80vh;
+  height: auto;
   display: flex;
   flex-direction: column;
   box-shadow:
     0 20px 50px rgba(0, 0, 0, 0.15),
     0 0 0 1px rgba(255, 255, 255, 0.3) inset;
-  overflow: visible;
+  overflow: hidden;
   padding: 10px;
 }
 

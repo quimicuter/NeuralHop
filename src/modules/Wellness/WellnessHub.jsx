@@ -9,7 +9,6 @@ import SimpleEvents from '../../components/SimpleEvents'
 import AuraHeatmap from './AuraHeatmap'
 import SubModuleHubModal from './SubModuleHubModal'
 import SleepTracker from './SleepTracker'
-import WelcomeCard from './WelcomeCard'
 import './WellnessHub.css'
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -57,30 +56,11 @@ const ROUTINE_FLOW = {
   ]
 }
 
-const MOTIVATIONAL_QUOTES = [
-  'El cuerpo logra lo que la mente cree.',
-  'Cuídate como cuidas a quienes amas.',
-  'El descanso no es rendición, es estrategia.',
-  'Pequeños pasos cada día, grandes victorias en el tiempo.',
-  'Tu bienestar es tu mejor inversión.',
-  'La calma es una superpotencia.',
-  'Florece desde adentro hacia afuera.'
-]
-
 const ACTIVE_PROJECTS = [
   { id: 'split', title: 'Operación Split', progress: 45 },
   { id: 'abs',   title: 'Operación Abs',   progress: 20 },
   { id: 'zen',   title: 'Zen 30 días',     progress: 63 }
 ]
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
-const getTodayQuote = () => {
-  const dayOfYear = Math.floor(
-    (new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000
-  )
-  return MOTIVATIONAL_QUOTES[dayOfYear % MOTIVATIONAL_QUOTES.length]
-}
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
@@ -108,22 +88,20 @@ function WellnessHub() {
   const openSubHub = (id) => { setSubHubId(id); setSubHubOpen(true) }
   const closeSubHub = () => { setSubHubOpen(false) }
 
-  const activeFilterConfig = ROUTINE_FILTERS.find(t => t.id === routineFilter) || ROUTINE_FILTERS[0]
+  const activeFilterConfig = ROUTINE_FILTERS?.find(t => t.id === routineFilter) || ROUTINE_FILTERS?.[0] || { accent: '120, 130, 180' }
   const accent          = `rgba(${activeFilterConfig.accent}, 1)`
   const accentSoft      = `rgba(${activeFilterConfig.accent}, 0.18)`
   const routineSteps    = useMemo(() => {
     if (routineFilter === 'all') {
-      const all = Object.entries(ROUTINE_FLOW).flatMap(([sub, steps]) =>
-        steps.map(s => ({ ...s, sub }))
+      const all = Object.entries(ROUTINE_FLOW || {}).flatMap(([sub, steps]) =>
+        (steps || []).map(s => ({ ...s, sub }))
       )
       return all.sort((a, b) => a.time.localeCompare(b.time))
     }
-    return ROUTINE_FLOW[routineFilter] || []
+    return ROUTINE_FLOW?.[routineFilter] || []
   }, [routineFilter])
-  const checkedRoutine  = checkedMap[routineFilter] ?? routineSteps.map(() => false)
-  const quote           = useMemo(() => getTodayQuote(), [])
-
-  // Persist routine filter
+  const checkedRoutine  = checkedMap[routineFilter] ?? (routineSteps?.map(() => false) || [])
+    // Persist routine filter
   useEffect(() => {
     window.localStorage.setItem('wellness.routineFilter', routineFilter)
   }, [routineFilter])
@@ -159,20 +137,6 @@ function WellnessHub() {
     })
   }
 
-  const handleRoutineEdit = (step, index) => {
-    const routineEntry = {
-      type: 'routine',
-      scope: 'personal',
-      module: 'wellness',
-      title: step.label,
-      description: `Horario: ${step.time}${step.sub ? ` (${step.sub})` : ''}`,
-      time: step.time,
-      completed: checkedRoutine[index] || false,
-      routineId: `routine-${routineFilter}-${index}`
-    }
-    window.dispatchEvent(new CustomEvent('open-global-modal', { detail: routineEntry }))
-  }
-
   const progressPercent = checkedRoutine.length
     ? Math.round((checkedRoutine.filter(Boolean).length / checkedRoutine.length) * 100)
     : 0
@@ -190,7 +154,7 @@ function WellnessHub() {
 
         {/* Tab pills — clicking only opens the corresponding Sub-Hub Modal */}
         <nav className="wh-tabs">
-          {WELLNESS_TABS.map(tab => (
+          {WELLNESS_TABS?.map(tab => (
             <button
               key={tab.id}
               className="wh-tab-pill"
@@ -211,18 +175,42 @@ function WellnessHub() {
       </header>
 
       {/* ── 4-COLUMN GRID ─────────────────────────────────────────────────── */}
-      <main className="wh-grid-4col">
+      <main className="wh-grid-3col">
 
         {/* ── COLUMN 1: Estado Interno ─────────────────────────────────────── */}
         <section className="wh-column wh-column-state">
-          {/* Welcome Card */}
-          <div className="wh-card wh-welcome-card-wrapper">
-            <WelcomeCard />
+          <div className="wh-card wh-aura-tracker wh-aura-square">
+            <AuraHeatmap />
           </div>
 
-          {/* Aura Heatmap - Químicute */}
-          <div className="wh-card wh-aura-tracker">
-            <AuraHeatmap />
+          <div className="wh-card wh-wellness-projects wh-projects-panel">
+            <div className="wh-card-header">
+              <h2 className="wh-card-title">Proyectos Wellness</h2>
+              <div className="wh-projects-actions">
+                <button className="wh-add-btn" title="Nuevo proyecto">+</button>
+                <button className="wh-history-btn" title="Historial de proyectos">🕒</button>
+              </div>
+            </div>
+
+            <div className="wh-projects-compact-list">
+              {ACTIVE_PROJECTS?.map((proj) => (
+                <div key={proj.id} className="wh-project-compact-row">
+                  <div className="wh-project-compact-meta">
+                    <span className="wh-project-compact-name">{proj.title}</span>
+                    <span className="wh-project-compact-pct" style={{ color: accent }}>{proj.progress}%</span>
+                  </div>
+                  <div className="wh-project-compact-track">
+                    <motion.div
+                      className="wh-project-compact-fill"
+                      style={{ background: accent }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${proj.progress}%` }}
+                      transition={{ duration: 1, ease: 'easeOut' }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -239,7 +227,7 @@ function WellnessHub() {
 
             {/* Internal filter nav (Global + 4 submódulos) */}
             <nav className="wh-routine-filter" aria-label="Filtro de rutinas">
-              {ROUTINE_FILTERS.map(f => {
+              {ROUTINE_FILTERS?.map(f => {
                 const isActive = routineFilter === f.id
                 return (
                   <button
@@ -272,80 +260,42 @@ function WellnessHub() {
               />
             </div>
 
-            {/* Two-column grid with alternating routine steps */}
-            <div className="wh-routine-grid">
-              {routineSteps.map((step, i) => {
-                const isLeft = i % 2 === 0
-                return (
-                  <motion.div
-                    key={`${step.sub ?? routineFilter}-${step.time}-${i}`}
-                    className={`wh-routine-item ${isLeft ? 'left-col' : 'right-col'} ${checkedRoutine[i] ? 'checked' : ''}`}
-                    style={checkedRoutine[i] ? { '--step-accent': accent, '--step-accent-soft': accentSoft } : {}}
-                    whileHover={{ y: -2 }}
-                    whileTap={{ scale: 0.97 }}
-                  >
-                    <div className="wh-routine-check-btn" onClick={() => handleRoutineToggle(i)} title="Marcar completado">
-                      <div className="wh-routine-checkbox" style={checkedRoutine[i] ? { background: accent, borderColor: accent } : {}}>
-                        {checkedRoutine[i] && <span className="wh-routine-checkmark">✓</span>}
-                      </div>
+            {/* Vertical zig-zag timeline with absolute centering */}
+            <div className="wh-timeline-container">
+              {/* Central axis line */}
+              <div className="wh-timeline-axis" />
+              
+              {/* Timeline steps */}
+              {routineSteps?.map((step, i) => (
+                <motion.div
+                  key={`${step?.sub ?? routineFilter}-${step?.time ?? i}-${i}`}
+                  className={`wh-timeline-step ${i % 2 === 0 ? 'left' : 'right'} ${checkedRoutine[i] ? 'checked' : ''}`}
+                  style={checkedRoutine[i] ? { '--step-accent': accent, '--step-accent-soft': accentSoft } : {}}
+                  onClick={() => handleRoutineToggle(i)}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  {/* Connector line */}
+                  <div className="wh-timeline-connector" />
+                  
+                  {/* Central dot */}
+                  <div className="wh-timeline-dot" style={checkedRoutine[i] ? { background: accent } : {}} />
+                  
+                  {/* Step card */}
+                  <div className="wh-timeline-card">
+                    <div className="wh-timeline-time">{step.time}</div>
+                    <div className={`wh-timeline-label ${checkedRoutine[i] ? 'line-through' : ''}`}>
+                      {step.label}
                     </div>
-                    <div className="wh-routine-content" onClick={() => handleRoutineEdit(step, i)}>
-                      <div className="wh-routine-time">{step.time}</div>
-                      <div className={`wh-routine-text ${checkedRoutine[i] ? 'line-through' : ''}`}>
-                        {step.label}
-                      </div>
-                      {step.sub && <div className="wh-routine-submodule">({step.sub})</div>}
-                    </div>
-                    <div className="wh-routine-edit-icon" onClick={() => handleRoutineEdit(step, i)} title="Editar">
-                      ✎
-                    </div>
-                  </motion.div>
-                )
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* ── COLUMN 3: Metas & Mindset ─────────────────────────────────── */}
-        <section className="wh-column wh-column-mindset">
-          {/* Motivational Quote */}
-          <div className="wh-card wh-motivation-quote">
-            <p className="wh-quote-mark">&ldquo;</p>
-            <blockquote className="wh-quote-text">{quote}</blockquote>
-            <p className="wh-quote-mark wh-quote-mark-close">&rdquo;</p>
-          </div>
-
-          {/* Wellness Projects (compact) */}
-          <div className="wh-card wh-wellness-projects">
-            <div className="wh-card-header">
-              <h2 className="wh-card-title">Proyectos Wellness</h2>
-              <button className="wh-add-btn" title="Nuevo proyecto">+</button>
-              <button className="wh-history-btn" title="Historial de proyectos">🕒</button>
-            </div>
-
-            <div className="wh-projects-compact-list">
-              {ACTIVE_PROJECTS.map((proj) => (
-                <div key={proj.id} className="wh-project-compact-row">
-                  <div className="wh-project-compact-meta">
-                    <span className="wh-project-compact-name">{proj.title}</span>
-                    <span className="wh-project-compact-pct" style={{ color: accent }}>{proj.progress}%</span>
+                    <div className="wh-timeline-check">{checkedRoutine[i] ? '✓' : ''}</div>
                   </div>
-                  <div className="wh-project-compact-track">
-                    <motion.div
-                      className="wh-project-compact-fill"
-                      style={{ background: accent }}
-                      initial={{ width: 0 }}
-                      animate={{ width: `${proj.progress}%` }}
-                      transition={{ duration: 1, ease: 'easeOut' }}
-                    />
-                  </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ── COLUMN 4: Acción (3D Cube) ─────────────────────────────────── */}
+        {/* ── COLUMN 3: Acción (3D Cube) ─────────────────────────────────── */}
         <section className="wh-column wh-column-action">
           <div className="wh-card wh-action-cube">
             {/* Toggle buttons */}

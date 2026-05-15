@@ -45,8 +45,9 @@
   z-index: 1;
 
   width: min(92vw, 960px);
-  height: min(88vh, 620px);
-  max-height: 620px;
+  max-width: 100%;
+  height: auto;
+  max-height: 92vh;
 
   display: flex;
   flex-direction: column;

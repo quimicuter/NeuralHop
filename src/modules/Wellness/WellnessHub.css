@@ -16,9 +16,9 @@
   --crystal-shadow: 0 8px 40px rgba(90, 60, 180, 0.08);
 
   /* Text */
-  --text-dark:      rgba(15, 23, 42, 0.92);
-  --text-mid:       rgba(15, 23, 42, 0.65);
-  --text-lila:      rgba(120, 90, 200, 0.75);
+  --text-dark:      rgba(26, 32, 44, 0.96);
+  --text-mid:       rgba(26, 32, 44, 0.68);
+  --text-lila:      rgba(120, 90, 200, 0.85);
 
   /* Surfaces */
   --surface-solid:  #ffffff;            /* mini-cards blancas sólidas */
@@ -34,8 +34,8 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  padding: 0.35rem;
-  gap: 0.25rem;
+  padding: 1rem;
+  gap: 1.5rem;
   background: linear-gradient(135deg,
     rgba(237, 233, 248, 0.75) 0%,
     rgba(220, 232, 248, 0.75) 40%,
@@ -113,9 +113,10 @@
 
 .wh-title {
   font-family: 'Playfair Display', serif;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  color: var(--text-dark);
+  color: #1a202c;
+  text-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
   margin: 0;
   letter-spacing: 0.01em;
 }
@@ -235,12 +236,12 @@
   text-transform: capitalize;
 }
 
-/* ── 4-COLUMN GRID ──────────────────────────────────────── */
-.wh-grid-4col {
+/* ── 3-COLUMN GRID ──────────────────────────────────────── */
+.wh-grid-3col {
   flex: 1;
   display: grid;
-  grid-template-columns: 1fr 1.2fr 1fr 1fr;
-  gap: 0.2rem;
+  grid-template-columns: 3fr 6fr 3fr;
+  gap: 1.5rem;
   min-height: 0;
   overflow: hidden;
 }
@@ -248,23 +249,37 @@
 .wh-column {
   display: flex;
   flex-direction: column;
-  gap: 0.175rem;
+  gap: 0.8rem;
   min-height: 0;
   overflow: hidden;
 }
 
-/* ── Crystal Card Shell ───────────────────────────────────── */
-.wh-card {
-  background: var(--surface-glass);
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
-  border: 1px solid var(--crystal-border);
-  border-radius: 0.8rem;
-  box-shadow: var(--crystal-shadow);
-  padding: 0.125rem;
+.wh-column-action {
   display: flex;
   flex-direction: column;
-  gap: 0.125rem;
+  gap: 1rem;
+  min-height: 0;
+}
+
+.wh-column-state {
+  display: grid;
+  grid-template-rows: 1.6fr 0.95fr;
+  gap: 1rem;
+  min-height: 0;
+}
+
+/* ── Crystal Card Shell ───────────────────────────────────── */
+.wh-card {
+  background: rgba(248, 249, 255, 0.82);
+  backdrop-filter: blur(44px);
+  -webkit-backdrop-filter: blur(44px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 1rem;
+  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.08);
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
   min-height: 0;
   overflow: hidden;
 }
@@ -280,10 +295,11 @@
 .wh-card-title {
   margin: 0;
   font-family: 'Playfair Display', serif;
-  font-size: 0.55rem;
+  font-size: 0.82rem;
   font-weight: 600;
-  color: var(--text-dark);
-  line-height: 1.05;
+  color: #1a202c;
+  text-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  line-height: 1.1;
   min-width: 0;
   flex-shrink: 1;
 }
@@ -340,18 +356,48 @@
   overflow: hidden;
 }
 
+.wh-welcome-card {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 1rem;
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+}
+
+.wh-welcome-text {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.1;
+  color: #1a202c;
+  letter-spacing: 0.01em;
+  text-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.wh-welcome-icon {
+  font-size: 1.1rem;
+}
+
 .wh-aura-tracker {
   flex: 1;
   min-height: 0;
-  padding: 0.2rem;
+  padding: 0.75rem;
   overflow: hidden;
+  border-radius: 1.4rem;
 }
 
 .wh-sleep-tracker {
   flex: 1 1 auto;
-  min-height: 280px;
+  min-height: 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 /* Aura Tracker 2x2 Grid */
@@ -590,156 +636,127 @@
   border-radius: 999px;
 }
 
-/* Two-column Routine Grid */
-.wh-routine-grid {
+/* Timeline with absolute centering */
+.wh-timeline-container {
   flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.25rem;
-  padding: 0.25rem 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.5rem 0;
   min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
-.wh-routine-item {
+/* Central axis line - perfectly centered */
+.wh-timeline-axis {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(15, 23, 42, 0.08);
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+/* Timeline steps */
+.wh-timeline-step {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.2rem;
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 0.4rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
   position: relative;
+  z-index: 2;
+  cursor: pointer;
+  width: 100%;
+  min-height: 32px;
+  margin: 0.25rem 0;
 }
 
-.wh-routine-item:hover {
-  background: rgba(255, 255, 255, 0.75);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+.wh-timeline-step.left {
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.wh-timeline-step.right {
+  flex-direction: row-reverse;
+  justify-content: flex-start;
 }
 
-.wh-routine-item.checked {
-  background: var(--step-accent-soft, rgba(118, 97, 255, 0.12));
+/* Connector line from axis to card */
+.wh-timeline-connector {
+  width: 1.5rem;
+  height: 1px;
+  background: rgba(15, 23, 42, 0.08);
+  flex-shrink: 0;
+}
+
+/* Central dot - absolutely positioned on axis */
+.wh-timeline-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  transition: all 0.2s ease;
+}
+
+/* Step card */
+.wh-timeline-card {
+  flex: 1;
+  padding: 0.2rem 0.35rem;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 0.45rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.06rem;
+  position: relative;
+  transition: all 0.2s ease;
+  min-width: 0;
+  max-width: 180px;
+}
+.wh-timeline-step:hover .wh-timeline-card {
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateY(-2px);
+}
+.wh-timeline-step.checked .wh-timeline-card {
+  background: var(--step-accent-soft, rgba(118, 97, 255, 0.1));
   border-color: var(--step-accent, rgba(118, 97, 255, 0.3));
 }
 
-.wh-routine-check-btn {
-  flex-shrink: 0;
-  padding: 0.15rem;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-}
-
-.wh-routine-checkbox {
-  width: 18px;
-  height: 18px;
-  border: 1.5px solid rgba(15, 23, 42, 0.2);
-  border-radius: 0.25rem;
-  display: grid;
-  place-items: center;
-  transition: all 0.18s ease;
-  background: rgba(255, 255, 255, 0.8);
-}
-
-.wh-routine-check-btn:hover .wh-routine-checkbox {
-  border-color: rgba(15, 23, 42, 0.35);
-  background: rgba(255, 255, 255, 1);
-}
-
-.wh-routine-checkmark {
-  color: white;
-  font-size: 0.65rem;
-  font-weight: 600;
-  line-height: 1;
-}
-
-.wh-routine-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.04rem;
-  min-width: 0;
-  cursor: pointer;
-}
-
-.wh-routine-time {
-  font-size: 0.38rem;
-  font-weight: 400;
+.wh-timeline-time {
+  font-size: 0.42rem;
+  font-weight: 300;
   color: var(--text-lila);
-  letter-spacing: 0.01em;
-  line-height: 1;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
 }
 
-.wh-routine-text {
-  font-size: 0.48rem;
-  font-weight: 400;
+.wh-timeline-label {
+  font-size: 0.5rem;
+  font-weight: 300;
   color: var(--text-dark);
-  line-height: 1.1;
+  line-height: 1.05;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  transition: opacity 0.2s ease;
+  white-space: nowrap;
 }
-
-.wh-routine-text.line-through {
+.wh-timeline-label.line-through {
   text-decoration: line-through;
-  opacity: 0.55;
+  opacity: 0.5;
 }
 
-.wh-routine-submodule {
-  font-size: 0.35rem;
-  color: rgba(15, 23, 42, 0.45);
-  line-height: 1;
-  font-style: italic;
+.wh-timeline-check {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.5rem;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--step-accent, rgba(118, 97, 255, 0.9));
 }
-
-.wh-routine-edit-icon {
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  display: grid;
-  place-items: center;
-  font-size: 0.5rem;
-  color: rgba(15, 23, 42, 0.3);
-  cursor: pointer;
-  border-radius: 0.3rem;
-  transition: all 0.15s ease;
-  opacity: 0;
-}
-
-.wh-routine-item:hover .wh-routine-edit-icon {
-  opacity: 1;
-  background: rgba(118, 97, 255, 0.1);
-  color: rgba(118, 97, 255, 0.8);
-}
-
-.wh-routine-edit-icon:hover {
-  background: rgba(118, 97, 255, 0.2);
-  color: rgba(118, 97, 255, 1);
-  transform: scale(1.1);
-}
-
-/* Scrollbar styling for routine grid */
-.wh-routine-grid::-webkit-scrollbar {
-  width: 4px;
-}
-.wh-routine-grid::-webkit-scrollbar-track {
-  background: transparent;
-}
-.wh-routine-grid::-webkit-scrollbar-thumb {
-  background: rgba(15, 23, 42, 0.1);
-  border-radius: 2px;
-}
-.wh-routine-grid::-webkit-scrollbar-thumb:hover {
-  background: rgba(15, 23, 42, 0.2);
-}
-
 
 /* ── COLUMN 3: Metas & Mindset ───────────────────────────── */
 .wh-motivation-quote {
@@ -756,6 +773,12 @@
   flex: 1;
   min-height: 0;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.wh-wellness-projects .wh-projects-compact-list {
+  max-height: calc(100% - 3.2rem);
 }
 
 /* Quote */
@@ -847,15 +870,10 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.75rem;
   overflow: hidden;
-}
-
-.wh-action-cube {
-  flex: 0 1 auto;
-  min-height: 220px;
-  max-height: 360px;
-  padding: 0.8rem;
+  padding: 0.9rem;
+  max-height: none;
 }
 
 /* Compact variant for entry cards inside cube */
