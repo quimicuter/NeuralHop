@@ -6,7 +6,7 @@ import {
   toDateKey,
   QUALITY_COLORS,
   QUALITY_SCORE,
-} from '../../engine/SleepEngine'
+} from '../engine/SleepEngine'
 import SleepEntryModal from './SleepEntryModal'
 import './SleepTracker.css'
 

@@ -44,7 +44,7 @@ body {
   overflow: auto;
   width: 100vw;
   min-height: 100vh;
-  background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=873&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+  background-image: url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=1920&q=80');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -938,7 +938,7 @@ body {
 .card-header h3 {
   font-family: 'Playfair Display', serif;
   font-weight: 600;
-  color: #000000;
+  color: var(--text-main, #f5ebe6);
   font-size: 0.85em;
   margin: 0;
 }
@@ -1407,6 +1407,29 @@ body {
   z-index: -1;
 }
 
+.offline-banner {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 50;
+  padding: 0.8rem 1rem;
+  margin-bottom: 0.7rem;
+  border-radius: 0 0 18px 18px;
+  background: rgba(34, 34, 34, 0.92);
+  color: white;
+  font-size: 0.95rem;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+.offline-banner::before {
+  content: '⛔ ';
+  margin-right: 0.35rem;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -1546,15 +1569,17 @@ body {
   font-family: 'Playfair Display', serif;
   font-size: 1.8em;
   font-weight: 600;
-  color: var(--color-p4);
+  color: #e8d5e0;
   margin-bottom: 0.5vh;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .clock-display .date {
   font-family: 'Inter', sans-serif;
   font-size: 0.7em;
-  color: var(--color-p5);
+  color: #d4c4d0;
   margin-bottom: 0.5vh;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 /* Pillars Styles */
@@ -2070,14 +2095,15 @@ html, body, #root, .app-container {
   font-family: 'Playfair Display', 'Lora', serif;
   font-size: 1.15rem; /* ¡Mucho más delicado! */
   font-weight: 600;
-  color: #4a3b3b;
+  color: #e8d5e0;
   text-transform: lowercase;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .calendar-nav-btn {
   background: transparent;
   border: none;
-  color: #4a3b3b;
+  color: #d4c4d0;
   font-size: 0.9rem; /* Flechas chiquitas */
   width: 24px; /* Botón más pequeño */
   height: 24px;
@@ -2101,7 +2127,7 @@ html, body, #root, .app-container {
   font-family: 'Inter', sans-serif;
   font-size: 0.7rem; /* Letritas más finas */
   font-weight: 600;
-  color: #666;
+  color: #b8a8b8;
   padding-bottom: 4px; /* Menos espacio */
   margin-bottom: 6px; /* Menos espacio */
   border-bottom: 1px solid rgba(255, 255, 255, 0.4);
@@ -2110,18 +2136,24 @@ html, body, #root, .app-container {
 /* 4. Cuadrícula y Celdas - Full-bottom: ocupa toda la altura disponible */
 .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   grid-auto-rows: 1fr;
   gap: 4px;
   width: 100%;
   align-content: stretch;
   flex: 1 1 auto;
   min-height: 0;
+  min-width: 0;
+}
+
+.calendar-weekdays {
+  min-width: 0;
 }
 
 .cal-day {
   /* Las celdas crecen con la altura disponible (full-bottom) */
-  min-height: 56px;
+  min-height: 0;
+  min-width: 0;
   border-radius: 8px;
   background: rgb(250, 250, 250);
   padding: 4px;
@@ -2159,7 +2191,7 @@ html, body, #root, .app-container {
   font-family: 'Playfair Display', serif;
   font-size: 0.9rem;
   font-weight: 700;
-  color: #4a3b3b;
+  color: #2d1b4e;
 }
 
 /* Semáforo de tareas */
@@ -2224,16 +2256,16 @@ html, body, #root, .app-container {
   width: 100%;
 }
 
-/* 4. Estilo Especial para el Día de Hoy */
+/* 4. Estilo Especial para el Día de Hoy — Burgundy */
 .cal-day.today {
-  /* Degradado de morado a azul oscuro */
-  background: linear-gradient(135deg, #877ad4 0%, #cca5ff 100%) !important;
+  background: linear-gradient(135deg, #6b1d2f 0%, #800020 100%) !important;
+  border-color: rgba(212, 163, 115, 0.6) !important;
   
-  /* Borde sutil para que no se pierda el efecto lila */
-  border: 2px solid rgb(160, 4, 160) !important;
+  /* Borde dorado cálido para el día de hoy */
+  border: 2px solid var(--accent-cozy-gold, #d4a373) !important;
   
-  /* Sombra más profunda para dar profundidad */
-  box-shadow: 0 4px 12px rgba(43, 58, 103, 0.3);
+  /* Sombra cálida para dar profundidad */
+  box-shadow: 0 4px 12px rgba(107, 29, 47, 0.4);
   
   /* Aseguramos que el texto sea blanco */
   color: white !important;

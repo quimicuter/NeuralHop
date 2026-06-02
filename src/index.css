@@ -10,10 +10,20 @@
   --space-base: 16px;
   --radius-pro: 10px;
   
-  /* Glassmorphism Premium */
-  --glass-bg: rgba(255, 255, 255, 0.1);
-  --glass-border: rgba(255, 255, 255, 0.2);
-  --glass-blur: blur(24px);
+  /* ════════ Cozy Canadian Forest & Burgundy Palette ════════ */
+  --bg-glass: rgba(28, 40, 32, 0.35);          /* cristal con tinte pino oscuro */
+  --border-glass: rgba(255, 255, 255, 0.12);   /* borde fino y elegante */
+  --text-main: #f5ebe6;                        /* hueso/crema cálido */
+  --text-muted: #b3a7a1;                       /* café grisáceo apagado */
+  --accent-burgundy: #6b1d2f;                  /* vino profundo · activo */
+  --accent-burgundy-soft: rgba(107, 29, 47, 0.4);
+  --accent-forest: #2d4a3e;                    /* verde pino · secundario */
+  --accent-cozy-gold: #d4a373;                 /* ocre cálido · detalles */
+
+  /* Glassmorphism Premium (legacy alias) */
+  --glass-bg: var(--bg-glass);
+  --glass-border: var(--border-glass);
+  --glass-blur: blur(18px) saturate(120%);
 
   /* Legacy Variables */
   --text: #6b6375;

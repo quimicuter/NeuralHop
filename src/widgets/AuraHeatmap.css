@@ -1,0 +1,205 @@
+/* ============================================================
+   AuraHeatmap — Mini-tracker semanal compacto
+   7 círculos L-D · radial-gradient · aura difuminada por nivel
+   ============================================================ */
+
+.aura-widget {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow: hidden;
+}
+
+/* ── Header minimalista ───────────────────────────────────── */
+.aura-widget-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 0 4px;
+  text-align: center;
+}
+
+.aura-widget-title {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(15, 23, 42, 0.85);
+  letter-spacing: 0.4px;
+}
+
+.aura-widget-sub {
+  font-size: 0.62rem;
+  font-weight: 500;
+  color: rgba(124, 58, 237, 0.7);
+  letter-spacing: 0.3px;
+  text-transform: lowercase;
+  font-style: italic;
+}
+
+/* ── Fila semanal de 7 días ───────────────────────────────── */
+.aura-week-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  padding: 0 2px;
+}
+
+.aura-day {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1.2px solid rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s ease,
+              border-color 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-family: inherit;
+  outline: none;
+  /* Aura difusa base — empuja el glow más allá del círculo */
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.35),
+              0 2px 6px rgba(120, 90, 200, 0.08);
+}
+
+.aura-day.is-empty {
+  background: radial-gradient(circle at 35% 30%,
+              rgba(255, 255, 255, 0.45) 0%,
+              rgba(200, 200, 220, 0.12) 100%);
+}
+
+.aura-day:hover {
+  transform: translateY(-2px) scale(1.06);
+  border-color: rgba(255, 255, 255, 0.95);
+}
+
+.aura-day.is-today {
+  border-color: rgba(124, 58, 237, 0.7);
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.25),
+              inset 0 1px 3px rgba(255, 255, 255, 0.4);
+}
+
+.aura-day.has-level.is-today {
+  /* Conserva el aura del nivel + halo morado de "hoy" */
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 2px;
+}
+
+.aura-day.is-active {
+  transform: scale(1.12);
+  border-color: rgba(255, 255, 255, 1);
+}
+
+/* Pulso suave en días con nivel alto (4-5) */
+.aura-day.has-level::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  animation: aura-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes aura-pulse {
+  0%, 100% { opacity: 0.0; transform: scale(1);    }
+  50%      { opacity: 0.35; transform: scale(1.18); }
+}
+
+/* Etiqueta del día */
+.aura-day-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #2d1b4e;
+  z-index: 2;
+  pointer-events: none;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.aura-day.has-level .aura-day-label {
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Mini badge con el número de nivel (esquina inferior) */
+.aura-day-dot {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #7c3aed;
+  font-size: 0.5rem;
+  font-weight: 700;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  z-index: 3;
+}
+
+/* ── Picker inline (1-5) ──────────────────────────────────── */
+.aura-picker {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+  padding: 4px 2px 0;
+  animation: aura-picker-in 0.25s ease-out;
+}
+
+@keyframes aura-picker-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.aura-picker-btn {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  font-family: inherit;
+  padding: 0;
+}
+
+.aura-picker-btn:hover {
+  transform: translateY(-1px) scale(1.1);
+}
+
+.aura-picker-clear {
+  background: rgba(255, 255, 255, 0.4);
+  color: rgba(15, 23, 42, 0.6);
+  text-shadow: none;
+  font-size: 0.85rem;
+  font-weight: 400;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.aura-picker-clear:hover {
+  background: rgba(255, 100, 100, 0.2);
+  color: #b91c1c;
+}
+
+/* ── Responsive: ajustes finos en celdas pequeñas ─────────── */
+@media (max-height: 720px) {
+  .aura-widget { gap: 6px; }
+  .aura-widget-title { font-size: 0.72rem; }
+  .aura-widget-sub { font-size: 0.58rem; }
+  .aura-week-row { gap: 4px; }
+}

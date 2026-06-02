@@ -135,7 +135,7 @@
   gap: 6px;
   font-family: 'Inter', sans-serif;
   font-size: 0.5rem; /* ~8px */
-  color: #a78bfa; /* lila tenue pero legible */
+  color: #7c3aed; /* lila más oscuro para mejor contraste */
   font-weight: 500;
   min-width: 0;
 }

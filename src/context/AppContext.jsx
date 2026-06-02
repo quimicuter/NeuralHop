@@ -64,6 +64,8 @@ const initialState = {
   monthOffset: 0
 }
 
+const ENTRIES_STORAGE_KEY = 'neuralhop-entries-cache'
+
 function appReducer(state, action) {
   switch (action.type) {
     case 'SET_ENTRIES':
@@ -111,6 +113,20 @@ const AppContext = createContext()
 export function AppProvider({ children }) {
   const [state, dispatch] = useReducer(appReducer, initialState)
 
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(ENTRIES_STORAGE_KEY)
+      if (stored) {
+        const parsed = JSON.parse(stored)
+        if (Array.isArray(parsed)) {
+          dispatch({ type: 'SET_ENTRIES', payload: parsed })
+        }
+      }
+    } catch (error) {
+      console.warn('[AppContext] No se pudieron cargar entries cacheados', error)
+    }
+  }, [])
+
   // Suscripción global a entries en tiempo real
   useEffect(() => {
     console.log('[AppContext] Suscribiéndose a entries...')
@@ -120,6 +136,14 @@ export function AppProvider({ children }) {
     })
     return () => unsubscribe()
   }, [])
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(ENTRIES_STORAGE_KEY, JSON.stringify(state.entries || []))
+    } catch (error) {
+      console.warn('[AppContext] No se pudieron guardar entries cacheados', error)
+    }
+  }, [state.entries])
 
   // Helpers derivados del estado de entries
   const getEntries = (filters) => filterEntries(state.entries, filters)

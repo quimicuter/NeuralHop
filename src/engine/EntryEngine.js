@@ -10,8 +10,9 @@ import {
   where, 
   orderBy, 
   limit,
-  getDocs,
-  serverTimestamp 
+  getDoc,
+  serverTimestamp,
+  enableIndexedDbPersistence
 } from 'firebase/firestore'
 
 let db = null
@@ -19,6 +20,15 @@ let db = null
 export function initEntryEngine(app) {
   if (app) {
     db = getFirestore(app)
+    enableIndexedDbPersistence(db).catch((error) => {
+      if (error.code === 'failed-precondition') {
+        console.warn('Firestore persistence disabled: multiple tabs open.')
+      } else if (error.code === 'unimplemented') {
+        console.warn('Firestore persistence not available in this browser.')
+      } else {
+        console.warn('Firestore persistence error:', error)
+      }
+    })
   }
 }
 
@@ -75,9 +85,9 @@ export async function getEntry(entryId) {
   if (!db) return null
   try {
     const entryRef = doc(db, 'entries', entryId)
-    const entryDoc = await getDocs(entryRef)
-    if (entryDoc.exists()) {
-      return { id: entryDoc.id, ...entryDoc.data() }
+    const entrySnap = await getDoc(entryRef)
+    if (entrySnap.exists()) {
+      return { id: entrySnap.id, ...entrySnap.data() }
     }
     return null
   } catch (e) {

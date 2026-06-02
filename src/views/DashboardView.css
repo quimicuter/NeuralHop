@@ -1,0 +1,297 @@
+/* ============================================================
+   DashboardView — Bento Box Rígido 12×12 (locked 100vh)
+   Estética: Glassmorphism (translucidez + blur + bordes suaves)
+   ============================================================ */
+
+.dashboard-view-container {
+  display: grid;
+  /* 12 columnas uniformes de 1fr para evitar distorsiones de escala */
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(12, 1fr);
+  height: 100vh;
+  max-height: 100vh;
+  gap: 14px;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* ════════ FILA SUPERIOR — Events y Tasks 50/50 bajo Welcome ════════ */
+.bento-welcome        { grid-column: 1 / 5;   grid-row: 1 / 3;   }
+.bento-events         { grid-column: 1 / 3;   grid-row: 3 / 9;   }
+.bento-tasks          { grid-column: 3 / 5;   grid-row: 3 / 9;   }
+.bento-calendar       { grid-column: 5 / 10;  grid-row: 1 / 9;   }
+.bento-routine        { grid-column: 10 / 13; grid-row: 1 / 9;   }
+
+/* ════════ FILA INFERIOR: SIMETRÍA PERFECTA (3 columnas cada una) ════════ */
+.bento-aura           { grid-column: 1 / 4;   grid-row: 9 / 13;  }
+.bento-hub-navigation { grid-column: 4 / 7;   grid-row: 9 / 13;  }
+.bento-menu           { grid-column: 7 / 10;  grid-row: 9 / 13;  }
+.bento-sleep          { grid-column: 10 / 13; grid-row: 9 / 13;  }
+
+/* Salvaguarda de renderizado rígido */
+.dashboard-view-container > .bento-cell {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ----------- Glassmorphism Cell base ----------- */
+.bento-cell {
+  height: 100%;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--bg-glass);
+  backdrop-filter: blur(18px) saturate(120%);
+  -webkit-backdrop-filter: blur(18px) saturate(120%);
+  border-radius: 20px;
+  border: 1px solid var(--border-glass);
+  box-shadow: 0 8px 32px 0 rgba(12, 20, 15, 0.2);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  color: var(--text-main);
+}
+
+.bento-cell:hover {
+  box-shadow: 0 12px 40px 0 rgba(12, 20, 15, 0.3);
+  border-color: rgba(212, 163, 115, 0.25);
+}
+
+.cell-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.cell-header h3 {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+  letter-spacing: 0.3px;
+}
+
+.cell-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.cell-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border-glass);
+  background: rgba(245, 235, 230, 0.12);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  color: var(--text-main);
+  transition: all .2s ease;
+}
+
+.cell-btn:hover {
+  background: var(--accent-burgundy-soft);
+  border-color: var(--accent-burgundy);
+  color: var(--text-main);
+}
+
+.cell-content {
+  flex: 1;
+  min-height: 0;
+}
+
+.cell-content.scrollable {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  padding-right: 4px;
+}
+
+.cell-content.scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+.cell-content.scrollable::-webkit-scrollbar-thumb {
+  background: rgba(160, 32, 160, 0.25);
+  border-radius: 3px;
+}
+
+/* ----------- Ajustes finos por celda ----------- */
+.bento-welcome   {
+  padding: 10px 18px;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+}
+.bento-welcome > * { flex: 1; min-width: 0; }
+
+.bento-aura      { padding: 12px; }
+.bento-calendar  { padding: 12px; }
+.bento-routine   { padding: 12px; }
+.bento-sleep     { padding: 12px; }
+
+.bento-calendar > *,
+.bento-routine > *,
+.bento-sleep > * {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ----------- Hub Navigation Grid (2x3) ----------- */
+.bento-hub-navigation {
+  padding: 10px;
+}
+
+.hub-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+}
+
+.hub-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 8px 14px;
+  background: rgba(245, 235, 230, 0.08);
+  border: 1px solid var(--border-glass);
+  border-radius: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  transition: all .25s ease;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.hub-btn:hover {
+  background: var(--accent-burgundy-soft);
+  border-color: var(--accent-burgundy);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(107, 29, 47, 0.35);
+  color: var(--text-main);
+}
+
+.hub-btn-emoji {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.hub-btn-label {
+  font-weight: 500;
+}
+
+/* ----------- Menú Semanal ----------- */
+.bento-menu {
+  padding: 12px;
+}
+
+.menu-grid-6x4 {
+  display: grid;
+  grid-template-columns: 40px repeat(5, 1fr);
+  grid-template-rows: 28px repeat(3, 1fr);
+  gap: 6px;
+  flex: 1;
+  min-height: 0;
+}
+
+.menu-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.menu-cell.day-header {
+  background: rgba(245, 235, 230, 0.12);
+  font-weight: 600;
+  color: #e8d5e0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.menu-cell.meal-emoji {
+  font-size: 1.2rem;
+}
+
+.menu-cell.meal-cell {
+  background: rgba(245, 235, 230, 0.06);
+  border: 1px dashed rgba(212, 163, 115, 0.3);
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.menu-cell.meal-cell:hover {
+  background: var(--accent-burgundy-soft);
+  border-color: var(--accent-burgundy);
+}
+
+.menu-cell.has-meal {
+  background: rgba(45, 74, 62, 0.45);
+  border-style: solid;
+  border-color: var(--accent-forest);
+  color: var(--accent-cozy-gold);
+}
+
+.menu-cell .check-icon { color: #fbbf24; font-weight: 700; }
+.menu-cell .plus-icon  { color: #d4c4d0; }
+
+/* ----------- Responsive: apilado estricto en una sola columna ----------- */
+@media (max-width: 1024px) {
+  .dashboard-view-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    height: auto;
+    max-height: none;
+    overflow: auto;
+  }
+  .bento-welcome,
+  .bento-events,
+  .bento-tasks,
+  .bento-aura,
+  .bento-calendar,
+  .bento-hub-navigation,
+  .bento-menu,
+  .bento-routine,
+  .bento-sleep {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    min-height: 220px;
+  }
+  .bento-welcome { flex-direction: column; }
+  .bento-calendar { min-height: 360px; }
+}
+
+@media (max-width: 640px) {
+  .dashboard-view-container {
+    grid-template-columns: 1fr;
+    padding: 12px;
+    gap: 10px;
+  }
+  .dashboard-view-container > * {
+    grid-column: 1 / -1 !important;
+  }
+}
+

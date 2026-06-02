@@ -188,7 +188,7 @@ export const isHabitDueToday = (habit, refDate = new Date()) => {
 }
 
 // ===== COMPONENTE PRINCIPAL =====
-function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModule = '', preselectedCategory = null, editEntry = null }) {
+function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModule = '', preselectedCategory = null, editEntry = null, prefillData = null }) {
   const { actions } = useApp()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -213,6 +213,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
     habitDays: [],
     frequency: 'daily',
     monthlyDays: '',
+    habitTime: '',
     projectStatus: 'not_started',
     roadmapSteps: [],
     roadmapInput: '',
@@ -323,6 +324,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
       monthlyDays: Array.isArray(entry.metadata?.monthlyDays)
         ? entry.metadata.monthlyDays.join(', ')
         : (entry.metadata?.monthlyDays || ''),
+      habitTime: entry.time || entry.metadata?.time || '',
       projectStatus: entry.metadata?.projectStatus || 'not_started',
       roadmapSteps: entry.metadata?.roadmapSteps || [],
       birthdayName: entry.metadata?.birthdayPerson || '',
@@ -337,6 +339,8 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
     if (isOpen) {
       if (editEntry) {
         setFormData(buildFormDataFromEntry(editEntry))
+      } else if (prefillData) {
+        setFormData(buildFormDataFromEntry(prefillData))
       } else {
         setFormData({
           ...emptyFormData,
@@ -347,7 +351,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
       }
       setIsSubmitting(false)
     }
-  }, [isOpen, preselectedType, preselectedModule, preselectedCategory, editEntry])
+  }, [isOpen, preselectedType, preselectedModule, preselectedCategory, editEntry, prefillData])
 
   // ===== HANDLERS =====
   const updateField = (field, value) => {
@@ -460,8 +464,12 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
             recurrenceType: formData.recurrenceType
           }
         } else if (formData.type === 'habit') {
+          updates.time = formData.habitTime || ''
+          updates.submodule = formData.category || ''
           updates.metadata = {
             ...updates.metadata,
+            time: formData.habitTime || '',
+            submodule: formData.category || '',
             frequency: formData.frequency,
             habitDays: (formData.frequency === 'weekly' || formData.frequency === 'multiple') ? formData.habitDays : [],
             monthlyDays: formData.frequency === 'monthly' ? parseMonthlyDays(formData.monthlyDays) : [],
@@ -555,8 +563,12 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
               description: formData.description
             }
           } else if (formData.type === 'habit') {
+            basePayload.time = formData.habitTime || ''
+            basePayload.submodule = formData.category || ''
             basePayload.metadata = {
               ...basePayload.metadata,
+              time: formData.habitTime || '',
+              submodule: formData.category || '',
               frequency: formData.frequency,
               habitDays: (formData.frequency === 'weekly' || formData.frequency === 'multiple') ? formData.habitDays : [],
               monthlyDays: formData.frequency === 'monthly' ? parseMonthlyDays(formData.monthlyDays) : [],
@@ -1153,6 +1165,20 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
                           />
                           {renderCategoryDropdown()}
                           {renderFrequencyDropdown({ iconOnly: true })}
+                        </div>
+
+                        {/* Fila 1b: Hora de ejecución (HH:MM) */}
+                        <div className="gam-task-times-row">
+                          <div className="gam-task-time-field gam-habit-time-field">
+                            <label className="gam-habit-time-label">⏱ Hora</label>
+                            <input
+                              type="time"
+                              className="gam-task-date-input"
+                              value={formData.habitTime}
+                              onChange={(e) => updateField('habitTime', e.target.value)}
+                              required
+                            />
+                          </div>
                         </div>
 
                         {/* Fila 2: Selector dinámico full-width */}

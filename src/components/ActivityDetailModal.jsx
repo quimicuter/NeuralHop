@@ -147,19 +147,25 @@ function ActivityDetailModal({ entry, isOpen, onClose, onSave, onEdit, onDelete 
         )}
 
         <div className="detail-actions">
-          <button className="detail-btn detail-btn-edit" onClick={() => onEdit(entry)}>
-            ✏️ Editar
-          </button>
-          <button className="detail-btn detail-btn-delete" onClick={handleDelete}>
-            🗑️ Eliminar
-          </button>
-          <button
-            className={`detail-btn detail-btn-save ${isModified ? 'active' : ''}`}
-            onClick={handleSave}
-            disabled={!isModified}
-          >
-            💾 Guardar
-          </button>
+          {onEdit && (
+            <button className="detail-btn detail-btn-edit" onClick={() => onEdit(entry)}>
+              ✏️ Editar
+            </button>
+          )}
+          {onDelete && (
+            <button className="detail-btn detail-btn-delete" onClick={handleDelete}>
+              🗑️ Eliminar
+            </button>
+          )}
+          {onSave && (
+            <button
+              className={`detail-btn detail-btn-save ${isModified ? 'active' : ''}`}
+              onClick={handleSave}
+              disabled={!isModified}
+            >
+              💾 Guardar
+            </button>
+          )}
         </div>
       </div>
     </div>

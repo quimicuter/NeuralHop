@@ -37,6 +37,38 @@ export default defineConfig({
           },
         ],
       },
+      workbox: {
+        navigateFallback: '/NeuralHop/',
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/(images|plus)\.unsplash\.com\/.*$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'remote-images',
+              expiration: { maxEntries: 80, maxAgeSeconds: 30 * 24 * 60 * 60 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/.*\.googleapis\.com\/.*$/,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'google-apis',
+              networkTimeoutSeconds: 10,
+              expiration: { maxEntries: 60, maxAgeSeconds: 30 * 24 * 60 * 60 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/.*\.(cloudflare|gstatic)\.com\/.*$/,
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'cdn-assets',
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+        ],
+      },
     }),
   ],
   base: '/NeuralHop/',
