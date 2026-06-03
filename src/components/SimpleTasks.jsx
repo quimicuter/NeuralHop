@@ -1,44 +1,16 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useApp } from '../context/AppContext'
-import ActivityDetailModal from './ActivityDetailModal'
 import EntryCard from './EntryCard'
 
 function SimpleTasks({ moduleFilter = null, scopeFilter = null, limit = 6 }) {
   const { state, actions, getTasks } = useApp()
   const tasks = (getTasks && getTasks()) || []
-  const [selectedEntry, setSelectedEntry] = useState(null)
-  const [isDetailOpen, setIsDetailOpen] = useState(false)
 
   const handleTaskToggle = (taskId) => {
     actions.updateEntry(taskId, {
       completed: true,
       status: 'done'
     })
-  }
-
-  const openDetail = (entry) => {
-    setSelectedEntry(entry)
-    setIsDetailOpen(true)
-  }
-
-  const closeDetail = () => {
-    setIsDetailOpen(false)
-    setSelectedEntry(null)
-  }
-
-  const handleSaveEntry = async (entryId, updates) => {
-    await actions.updateEntry(entryId, updates)
-    closeDetail()
-  }
-
-  const handleEditEntry = (entry) => {
-    closeDetail()
-    window.dispatchEvent(new CustomEvent('open-edit-modal', { detail: entry }))
-  }
-
-  const handleDeleteEntry = async (entryId) => {
-    await actions.deleteEntry(entryId)
-    closeDetail()
   }
 
   const getCategoryColor = (category) => {
@@ -151,6 +123,10 @@ function SimpleTasks({ moduleFilter = null, scopeFilter = null, limit = 6 }) {
 
   // Mostrar solo tareas reales. Excluir entradas tipo task que tienen `date` pero no `deadline`,
   // porque en la práctica son eventos mal etiquetados y deben ir a la lista de Eventos.
+  const handleTaskClick = (task) => {
+    window.dispatchEvent(new CustomEvent('open-edit-modal', { detail: task }))
+  }
+
   const visibleTasks = (tasks || []).filter(task =>
     task.type === 'task' &&
     !task.completed &&
@@ -161,35 +137,24 @@ function SimpleTasks({ moduleFilter = null, scopeFilter = null, limit = 6 }) {
   ).slice(0, limit)
 
   return (
-    <>
-      <div className="task-list">
-        {visibleTasks.map(task => (
-          <EntryCard
-            key={task.id}
-            entry={task}
-            variant="task"
-            isOverdue={isTaskOverdue(task)}
-            getDateTime={getTaskDateTime}
-            onToggle={handleTaskToggle}
-            onClick={() => openDetail(task)}
-          />
-        ))}
-        {visibleTasks.length === 0 && (
-          <div className="empty-tasks">
-            <span>No hay tareas pendientes. ✨</span>
-          </div>
-        )}
-      </div>
-
-      <ActivityDetailModal
-        entry={selectedEntry}
-        isOpen={isDetailOpen}
-        onClose={closeDetail}
-        onSave={handleSaveEntry}
-        onEdit={handleEditEntry}
-        onDelete={handleDeleteEntry}
-      />
-    </>
+    <div className="task-list">
+      {visibleTasks.map(task => (
+        <EntryCard
+          key={task.id}
+          entry={task}
+          variant="task"
+          isOverdue={isTaskOverdue(task)}
+          getDateTime={getTaskDateTime}
+          onToggle={handleTaskToggle}
+          onClick={() => handleTaskClick(task)}
+        />
+      ))}
+      {visibleTasks.length === 0 && (
+        <div className="empty-tasks">
+          <span>No hay tareas pendientes. ✨</span>
+        </div>
+      )}
+    </div>
   )
 }
 
