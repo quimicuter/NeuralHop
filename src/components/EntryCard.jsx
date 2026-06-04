@@ -1,27 +1,28 @@
 import React from 'react'
+import { IconRenderer } from './IconRenderer'
 import { MODULE_CONFIG, SCOPE_LABELS } from './GlobalAddModal'
 import './EntryCard.css'
 
 // ===== Helpers de origen =====
-const getScopeEmoji = (entry) => {
+const getScopeIcon = (entry) => {
   const scope = entry?.scope
-  return SCOPE_LABELS?.[scope]?.emoji || '✦'
+  return SCOPE_LABELS?.[scope]?.icon || 'Circle'
 }
 
-const getSubmoduleSymbol = (entry) => {
+const getSubmoduleIcon = (entry) => {
   const moduleCfg = MODULE_CONFIG?.[entry?.module]
-  if (!moduleCfg) return '·'
+  if (!moduleCfg) return 'Dot'
   const subId = entry?.metadata?.category || entry?.category
   const sub = moduleCfg.submodules?.find(s => s.id === subId)
-  if (sub?.emoji) return sub.emoji
-  return moduleCfg.emoji || '·'
+  if (sub?.icon) return sub.icon
+  return moduleCfg.icon || 'Dot'
 }
 
-const getEventMarkerEmoji = (entry) => {
-  if (!entry) return '📅'
-  const moduleEmoji = MODULE_CONFIG?.[entry.module]?.emoji
-  const metadataEmoji = entry.metadata?.emoji
-  return metadataEmoji || moduleEmoji || getScopeEmoji(entry) || '📅'
+const getEventMarkerIcon = (entry) => {
+  if (!entry) return 'Calendar'
+  const moduleIcon = MODULE_CONFIG?.[entry.module]?.icon
+  const metadataIcon = entry.metadata?.icon
+  return metadataIcon || moduleIcon || getScopeIcon(entry) || 'Calendar'
 }
 
 // ===== Componente principal =====
@@ -54,7 +55,9 @@ function EntryCard({
       {/* LADO IZQUIERDO: Checkbox / Indicador de evento */}
       <div className="entry-card-left">
         {variant === 'event' || hideCheckbox ? (
-          <span className="entry-event-marker" aria-hidden="true">{getEventMarkerEmoji(entry)}</span>
+          <span className="entry-event-marker" aria-hidden="true">
+            <IconRenderer icon={getEventMarkerIcon(entry)} size={16} />
+          </span>
         ) : (
           <button
             type="button"
@@ -89,12 +92,12 @@ function EntryCard({
       {/* LADO DERECHO: Emoji de ámbito, título y símbolo de submódulo */}
       <div className="entry-card-right">
         <span className="entry-scope-emoji" aria-hidden="true">
-          {getScopeEmoji(entry)}
+          <IconRenderer icon={getScopeIcon(entry)} size={14} />
         </span>
         <span className="entry-title">{entry?.title || entry?.name || 'Sin título'}</span>
         {entry?.module === 'wellness' && (
           <span className="entry-submodule-symbol" aria-hidden="true">
-            {getSubmoduleSymbol(entry)}
+            <IconRenderer icon={getSubmoduleIcon(entry)} size={12} />
           </span>
         )}
       </div>

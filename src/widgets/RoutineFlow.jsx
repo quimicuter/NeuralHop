@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useApp } from '../context/AppContext'
-import ActivityDetailModal from '../components/ActivityDetailModal'
 import './RoutineFlow.css'
 
 const ROUTINE_FILTERS = [
@@ -50,8 +49,6 @@ export default function RoutineFlow() {
   const [checkedMap, setCheckedMap] = useState({})
   const [toastMessage, setToastMessage] = useState('')
   const [toastVisible, setToastVisible] = useState(false)
-  const [selectedStep, setSelectedStep] = useState(null)
-  const [isDetailOpen, setIsDetailOpen] = useState(false)
   const [itemToDelete, setItemToDelete] = useState(null)
 
   const [hiddenStatics, setHiddenStatics] = useState(() => {
@@ -127,74 +124,7 @@ export default function RoutineFlow() {
       showToast('🗑 Rutina oculta')
     }
     setItemToDelete(null)
-    closeDetail()
   }
-
-  const openDetail = (step) => {
-    setSelectedStep(step)
-    setIsDetailOpen(true)
-  }
-
-  const closeDetail = () => {
-    setIsDetailOpen(false)
-    setSelectedStep(null)
-  }
-
-  // Lógica de ráfaga multievento reparada para abrir el modal global pase lo que pase
-  const handleEditDetail = (entry, isDynamic = false) => {
-    if (!entry) return
-    
-    const rawEntry = isDynamic && selectedStep?.entry ? selectedStep.entry : entry;
-    closeDetail()
-
-    // Disparamos una ráfaga controlada de eventos con distintos esquemas de datos
-    setTimeout(() => {
-      const eventNames = ['open-edit-modal', 'open-global-modal', 'open-add-modal', 'open-entry-modal'];
-      
-      eventNames.forEach(name => {
-        // Variante 1: Objeto plano crudo directo (Como el menú contextual original)
-        window.dispatchEvent(new CustomEvent(name, { detail: rawEntry }));
-        
-        // Variante 2: Objeto envuelto bajo la propiedad entry
-        window.dispatchEvent(new CustomEvent(name, { 
-          detail: { 
-            entry: rawEntry, 
-            mode: 'edit', 
-            isEdit: true 
-          } 
-        }));
-
-        // Variante 3: Payload extendido unificado
-        window.dispatchEvent(new CustomEvent(name, {
-          detail: {
-            ...rawEntry,
-            mode: 'edit',
-            isEdit: true,
-            id: rawEntry.id,
-            title: rawEntry.title || rawEntry.label,
-            time: rawEntry.time || rawEntry.metadata?.startTime || ''
-          }
-        }));
-      });
-    }, 60);
-  }
-
-  const detailEntry = selectedStep ? (
-    selectedStep.dynamic ? selectedStep.entry : {
-      id: null,
-      title: selectedStep.label,
-      label: selectedStep.label,
-      time: selectedStep.time,
-      module: 'wellness',
-      type: 'habit',
-      submodule: selectedStep.sub,
-      sub: selectedStep.sub,
-      metadata: {
-        startTime: selectedStep.time,
-        category: selectedStep.sub
-      }
-    }
-  ) : null
 
   return (
     <div className="wh-card wh-routine-flow" role="region" aria-label="Routine Flow">
@@ -261,7 +191,7 @@ export default function RoutineFlow() {
                 style={{ background: isChecked ? stepAccent : undefined, borderColor: stepAccent }}
               />
 
-              <div className="wh-timeline-card" onClick={() => openDetail(step)}>
+              <div className="wh-timeline-card">
                 <div className="wh-timeline-card-body">
                   <div 
                     className={`wh-routine-inline-checkbox ${isChecked ? 'checked' : ''}`}
@@ -283,14 +213,6 @@ export default function RoutineFlow() {
           )
         })}
       </div>
-
-      <ActivityDetailModal
-        entry={detailEntry}
-        isOpen={isDetailOpen}
-        onClose={closeDetail}
-        onEdit={detailEntry ? (entry => handleEditDetail(entry, selectedStep?.dynamic)) : undefined}
-        onDelete={detailEntry ? () => requestDelete(detailEntry) : undefined}
-      />
 
       <AnimatePresence>
         {itemToDelete && (

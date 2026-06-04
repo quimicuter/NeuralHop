@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useApp } from '../context/AppContext'
+import { IconRenderer } from './IconRenderer'
 import './GlobalAddModal.css'
 
 // ===== CONFIGURACIÓN CENTRALIZADA =====
@@ -10,131 +11,131 @@ export const SCOPE_MODULES = {
 }
 
 export const SCOPE_LABELS = {
-  personal: { label: 'Personal', emoji: '👤', glow: 'rgba(244, 114, 182, 0.35)' },   // rosa
-  academico: { label: 'Académico', emoji: '🎓', glow: 'rgba(139, 92, 246, 0.35)' }, // morado
-  general: { label: 'General', emoji: '🌍', glow: 'rgba(56, 189, 248, 0.35)' }       // azul
+  personal: { label: 'Personal', icon: 'Heart', glow: 'rgba(244, 114, 182, 0.35)' },   // rosa
+  academico: { label: 'Académico', icon: 'GraduationCap', glow: 'rgba(139, 92, 246, 0.35)' }, // morado
+  general: { label: 'General', icon: 'Globe', glow: 'rgba(56, 189, 248, 0.35)' }       // azul
 }
 
 export const MODULE_CONFIG = {
   // Personal
   'wellness': {
     label: 'Wellness Hub',
-    emoji: '🌿',
+    icon: 'Leaf',
     allowsHabits: true,
     submodules: [
-      { id: 'glow', label: 'Glow', emoji: '✧', color: '#fbbf24' },
-      { id: 'vitality', label: 'Vitality', emoji: '🗲', color: '#f87171' },
-      { id: 'innerBalance', label: 'Inner Balance', emoji: '⸙', color: '#34d399' },
-      { id: 'zenRest', label: 'Zen Rest', emoji: '☾', color: '#60a5fa' }
+      { id: 'glow', label: 'Glow', icon: 'Sparkles', color: '#fbbf24' },
+      { id: 'vitality', label: 'Vitality', icon: 'Zap', color: '#f87171' },
+      { id: 'innerBalance', label: 'Inner Balance', icon: 'Circle', color: '#34d399' },
+      { id: 'zenRest', label: 'Zen Rest', icon: 'Moon', color: '#60a5fa' }
     ]
   },
   'vida-social': {
     label: 'Vida Social',
-    emoji: '🥂',
+    icon: 'GlassWater',
     allowsHabits: false,
     submodules: [
-      { id: 'amigos', label: 'Amigos', emoji: '👯', color: '#ec4899' },
-      { id: 'familia', label: 'Familia', emoji: '👨‍👩‍👧‍👦', color: '#f97316' },
-      { id: 'eventos', label: 'Eventos', emoji: '🎉', color: '#8b5cf6' }
+      { id: 'amigos', label: 'Amigos', icon: 'Users', color: '#ec4899' },
+      { id: 'familia', label: 'Familia', icon: 'Users', color: '#f97316' },
+      { id: 'eventos', label: 'Eventos', icon: 'PartyPopper', color: '#8b5cf6' }
     ]
   },
   'foodie': {
     label: 'Foodie',
-    emoji: '🍴',
+    icon: 'Utensils',
     allowsHabits: true,
     submodules: [
-      { id: 'cocina', label: 'Cocina', emoji: '👨‍🍳', color: '#ef4444' },
-      { id: 'recetas', label: 'Recetas', emoji: '📖', color: '#06b6d4' },
-      { id: 'dieta', label: 'Dieta', emoji: '🥗', color: '#10b981' }
+      { id: 'cocina', label: 'Cocina', icon: 'ChefHat', color: '#ef4444' },
+      { id: 'recetas', label: 'Recetas', icon: 'BookOpen', color: '#06b6d4' },
+      { id: 'dieta', label: 'Dieta', icon: 'Apple', color: '#10b981' }
     ]
   },
   // Académico
   'tecno-girl': {
     label: 'Tecno Girl',
-    emoji: '💻',
+    icon: 'Code2',
     allowsHabits: false,
     submodules: [
-      { id: 'dev', label: 'Development', emoji: '⚙️', color: '#6366f1' },
-      { id: 'design', label: 'Design', emoji: '🎨', color: '#ec4899' },
-      { id: 'marketing', label: 'Marketing', emoji: '📢', color: '#f59e0b' }
+      { id: 'dev', label: 'Development', icon: 'Wrench', color: '#6366f1' },
+      { id: 'design', label: 'Design', icon: 'Palette', color: '#ec4899' },
+      { id: 'marketing', label: 'Marketing', icon: 'Megaphone', color: '#f59e0b' }
     ]
   },
   'investigacion': {
     label: 'Investigación',
-    emoji: '🔬',
+    icon: 'FlaskConical',
     allowsHabits: true,
     submodules: [
-      { id: 'literatura', label: 'Literatura', emoji: '📚', color: '#6d28d9' },
-      { id: 'experimento', label: 'Experimento', emoji: '🧬', color: '#06b6d4' },
-      { id: 'analisis', label: 'Análisis', emoji: '📊', color: '#8b5cf6' }
+      { id: 'literatura', label: 'Literatura', icon: 'BookOpen', color: '#6d28d9' },
+      { id: 'experimento', label: 'Experimento', icon: 'Dna', color: '#06b6d4' },
+      { id: 'analisis', label: 'Análisis', icon: 'BarChart3', color: '#8b5cf6' }
     ]
   },
   'maestria': {
     label: 'Maestría',
-    emoji: '🎓',
+    icon: 'GraduationCap',
     allowsHabits: false,
     submodules: [
-      { id: 'clases', label: 'Clases', emoji: '🎓', color: '#3b82f6' },
-      { id: 'tesis', label: 'Tesis', emoji: '📝', color: '#8b5cf6' },
-      { id: 'proyectos', label: 'Proyectos', emoji: '🚀', color: '#f59e0b' }
+      { id: 'clases', label: 'Clases', icon: 'BookOpen', color: '#3b82f6' },
+      { id: 'tesis', label: 'Tesis', icon: 'FileText', color: '#8b5cf6' },
+      { id: 'proyectos', label: 'Proyectos', icon: 'Rocket', color: '#f59e0b' }
     ]
   },
   'laboratorio': {
     label: 'Laboratorio',
-    emoji: '🧪',
+    icon: 'Beaker',
     allowsHabits: false,
     submodules: [
-      { id: 'practicas', label: 'Prácticas', emoji: '🧪', color: '#06b6d4' },
-      { id: 'reportes', label: 'Reportes', emoji: '📋', color: '#10b981' },
-      { id: 'equipo', label: 'Equipo', emoji: '⚗️', color: '#ec4899' }
+      { id: 'practicas', label: 'Prácticas', icon: 'Beaker', color: '#06b6d4' },
+      { id: 'reportes', label: 'Reportes', icon: 'ClipboardList', color: '#10b981' },
+      { id: 'equipo', label: 'Equipo', icon: 'Flask', color: '#ec4899' }
     ]
   },
   'idiomas': {
     label: 'Idiomas',
-    emoji: '🗣️',
+    icon: 'Languages',
     allowsHabits: true,
     submodules: [
-      { id: 'ingles', label: 'Inglés', emoji: '🇬🇧', color: '#3b82f6' },
-      { id: 'aleman', label: 'Alemán', emoji: '🇩🇪', color: '#f97316' },
-      { id: 'japones', label: 'Japonés', emoji: '🇯🇵', color: '#ef4444' }
+      { id: 'ingles', label: 'Inglés', icon: 'Globe', color: '#3b82f6' },
+      { id: 'aleman', label: 'Alemán', icon: 'Globe', color: '#f97316' },
+      { id: 'japones', label: 'Japonés', icon: 'Globe', color: '#ef4444' }
     ]
   },
   // General
-  'cumpleanos': { label: 'Cumpleaños', emoji: '🎂', allowsHabits: false, isBirthday: true },
+  'cumpleanos': { label: 'Cumpleaños', icon: 'Cake', allowsHabits: false, isBirthday: true },
   'finanzas': {
     label: 'Finanzas',
-    emoji: '💰',
+    icon: 'Wallet',
     allowsHabits: false,
     submodules: [
-      { id: 'ingresos', label: 'Ingresos', emoji: '📈', color: '#10b981' },
-      { id: 'gastos', label: 'Gastos', emoji: '📉', color: '#ef4444' },
-      { id: 'ahorros', label: 'Ahorros', emoji: '🏦', color: '#3b82f6' }
+      { id: 'ingresos', label: 'Ingresos', icon: 'TrendingUp', color: '#10b981' },
+      { id: 'gastos', label: 'Gastos', icon: 'TrendingDown', color: '#ef4444' },
+      { id: 'ahorros', label: 'Ahorros', icon: 'PiggyBank', color: '#3b82f6' }
     ]
   },
   'tramites': {
     label: 'Trámites',
-    emoji: '📝',
+    icon: 'FileText',
     allowsHabits: false,
     submodules: [
-      { id: 'documentos', label: 'Documentos', emoji: '📄', color: '#6b7280' },
-      { id: 'solicitudes', label: 'Solicitudes', emoji: '📋', color: '#8b5cf6' },
-      { id: 'pagos', label: 'Pagos', emoji: '💳', color: '#f59e0b' }
+      { id: 'documentos', label: 'Documentos', icon: 'FileText', color: '#6b7280' },
+      { id: 'solicitudes', label: 'Solicitudes', icon: 'Clipboard', color: '#8b5cf6' },
+      { id: 'pagos', label: 'Pagos', icon: 'CreditCard', color: '#f59e0b' }
     ]
   }
 }
 
 const TYPE_CONFIG = {
-  task: { label: 'Tarea', emoji: '✅', color: 'rgba(244, 212, 217, 0.65)' },    // Rosa Bruma
-  event: { label: 'Evento', emoji: '📅', color: 'rgba(215, 189, 226, 0.65)' },   // Lavanda Mate
-  habit: { label: 'Hábito', emoji: '🔄', color: 'rgba(189, 212, 231, 0.65)' },   // Azul Glaciar
-  project: { label: 'Proyecto', emoji: '�', color: 'rgba(201, 222, 197, 0.65)' } // Verde Salvia
+  task: { label: 'Tarea', icon: 'CheckSquare', color: 'rgba(244, 212, 217, 0.65)' },    // Rosa Bruma
+  event: { label: 'Evento', icon: 'Calendar', color: 'rgba(215, 189, 226, 0.65)' },   // Lavanda Mate
+  habit: { label: 'Hábito', icon: 'RefreshCw', color: 'rgba(189, 212, 231, 0.65)' },   // Azul Glaciar
+  project: { label: 'Proyecto', icon: 'Rocket', color: 'rgba(201, 222, 197, 0.65)' } // Verde Salvia
 }
 
 const FREQUENCY_CONFIG = {
-  daily: { label: 'Diario', emoji: '○' },
-  weekly: { label: 'Semanal', emoji: '◐' },
-  multiple: { label: 'Múltiple', emoji: '◓' },
-  monthly: { label: 'Mensual', emoji: '◑' }
+  daily: { label: 'Diario', icon: 'Circle' },
+  weekly: { label: 'Semanal', icon: 'CircleHalf' },
+  multiple: { label: 'Múltiple', icon: 'CircleDot' },
+  monthly: { label: 'Mensual', icon: 'Calendar' }
 }
 
 const PROJECT_STATUS = {
@@ -145,9 +146,10 @@ const PROJECT_STATUS = {
 }
 
 const PRIORITY_CONFIG = {
-  low: { label: 'Baja', emoji: '🟢', color: '#22c55e' },
-  medium: { label: 'Media', emoji: '🟡', color: '#eab308' },
-  high: { label: 'Alta', emoji: '🔴', color: '#ef4444' }
+  low: { label: 'Baja', icon: 'Circle', color: '#22c55e' },
+  medium: { label: 'Media', icon: 'Circle', color: '#eab308' },
+  high: { label: 'Alta', icon: 'Circle', color: '#ef4444' },
+  critical: { label: 'Crítica', icon: 'AlertTriangle', color: '#8b0000' }
 }
 
 const WEEK_DAYS = [
@@ -399,15 +401,15 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
   // Tipos disponibles según el módulo
   const getAvailableTypes = () => {
     const types = [
-      { value: 'task', label: 'Tarea', emoji: '✅' },
-      { value: 'event', label: 'Evento', emoji: '📅' }
+      { value: 'task', label: 'Tarea', icon: 'CheckSquare' },
+      { value: 'event', label: 'Evento', icon: 'Calendar' }
     ]
 
     if (canSelectHabit) {
-      types.push({ value: 'habit', label: 'Hábito', emoji: '🔄' })
+      types.push({ value: 'habit', label: 'Hábito', icon: 'RefreshCw' })
     }
 
-    types.push({ value: 'project', label: 'Proyecto', emoji: '🚀' })
+    types.push({ value: 'project', label: 'Proyecto', icon: 'Rocket' })
 
     return types
   }
@@ -645,7 +647,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
       >
         <span className="gam-dropdown-icon">
           {formData.category ? (
-            currentModuleConfig.submodules?.find(s => s.id === formData.category)?.emoji
+            <IconRenderer icon={currentModuleConfig.submodules?.find(s => s.id === formData.category)?.icon} size={16} />
           ) : (
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
@@ -666,7 +668,9 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
               className={`gam-dropdown-item ${formData.category === submodule.id ? 'active' : ''}`}
               onClick={() => { updateField('category', submodule.id); closeDropdowns() }}
             >
-              <span className="gam-dropdown-item-icon">{submodule.emoji}</span>
+              <span className="gam-dropdown-item-icon">
+                <IconRenderer icon={submodule.icon} size={16} />
+              </span>
               <span className="gam-dropdown-item-text">{submodule.label}</span>
               {formData.category === submodule.id && <span className="gam-dropdown-check">✓</span>}
             </button>
@@ -754,7 +758,9 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
         onClick={(e) => { e.stopPropagation(); toggleDropdown('frequency') }}
         title={iconOnly ? `Frecuencia: ${FREQUENCY_CONFIG[formData.frequency]?.label}` : undefined}
       >
-        <span className="gam-dropdown-icon">{FREQUENCY_CONFIG[formData.frequency]?.emoji}</span>
+        <span className="gam-dropdown-icon">
+          <IconRenderer icon={FREQUENCY_CONFIG[formData.frequency]?.icon} size={16} />
+        </span>
         {!iconOnly && <span className="gam-dropdown-text">{FREQUENCY_CONFIG[formData.frequency]?.label}</span>}
         {!iconOnly && <span className="gam-dropdown-arrow">▾</span>}
       </button>
@@ -767,7 +773,9 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
               className={`gam-dropdown-item ${formData.frequency === key ? 'active' : ''}`}
               onClick={() => { updateField('frequency', key); closeDropdowns() }}
             >
-              <span className="gam-dropdown-item-icon">{config.emoji}</span>
+              <span className="gam-dropdown-item-icon">
+                <IconRenderer icon={config.icon} size={16} />
+              </span>
               <span className="gam-dropdown-item-text">{config.label}</span>
               {formData.frequency === key && <span className="gam-dropdown-check">✓</span>}
             </button>
@@ -797,7 +805,9 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
                   className={`gam-scope-pill ${formData.scope === key ? 'active' : ''}`}
                   onClick={() => updateField('scope', key)}
                 >
-                  <span className="gam-scope-emoji">{config.emoji}</span>
+                  <span className="gam-scope-icon">
+                    <IconRenderer icon={config.icon} size={18} />
+                  </span>
                   <span className="gam-scope-label">{config.label}</span>
                 </button>
               ))}
@@ -818,7 +828,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
                               onClick={() => updateField('module', moduleKey)}
                             >
                               <div className="gam-module-circle">
-                                {config.emoji}
+                                <IconRenderer icon={config.icon} size={24} />
                               </div>
                               <span className="gam-module-label">{config.label}</span>
                             </div>
@@ -837,7 +847,9 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
                   className={`gam-type-pill ${formData.type === type.value ? 'active' : ''}`}
                   onClick={() => updateField('type', type.value)}
                 >
-                  <span className="gam-pill-emoji">{type.emoji}</span>
+                  <span className="gam-pill-icon">
+                    <IconRenderer icon={type.icon} size={16} />
+                  </span>
                   <span className="gam-pill-label">{type.label}</span>
                 </button>
               ))}
@@ -903,7 +915,7 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
                             >
                               <span className="gam-dropdown-icon">
                                 {formData.category ? (
-                                  currentModuleConfig.submodules?.find(s => s.id === formData.category)?.emoji
+                                  <IconRenderer icon={currentModuleConfig.submodules?.find(s => s.id === formData.category)?.icon} size={16} />
                                 ) : (
                                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
@@ -935,7 +947,9 @@ function GlobalAddModal({ isOpen, onClose, preselectedType = '', preselectedModu
                                       closeDropdowns()
                                     }}
                                   >
-                                    <span className="gam-dropdown-item-icon">{submodule.emoji}</span>
+                                    <span className="gam-dropdown-item-icon">
+                                      <IconRenderer icon={submodule.icon} size={16} />
+                                    </span>
                                     <span className="gam-dropdown-item-text">{submodule.label}</span>
                                     {formData.category === submodule.id && <span className="gam-dropdown-check">✓</span>}
                                   </button>

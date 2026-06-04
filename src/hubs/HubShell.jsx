@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import GlobalAddModal from '../components/GlobalAddModal'
-import BaseWidget from '../components/BaseWidget'
 import './HubShell.css'
 
 // ─── Widgets Especializados Fase B (Personal Hubs) ───
@@ -35,7 +34,7 @@ const hubConfig = {
   
   // ─── WELLNESS HUB: Centro integral de bienestar ───
   wellness: {
-    emoji: '🌿', title: 'Wellness Hub',
+    icon: 'Leaf', title: 'Wellness Hub',
     gradient: 'linear-gradient(135deg, #fff0f3 0%, #ffcbce 45%, #d8f0e8 100%)',
     accent: '#ff8b94', description: 'Bienestar integral y self-care consolidado',
     widgets: ['virtualShelf', 'cyclicTracker', 'tasks', 'events']
@@ -43,7 +42,7 @@ const hubConfig = {
   
   // ─── VIDA SOCIAL: MemoryWall + WishlistKanban ───
   'vida-social': {
-    emoji: '🥂', title: 'Vida Social',
+    icon: 'GlassWater', title: 'Vida Social',
     gradient: 'linear-gradient(135deg, #fce4ec 0%, #f8bbd0 50%, #ef9a9a 100%)',
     accent: '#ef9a9a', description: 'Conexiones y recuerdos',
     widgets: ['memoryWall', 'wishlistKanban', 'events', 'tasks']
@@ -55,7 +54,7 @@ const hubConfig = {
   
   // ─── TECNO GIRL: CourseProgress + CodeSnippet ───
   'tecno-girl': {
-    emoji: '💻', title: 'Tecno Girl',
+    icon: 'Code2', title: 'Tecno Girl',
     gradient: 'linear-gradient(135deg, #d8f8ff 0%, #c4e4ff 50%, #8ec1ff 100%)',
     accent: '#4f8fe6', description: 'Innovación tecnológica y proyectos creativos',
     widgets: ['courseProgress', 'codeSnippet', 'tasks', 'habits']
@@ -63,7 +62,7 @@ const hubConfig = {
   
   // ─── INVESTIGACIÓN: PaperKanban + NetworkContact ───
   investigacion: {
-    emoji: '🔬', title: 'Investigación',
+    icon: 'FlaskConical', title: 'Investigación',
     gradient: 'linear-gradient(135deg, #f3e5f5 0%, #e1bee7 50%, #ce93d8 100%)',
     accent: '#ce93d8', description: 'Laboratorio mental',
     widgets: ['paperKanban', 'networkContact', 'tasks', 'habits']
@@ -71,7 +70,7 @@ const hubConfig = {
   
   // ─── MAESTRÍA: ApplicationTracker + TitulacionChecklist ───
   maestria: {
-    emoji: '🎓', title: 'Maestría',
+    icon: 'GraduationCap', title: 'Maestría',
     gradient: 'linear-gradient(135deg, #ede7f6 0%, #d1c4e9 50%, #b39ddb 100%)',
     accent: '#b39ddb', description: 'Transición y objetivos a largo plazo',
     widgets: ['applicationTracker', 'titulacionChecklist', 'tasks', 'habits']
@@ -79,7 +78,7 @@ const hubConfig = {
   
   // ─── LAB MANAGER: MultiSubjectPanel + InventoryTable ───
   lab: {
-    emoji: '🧪', title: 'Laboratorio',
+    icon: 'Beaker', title: 'Laboratorio',
     gradient: 'linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 50%, #80deea 100%)',
     accent: '#80deea', description: 'Command Center - Gestión de trabajo',
     widgets: ['multiSubjectPanel', 'inventoryTable', 'tasks', 'habits']
@@ -87,7 +86,7 @@ const hubConfig = {
   
   // ─── IDIOMAS: MultiLanguageDB + FlashcardWidget ───
   idiomas: {
-    emoji: '🗣️', title: 'Idiomas',
+    icon: 'Languages', title: 'Idiomas',
     gradient: 'linear-gradient(135deg, #fff8e1 0%, #ffecb3 50%, #ffe082 100%)',
     accent: '#ffe082', description: 'Políglota en progreso',
     widgets: ['multiLanguageDB', 'flashcardWidget', 'tasks', 'habits']
@@ -368,9 +367,9 @@ function HubShell({ children }) {
               onToggleComplete={(id) => actions.updateEntry(id, { completed: true, status: 'done' })}
               onMoveEntry={(id, status) => actions.updateEntry(id, { status })}
               kanbanColumns={[
-                { id: 'todo', title: 'Por Hacer', emoji: '⏳', color: '#94a3b8' },
-                { id: 'in-progress', title: 'En Progreso', emoji: '🔄', color: '#60a5fa' },
-                { id: 'done', title: 'Completado', emoji: '✅', color: '#4ade80' }
+                { id: 'todo', title: 'Por Hacer', icon: 'Clock', color: '#94a3b8' },
+                { id: 'in-progress', title: 'En Progreso', icon: 'RefreshCw', color: '#60a5fa' },
+                { id: 'done', title: 'Completado', icon: 'CheckCircle2', color: '#4ade80' }
               ]}
               emptyMessage="Sin tareas pendientes ✨"
             />

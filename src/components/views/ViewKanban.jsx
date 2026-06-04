@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { IconRenderer } from '../IconRenderer'
 import './ViewKanban.css'
 
 const ViewKanban = ({ 
@@ -58,7 +59,9 @@ const ViewKanban = ({
               onDrop={(e) => handleDrop(e, column.id)}
             >
               <div className="kanban-column-header" style={{ borderColor: column.color }}>
-                <span className="kanban-column-emoji">{column.emoji}</span>
+                <span className="kanban-column-emoji">
+                  <IconRenderer icon={column.icon} size={18} />
+                </span>
                 <span className="kanban-column-title">{column.title}</span>
                 <span className="kanban-column-count">{columnEntries.length}</span>
               </div>

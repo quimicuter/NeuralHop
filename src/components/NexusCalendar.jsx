@@ -1,17 +1,30 @@
 import React, { useState, useEffect } from 'react'
 import { useApp } from '../context/AppContext'
+import { IconRenderer } from './IconRenderer'
 import { MODULE_CONFIG } from './GlobalAddModal'
+import './NexusCalendar.css'
 
-// Color por ámbito para los puntos del calendario
+// Color por ámbito para los puntos del calendario (Paleta Cozy Forest)
 const SCOPE_DOT_COLORS = {
-  personal: '#f472b6',   // rosa
-  academico: '#a78bfa',  // lila / morado
-  general: '#38bdf8'     // azul
+  personal: '#8b3a62',   // burgundy profundo
+  academico: '#6b5b45',  // marrón cálido / tierra
+  general: '#d4a373'     // ocre/oro viejo
 }
 
 const getEntryDotColor = (entry) => {
   if (entry?.scope && SCOPE_DOT_COLORS[entry.scope]) return SCOPE_DOT_COLORS[entry.scope]
-  return '#94a3b8' // gris fallback
+  return '#d4a373' // ocre/oro viejo fallback
+}
+
+// Mapeo de colores para indicadores prioritarios
+const getPriorityIconColor = (priority) => {
+  const colors = {
+    low: '#22c55e',      // Verde
+    medium: '#eab308',   // Amarillo
+    high: '#ef4444',     // Rojo
+    critical: '#8b0000'  // Rojo oscuro
+  }
+  return colors[priority] || '#94a3b8'
 }
 
 function NexusCalendar() {
@@ -79,32 +92,32 @@ function NexusCalendar() {
     return { events, tasks }
   }
 
-  const getTaskEmoji = (task) => {
-    if (!task) return '📌'
+  const getTaskIcon = (task) => {
+    if (!task) return 'Pin'
 
-    const moduleEmoji = MODULE_CONFIG[task.module]?.emoji
-    const metadataEmoji = task.metadata?.emoji
+    const moduleIcon = MODULE_CONFIG[task.module]?.icon
+    const metadataIcon = task.metadata?.icon
 
-    if (metadataEmoji) return metadataEmoji
-    if (moduleEmoji) return moduleEmoji
+    if (metadataIcon) return metadataIcon
+    if (moduleIcon) return moduleIcon
 
     if (task.type === 'event') {
-      if (task.title?.trim()) return task.title.trim()[0]
-      return '📅'
+      if (task.title?.trim()) return 'Calendar'
+      return 'Calendar'
     }
 
     if (task.type === 'task') {
-      if (task.title?.trim()) return task.title.trim()[0]
-      return '📌'
+      if (task.title?.trim()) return 'CheckSquare'
+      return 'Pin'
     }
 
     if (task.category && state.categories[task.category]) {
-      return state.categories[task.category].icon || '📌'
+      return state.categories[task.category].icon || 'Pin'
     }
     if (task.scope && state.categories[task.scope]) {
-      return state.categories[task.scope].icon || '📌'
+      return state.categories[task.scope].icon || 'Pin'
     }
-    return '📌'
+    return 'Pin'
   }
 
   // Calcular edad del cumpleañero a partir de birthYear
@@ -201,9 +214,9 @@ function NexusCalendar() {
       days.push(
         <div
           key={day}
-          className={`cal-day ${today ? 'today' : ''} ${weekend ? 'weekend' : ''}`}
+          className={`cal-day calendar-day ${today ? 'today' : ''} ${weekend ? 'weekend' : ''}`}
         >
-          <div className="day-header">
+          <div className="day-top-row">
             <div
               className="traffic-light"
               style={{ backgroundColor: light.color }}
@@ -214,12 +227,8 @@ function NexusCalendar() {
             <div className="day-num">{day}</div>
           </div>
           {events.length > 0 && (
-            <div className="cal-event-row" title={getTaskTooltip(events[0])}>
-              {events.slice(0, 3).map((event, index) => (
-                <span key={`${event.id || event.title || index}-${index}`} className="cal-event-emoji">
-                  {getTaskEmoji(event)}
-                </span>
-              ))}
+            <div className="bento-calendar-emoji-badge" title={getTaskTooltip(events[0])}>
+              <IconRenderer icon={getTaskIcon(events[0])} size={18} />
             </div>
           )}
         </div>
@@ -231,10 +240,13 @@ function NexusCalendar() {
 
   return (
     <div className="nexus-calendar">
-      <div className="month-header">
-        <button className="calendar-nav-btn" onClick={prevMonth} aria-label="Mes anterior">❮</button>
-        <span className="month-label">{getMonthName(currentDate)}</span>
-        <button className="calendar-nav-btn" onClick={nextMonth} aria-label="Mes siguiente">❯</button>
+      <div className="calendar-header-flex">
+        <div className="calendar-title-left">CALENDARIO</div>
+        <div className="calendar-nav-right">
+          <span className="nav-month-year">{getMonthName(currentDate)}</span>
+          <button className="calendar-nav-btn" onClick={prevMonth} aria-label="Mes anterior">❮</button>
+          <button className="calendar-nav-btn" onClick={nextMonth} aria-label="Mes siguiente">❯</button>
+        </div>
       </div>
       <div className="calendar-weekdays">
         {['D', 'L', 'M', 'M', 'J', 'V', 'S'].map((day, index) => (

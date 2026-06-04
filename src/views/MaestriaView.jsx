@@ -1,18 +1,9 @@
-import React from 'react'
-import './MaestriaView.css'
+import React from 'react';
 
-function MaestriaView() {
+export default function MaestriaView() {
   return (
-    <div className="maestria-view">
-      <div className="maestria-header">
-        <h1>?? Maestría Hub</h1>
-        <p>Gestión de investigación y proyectos académicos</p>
-      </div>
-      <div className="maestria-content">
-        {/* Contenido será poblado aquí */}
-      </div>
+    <div className="bento-cell" style={{ padding: '20px', color: '#f4efe9' }}>
+      Vista en Desarrollo
     </div>
-  )
+  );
 }
-
-export default MaestriaView

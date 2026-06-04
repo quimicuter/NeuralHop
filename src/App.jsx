@@ -4,10 +4,6 @@ import { AppProvider } from './context/AppContext'
 import HubShell from './hubs/HubShell'
 import DashboardView from './views/DashboardView'
 import GlobalAddModal from './components/GlobalAddModal'
-import TecnoGirlHub from './modules/TecnoGirl/TecnoGirlHub'
-import LibraryHub from './modules/Library/LibraryHub'
-import GrimoireHub from './modules/Grimoire/GrimoireHub'
-import ShoplistHub from './modules/Shoplist/ShoplistHub'
 import NotesRepository from './components/NotesRepository'
 import TaskHistoryModal from './components/TaskHistoryModal'
 import OfflineBanner from './components/OfflineBanner'
@@ -16,10 +12,6 @@ import './App.css'
 
 function App() {
   const [isModalOpen, setIsModalOpen] = React.useState(false)
-  const [isTecnoGirlHubOpen, setIsTecnoGirlHubOpen] = React.useState(false)
-  const [isLibraryOpen, setIsLibraryOpen] = React.useState(false)
-  const [isGrimoireOpen, setIsGrimoireOpen] = React.useState(false)
-  const [isShoplistOpen, setIsShoplistOpen] = React.useState(false)
   const [isTaskHistoryOpen, setIsTaskHistoryOpen] = React.useState(false)
   const [isRecipeModalOpen, setIsRecipeModalOpen] = React.useState(false)
   const [isNotesOpen, setIsNotesOpen] = React.useState(false)
@@ -90,8 +82,6 @@ function App() {
                 onOpenTaskHistory={() => setIsTaskHistoryOpen(true)}
                 onOpenRecipeModal={openRecipeModal}
                 onOpenNotes={() => setIsNotesOpen(true)}
-                onOpenGrimoire={() => setIsGrimoireOpen(true)}
-                onOpenShoplist={() => setIsShoplistOpen(true)}
               />
 
             <GlobalAddModal
@@ -110,22 +100,6 @@ function App() {
                 // Force refresh via console confirmation
                 // 🎯 Nueva entrada guardada en Firebase - sincronización en tiempo real activa
               }}
-            />
-            <TecnoGirlHub 
-              isOpen={isTecnoGirlHubOpen} 
-              onClose={() => setIsTecnoGirlHubOpen(false)} 
-            />
-            <LibraryHub 
-              isOpen={isLibraryOpen} 
-              onClose={() => setIsLibraryOpen(false)} 
-            />
-            <GrimoireHub 
-              isOpen={isGrimoireOpen} 
-              onClose={() => setIsGrimoireOpen(false)} 
-            />
-            <ShoplistHub 
-              isOpen={isShoplistOpen} 
-              onClose={() => setIsShoplistOpen(false)} 
             />
             <TaskHistoryModal 
               isOpen={isTaskHistoryOpen} 

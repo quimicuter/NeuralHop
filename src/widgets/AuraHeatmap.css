@@ -1,6 +1,10 @@
 /* ============================================================
-   AuraHeatmap — Mini-tracker semanal compacto
-   7 círculos L-D · radial-gradient · aura difuminada por nivel
+   AuraHeatmap — Rejilla mensual ultra compacta 125px
+   Header compacto · navegación · modales avanzados
+   ============================================================ */
+
+/* ============================================================
+   AuraHeatmap — Rejilla ultra compacta y anti-recorte (Corregido)
    ============================================================ */
 
 .aura-widget {
@@ -8,103 +12,170 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 10px;
+  justify-content: flex-start;
+  gap: 6px; /* Distancia milimétrica controlada */
   font-family: 'Inter', system-ui, sans-serif;
   overflow: hidden;
+  padding: 0 !important; /* Dejamos que el contenedor padre maneje el padding */
+  box-sizing: border-box;
 }
 
-/* ── Header minimalista ───────────────────────────────────── */
-.aura-widget-header {
+/* ── Header Ultra Compacto con Límites de Ancho Extremo ────── */
+.aura-header {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  gap: 2px;
-  padding: 0 4px;
-  text-align: center;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important; /* Obliga a la cabecera a respetar el ancho real del bento */
+  flex: 0 0 auto;
 }
 
-.aura-widget-title {
-  margin: 0;
-  font-family: 'Playfair Display', serif;
-  font-size: 0.78rem;
+.aura-header-title {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.aura-title-text {
+  font-size: 0.6rem !important; /* Micro tipografía elegante para evitar empujar los elementos */
   font-weight: 600;
-  color: rgba(15, 23, 42, 0.85);
-  letter-spacing: 0.4px;
+  color: rgba(244, 239, 233, 0.4) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
-.aura-widget-sub {
-  font-size: 0.62rem;
-  font-weight: 500;
-  color: rgba(124, 58, 237, 0.7);
-  letter-spacing: 0.3px;
-  text-transform: lowercase;
-  font-style: italic;
+.aura-header-nav {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 6px; /* Colchón de seguridad para que el botón info no se desborde */
 }
 
-/* ── Fila semanal de 7 días ───────────────────────────────── */
-.aura-week-row {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
-  padding: 0 2px;
+.aura-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: none;
+  background: transparent;
+  color: rgba(244, 239, 233, 0.6);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.aura-nav-date {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: rgba(244, 239, 233, 0.85);
+  text-transform: capitalize;
+  min-width: 55px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.aura-header-info {
+  flex: 0 0 auto; /* Asegura un bloque rígido para anclar la 'i' circulada */
+  display: flex;
+  align-items: center;
+}
+
+.aura-info-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(244, 239, 233, 0.7);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+
+.aura-info-btn:hover {
+  background: rgba(212, 163, 115, 0.15);
+  border-color: rgba(212, 163, 115, 0.3);
+  color: rgba(212, 163, 115, 0.9);
+}
+
+/* ── Rejilla Micro-Calibrada de Cuadritos Completa ─────────── */
+.aura-month-grid {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  grid-auto-rows: 8px !important; /* Bajamos el alto de fila a 8px exactos para forzar el despliegue de las 5-6 semanas */
+  gap: 3px !important; /* Separación micro simétrica hermosa */
+  margin-bottom: 0 !important;
+  padding: 0;
+  width: 100%;
+  flex: 0 0 auto; /* Cancela estiramientos verticales artificiales */
 }
 
 .aura-day {
   position: relative;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border: 1.2px solid rgba(255, 255, 255, 0.55);
-  background: rgba(255, 255, 255, 0.18);
+  height: 8px !important; /* Fijamos la altura idéntica a la fila */
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
   cursor: pointer;
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.3s ease,
-              border-color 0.25s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  font-family: inherit;
   outline: none;
-  /* Aura difusa base — empuja el glow más allá del círculo */
-  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.35),
-              0 2px 6px rgba(120, 90, 200, 0.08);
+  min-width: 0;
 }
 
 .aura-day.is-empty {
-  background: radial-gradient(circle at 35% 30%,
-              rgba(255, 255, 255, 0.45) 0%,
-              rgba(200, 200, 220, 0.12) 100%);
+  background: rgba(255, 255, 255, 0.06);
 }
 
-.aura-day:hover {
-  transform: translateY(-2px) scale(1.06);
-  border-color: rgba(255, 255, 255, 0.95);
+.aura-day.is-future {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.aura-day.is-other-month {
+  opacity: 0.4;
+}
+
+.aura-day:hover:not(.is-future) {
+  transform: scale(1.15);
+  border-color: rgba(255, 255, 255, 0.4);
+  z-index: 1;
 }
 
 .aura-day.is-today {
-  border-color: rgba(124, 58, 237, 0.7);
-  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.25),
-              inset 0 1px 3px rgba(255, 255, 255, 0.4);
+  border-color: rgba(212, 163, 115, 0.5);
+  box-shadow: 0 0 0 1px rgba(212, 163, 115, 0.3);
 }
 
 .aura-day.has-level.is-today {
-  /* Conserva el aura del nivel + halo morado de "hoy" */
-  outline: 2px solid rgba(255, 255, 255, 0.6);
-  outline-offset: 2px;
+  border-color: rgba(212, 163, 115, 0.7);
+  box-shadow: 0 0 0 1px rgba(212, 163, 115, 0.4);
 }
 
-.aura-day.is-active {
-  transform: scale(1.12);
-  border-color: rgba(255, 255, 255, 1);
+.aura-day.is-active:not(.is-future) {
+  transform: scale(1.2);
+  border-color: rgba(255, 255, 255, 0.6);
+  z-index: 2;
 }
 
 /* Pulso suave en días con nivel alto (4-5) */
 .aura-day.has-level::after {
   content: '';
   position: absolute;
-  inset: -3px;
-  border-radius: 50%;
+  inset: -2px;
+  border-radius: 3px;
   pointer-events: none;
   opacity: 0;
   animation: aura-pulse 2.4s ease-in-out infinite;
@@ -112,94 +183,321 @@
 
 @keyframes aura-pulse {
   0%, 100% { opacity: 0.0; transform: scale(1);    }
-  50%      { opacity: 0.35; transform: scale(1.18); }
+  50%      { opacity: 0.25; transform: scale(1.15); }
 }
 
-/* Etiqueta del día */
-.aura-day-label {
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  color: #2d1b4e;
-  z-index: 2;
-  pointer-events: none;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
-}
-
-.aura-day.has-level .aura-day-label {
-  color: #ffffff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-}
-
-/* Mini badge con el número de nivel (esquina inferior) */
+/* Mini badge con el número de nivel (centrado en cuadrito) */
 .aura-day-dot {
   position: absolute;
-  bottom: -2px;
-  right: -2px;
-  background: rgba(255, 255, 255, 0.95);
-  color: #7c3aed;
-  font-size: 0.5rem;
+  font-size: 7px;
   font-weight: 700;
-  width: 12px;
-  height: 12px;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ── Modal Overlay (Corregido para escapar del contenedor padre) ── */
+.aura-modal-overlay {
+  position: fixed !important; /* Forzamos el posicionamiento respecto a la ventana global del navegador */
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;  /* Abarca el 100% del ancho de la pantalla */
+  height: 100vh !important; /* Abarca el 100% del alto de la pantalla */
+  background: rgba(12, 20, 15, 0.75) !important; /* Capa oscura translúcida premium */
+  backdrop-filter: blur(6px) !important; /* Desenfoque de fondo general */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 9999 !important; /* Capa suprema por encima de cualquier grid o bento del dashboard */
+  animation: aura-modal-in 0.2s ease-out;
+}
+
+@keyframes aura-modal-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+
+/* Contenedor flotante centrado */
+.aura-modal-content {
+  background: rgba(20, 30, 25, 0.98) !important;
+  backdrop-filter: blur(24px) saturate(120%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 20px !important;
+  padding: 24px !important;
+  width: 90% !important;
+  max-width: 400px !important; /* Ancho perfecto para que luzca en medio de la pantalla */
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+  position: relative !important;
+  color: #f4efe9 !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important; /* Sombra profunda de ventana flotante */
+}
+
+.aura-modal-content.aura-modal-small {
+  max-width: 320px !important;
+  padding: 20px !important;
+}
+
+/* ── Modal Header ─────────────────────────────────────────── */
+.aura-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.aura-modal-header h4 {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f4efe9;
+  text-transform: capitalize;
+}
+
+.aura-modal-close {
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: #f4efe9;
+  cursor: pointer;
+  font-size: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  z-index: 3;
+  transition: all 0.2s ease;
 }
 
-/* ── Picker inline (1-5) ──────────────────────────────────── */
-.aura-picker {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 4px;
-  padding: 4px 2px 0;
-  animation: aura-picker-in 0.25s ease-out;
-}
-
-@keyframes aura-picker-in {
-  from { opacity: 0; transform: translateY(-4px); }
-  to   { opacity: 1; transform: translateY(0);    }
-}
-
-.aura-picker-btn {
-  aspect-ratio: 1;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: #fff;
-  cursor: pointer;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-  font-family: inherit;
-  padding: 0;
-}
-
-.aura-picker-btn:hover {
-  transform: translateY(-1px) scale(1.1);
-}
-
-.aura-picker-clear {
-  background: rgba(255, 255, 255, 0.4);
-  color: rgba(15, 23, 42, 0.6);
-  text-shadow: none;
-  font-size: 0.85rem;
-  font-weight: 400;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-}
-
-.aura-picker-clear:hover {
+.aura-modal-close:hover {
   background: rgba(255, 100, 100, 0.2);
-  color: #b91c1c;
+  border-color: rgba(255, 100, 100, 0.4);
+}
+
+/* ── Modal Body ───────────────────────────────────────────── */
+.aura-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.aura-transition-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.aura-transition-section label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(244, 239, 233, 0.85);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.aura-preview-row {
+  gap: 12px;
+}
+
+.aura-preview-label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(244, 239, 233, 0.75);
+}
+
+.aura-preview-box {
+  width: 100%;
+  min-height: 42px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #f4efe9;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  gap: 4px;
+}
+
+.aura-preview-box small {
+  color: rgba(244, 239, 233, 0.7);
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-transform: none;
+}
+
+.aura-mood-selector {
+  display: flex;
+  gap: 8px;
+}
+
+.aura-mood-btn {
+  flex: 1;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #f4efe9;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 40px;
+}
+
+.aura-mood-btn svg {
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+}
+
+.aura-preview-box span {
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.aura-mood-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(212, 163, 115, 0.3);
+}
+
+.aura-mood-btn.selected {
+  background: rgba(212, 163, 115, 0.2);
+  border-color: rgba(212, 163, 115, 0.5);
+  box-shadow: 0 0 12px rgba(212, 163, 115, 0.2);
+}
+
+.aura-notes-input {
+  width: 100%;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  color: #f4efe9;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.85rem;
+  resize: none;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.aura-notes-input:focus {
+  border-color: rgba(212, 163, 115, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.aura-notes-input::placeholder {
+  color: rgba(244, 239, 233, 0.4);
+}
+
+/* ── Detail Modal Styles ───────────────────────────────────── */
+.aura-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.aura-detail-row:last-child {
+  border-bottom: none;
+}
+
+.aura-detail-label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: rgba(244, 239, 233, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.aura-detail-value {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #f4efe9;
+  text-align: right;
+}
+
+/* ── Modal Footer ─────────────────────────────────────────── */
+.aura-modal-footer {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.aura-modal-btn {
+  padding: 10px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.aura-modal-btn-cancel {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(244, 239, 233, 0.8);
+}
+
+.aura-modal-btn-cancel:hover {
+  background: rgba(255, 100, 100, 0.15);
+  border-color: rgba(255, 100, 100, 0.3);
+}
+
+.aura-modal-btn-save {
+  background: rgba(212, 163, 115, 0.2);
+  color: #d4a373;
+  border-color: rgba(212, 163, 115, 0.4);
+}
+
+.aura-modal-btn-save:hover {
+  background: rgba(212, 163, 115, 0.3);
+  border-color: rgba(212, 163, 115, 0.6);
+  box-shadow: 0 0 12px rgba(212, 163, 115, 0.2);
+}
+
+.aura-modal-btn-edit {
+  background: rgba(212, 163, 115, 0.2);
+  color: #d4a373;
+  border-color: rgba(212, 163, 115, 0.4);
+  width: 100%;
+}
+
+.aura-modal-btn-edit:hover {
+  background: rgba(212, 163, 115, 0.3);
+  border-color: rgba(212, 163, 115, 0.6);
+  box-shadow: 0 0 12px rgba(212, 163, 115, 0.2);
 }
 
 /* ── Responsive: ajustes finos en celdas pequeñas ─────────── */
 @media (max-height: 720px) {
   .aura-widget { gap: 6px; }
   .aura-widget-title { font-size: 0.72rem; }
-  .aura-widget-sub { font-size: 0.58rem; }
-  .aura-week-row { gap: 4px; }
+  .aura-month-grid { gap: 3px; }
+  .aura-day { height: 10px; }
 }

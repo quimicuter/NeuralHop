@@ -1,4 +1,5 @@
 import React from 'react'
+import { IconRenderer } from './IconRenderer'
 import { useApp } from '../context/AppContext'
 import './TaskHistoryModal.css'
 
@@ -7,20 +8,21 @@ function TaskHistoryModal({ isOpen, onClose }) {
 
   const completedTasks = getCompletedTasks ? getCompletedTasks() : []
 
-  const getModuleEmoji = (task) => {
-    const moduleEmojis = {
-      'selfcare': '🛀',
-      'mindfulness': '🧘‍♀️',
-      'vida-social': '🥂',
-      'fitness': '💪',
-      'tecno-girl': '💻',
-      'investigacion': '🔬',
-      'maestria': '🎓',
-      'laboratorio': '🧪',
-      'idiomas': '🗣️',
-      'cumpleanos': '🎂'
+  const getModuleIcon = (task) => {
+    const MODULE_CONFIG = {
+      'selfcare': 'Droplet',
+      'mindfulness': 'Dumbbell',
+      'vida-social': 'GlassWater',
+      'fitness': 'Dumbbell',
+      'foodie': 'Utensils',
+      'tecno-girl': 'Code2',
+      'investigacion': 'FlaskConical',
+      'maestria': 'GraduationCap',
+      'laboratorio': 'Beaker',
+      'idiomas': 'Languages',
+      'cumpleanos': 'Cake'
     }
-    return moduleEmojis[task.module] || '📌'
+    return MODULE_CONFIG[task.module] || 'Pin'
   }
 
   const getPriorityColor = (priority) => {
@@ -96,7 +98,9 @@ function TaskHistoryModal({ isOpen, onClose }) {
                       <span className="task-title completed">{task.title}</span>
                     </div>
                     <div className="task-item-right">
-                      <span className="task-emoji">{getModuleEmoji(task)}</span>
+                      <span className="task-emoji">
+                        <IconRenderer icon={getModuleIcon(task)} size={16} />
+                      </span>
                     </div>
                   </div>
                   <div className="task-item-footer">

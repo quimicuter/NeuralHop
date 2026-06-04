@@ -21,7 +21,7 @@ try {
 
 const defaultCategories = {
   personal: { 
-    icon: "💕", 
+    icon: "Heart", 
     label: 'Personal', 
     color: '#ffb3c6', 
     cover: 'https://images.unsplash.com/photo-1490730141103-6cac27aaab94?auto=format&fit=crop&w=600&q=80', 
@@ -30,7 +30,7 @@ const defaultCategories = {
     dataRoot: 'personal'
   },
   academico: { 
-    icon: "🎓", 
+    icon: "GraduationCap", 
     label: 'Académico', 
     color: '#c8a2c8', 
     cover: 'https://images.unsplash.com/photo-1532153975070-2e9ab71f1b14?auto=format&fit=crop&w=600&q=80', 
@@ -39,7 +39,7 @@ const defaultCategories = {
     dataRoot: 'academic'
   },
   global: {
-    icon: "🌍",
+    icon: "Globe",
     label: 'Global',
     color: '#3b82f6',
     cover: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80',

@@ -1,18 +1,9 @@
-import React from 'react'
-import './ProyectosView.css'
+import React from 'react';
 
-function ProyectosView() {
+export default function ProyectosView() {
   return (
-    <div className="proyectos-view">
-      <div className="proyectos-header">
-        <h1>?? Proyectos Hub</h1>
-        <p>Seguimiento de proyectos personales y académicos</p>
-      </div>
-      <div className="proyectos-content">
-        {/* Contenido será poblado aquí */}
-      </div>
+    <div className="bento-cell" style={{ padding: '20px', color: '#f4efe9' }}>
+      Vista en Desarrollo
     </div>
-  )
+  );
 }
-
-export default ProyectosView
