@@ -83,7 +83,7 @@ export async function addEntry(entryData) {
     await setDoc(entryRef, entry)
     return entryRef.id
   } catch (e) {
-    console.error('EntryEngine addEntry error:', e)
+    console.error('EntryEngine addEntry error:', e?.code || '', e?.message || '', e)
     return null
   }
 }
