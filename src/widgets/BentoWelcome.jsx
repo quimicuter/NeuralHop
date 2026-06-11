@@ -103,24 +103,24 @@ function BentoWelcome() {
         <div className="date-display">{formatDate(time)}</div>
       </div>
 
-      {/* 🌤️ COLUMNA CENTRAL: Clima con separadores */}
+      {/* 🌤️ COLUMNA CENTRAL: Clima */}
       <div className="welcome-col welcome-weather">
         <div className="weather-icon-wrapper">
           {renderWeatherIcon()}
         </div>
         <div className="weather-details">
-          <span className="weather-temp">{weather.temp}°C</span>
+          <span className="weather-temp">{weather.temp}°</span>
           <span className="weather-desc">{weather.desc}</span>
         </div>
       </div>
 
-      {/* 🍂 COLUMNA DERECHA: Lyrics alineadas */}
+      {/* 🍂 COLUMNA DERECHA: Lyrics */}
       <div className="welcome-col welcome-quote">
         <div className="lyric-box">
           <p className="lyric-text-micro" title={currentLyric.texto}>
             "{currentLyric.texto}"
           </p>
-          <span className="lyric-author-micro">{currentLyric.autor}</span>
+          <span className="lyric-author-micro">— {currentLyric.autor}</span>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react'
-import { initializeApp } from 'firebase/app'
+import { initializeApp, getApps, getApp } from 'firebase/app'
+import { getAnalytics } from 'firebase/analytics'
 import { initEntryEngine, subscribeToAllEntries, addEntry, updateEntry, deleteEntry, filterEntries } from '../engine/EntryEngine'
 
 const firebaseConfig = {
@@ -10,13 +11,37 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
-}
+};
 
-try {
-  const app = initializeApp(firebaseConfig)
-  initEntryEngine(app)
-} catch (e) {
-  console.warn('Firebase initialization failed:', e)
+// Debug: indicate which env vars are present (booleans)
+console.log('Firebase env:', {
+  hasApiKey: !!import.meta.env.VITE_FIREBASE_API_KEY,
+  hasAuthDomain: !!import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  hasProjectId: !!import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  hasStorageBucket: !!import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  hasMessagingSenderId: !!import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  hasAppId: !!import.meta.env.VITE_FIREBASE_APP_ID,
+  hasMeasurementId: !!import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+  mode: import.meta.env.MODE
+})
+
+// Inicializa Firebase asegurándote de que no se instancie múltiples veces
+let app = null
+if (!firebaseConfig.apiKey) {
+  console.warn('VITE_FIREBASE_API_KEY parece estar ausente. Firebase no será inicializado en este entorno.')
+} else {
+  try {
+    app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+    try { getAnalytics(app) } catch (e) { /* analytics optional */ }
+    // Inicializar engines con la app
+    try {
+      initEntryEngine(app)
+    } catch (e) {
+      console.warn('initEntryEngine warning:', e)
+    }
+  } catch (e) {
+    console.error('❌ Firebase initialization failed:', e)
+  }
 }
 
 const defaultCategories = {

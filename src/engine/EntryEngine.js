@@ -12,23 +12,33 @@ import {
   limit,
   getDoc,
   serverTimestamp,
-  enableIndexedDbPersistence
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager
 } from 'firebase/firestore'
 
 let db = null
 
 export function initEntryEngine(app) {
   if (app) {
-    db = getFirestore(app)
-    enableIndexedDbPersistence(db).catch((error) => {
-      if (error.code === 'failed-precondition') {
-        console.warn('Firestore persistence disabled: multiple tabs open.')
-      } else if (error.code === 'unimplemented') {
-        console.warn('Firestore persistence not available in this browser.')
+    try {
+      db = initializeFirestore(app, {
+        cache: persistentLocalCache(
+          /*settings=*/ persistentMultipleTabManager()
+        )
+      })
+      console.log('✅ Firestore initialized with persistent cache')
+    } catch (error) {
+      if (error.code === 'already-initialized') {
+        // Si Firestore ya fue inicializado, obtenerlo normalmente
+        db = getFirestore(app)
+        console.log('✅ Firestore already initialized')
       } else {
-        console.warn('Firestore persistence error:', error)
+        console.warn('Firestore initialization error:', error)
+        // Fallback: usar Firestore sin cache personalizado
+        db = getFirestore(app)
       }
-    })
+    }
   }
 }
 
