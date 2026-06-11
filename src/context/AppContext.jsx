@@ -14,6 +14,7 @@ const firebaseConfig = {
 };
 
 // Debug: indicate which env vars are present (booleans)
+console.log('Vite raw env:', import.meta.env)
 console.log('Firebase env:', {
   hasApiKey: !!import.meta.env.VITE_FIREBASE_API_KEY,
   hasAuthDomain: !!import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
